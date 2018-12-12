@@ -1,6 +1,10 @@
 #!/usr/bin/env python
+<<<<<<< HEAD
 #111111111
 import os
+=======
+import os#wangyu
+>>>>>>> 145c74fb75d97fa0dfa3189c7f5458cb757a9068
 import sys
 
 if __name__ == "__main__":
