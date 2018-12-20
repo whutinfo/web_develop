@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+#chabngshi
 
 # Application definition
 
