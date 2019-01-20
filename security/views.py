@@ -503,7 +503,7 @@ def menuControl(request):
 		return render(request, 'security/menu.html')  ##用render，从第二个参数中找
 	else:
 		if action == 'LoadTree':
-			menus=models.Menu.objects.all()
+			menus=models.Menu.objects.all().order_by('menu_node')
 			rankMenu=[]
 			#values={'id':'','text':'','state':'','children':''}
 			values={}
@@ -512,8 +512,8 @@ def menuControl(request):
 					values['id']=row.menu_id
 					values['text']=row.menu_name
 					Ztree = getZtree(row,menus)
+					values['state'] = 'closed' #有这个显示样式就一定会是可以展开的样式，尽管没有childern也会是这样
 					if Ztree != []:
-						values['state']='closed'
 						values['children']=Ztree#row是一个Menu对象，menus是qs
 					rankMenu.append(values.copy())
 					values.clear()  # 防止上次保存的结果干扰下一次的值，比如下一次没有这个键值，而上一次却有，就会保存上一次
@@ -562,11 +562,12 @@ def menuControl(request):
 			menu_show=request.POST.get('menu_show')
 			menu_img = request.POST.get('menu_img')
 			menu_describe = request.POST.get('menu_describe')
+			addmaxchild = '1000'
 			if pmenu_id != '0':
 			# 如果不是新父菜单，那么获取的是已有菜单的id
 			# 根据父节点node，和Maxchild ，将maxchild+1，与父节点node拼接即当前新增菜单的节点
 			# 而新增菜单的maxchild为初始值addmaxchild即1000
-				addmaxchild='1000'
+
 				pmenu=models.Menu.objects.filter(menu_id=pmenu_id).first()#一个Menu对象
 				pmenu_node=pmenu.menu_node
 				maxchild=pmenu.maxchild
@@ -577,10 +578,18 @@ def menuControl(request):
 				#更新其父菜单的maxchild
 				models.Menu.objects.filter(menu_id=pmenu_id).update(maxchild=checknode)  #根据id最快，而且id是唯一的，也是Int
 				back = 1
+			else:  # 此时增加新父节点
+				newnode = "1000"  # 父节点初始值
+				menus = models.Menu.objects.all().order_by('-menu_node')
+				for menu in menus:
+					if len(menu.menu_node) == 4:
+						addnode = int(menu.menu_node) + 1
+						break
+				models.Menu.objects.create(menu_name=menu_name, menu_describe=menu_describe, menu_url=menu_url,
+				                           menu_show=menu_show, menu_img=menu_img, menu_node=addnode,maxchild=addmaxchild)
+				back = 1
+
 			return HttpResponse(back)
-
-
-
 
 
 '''
