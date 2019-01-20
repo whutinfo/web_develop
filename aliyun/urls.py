@@ -117,16 +117,23 @@ from django.urls import path
 from login import views as lv
 from MainIndex import views as mv
 from SystemSettings import views as sv
-
+from security import views as sec_v
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    #path('admin/', admin.site.urls),
     path('login/',lv.login),
-    path('login1/',lv.login1),
-    path('mainIndex/', mv.mainIndex),
-    path('index/',lv.index),
-    path('test/',lv.test),
+    path('mainIndex/', mv.frame),
+    path('home/',mv.home),
+
+    path('user/', sec_v.userControl),
+    path('role/', sec_v.roleControl),
+    path('menu/', sec_v.menuControl),
 
     path('goods/',sv.goods),
     path('goodsCat/',sv.goodsCat),
     path('manufactor/',sv.manufactor),
+    path('supplier/', sv.supplier),
+
+#测试用
+    path('index/', lv.index),
+    path('demo/', lv.demo),
 ]

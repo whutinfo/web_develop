@@ -1,9 +1,6 @@
-from django.shortcuts import render,redirect,render_to_response
-from django.http import HttpResponse,HttpResponseRedirect
-
-from django.views.decorators.csrf import csrf_exempt
-from . import models
-
+from django.http import HttpResponse
+from django.shortcuts import render
+from Models import models
 
 # 每个响应对应一个函数，函数必须返回一个响应
 # 函数必须存在一个参数，一般约定为request
@@ -23,87 +20,101 @@ def login(request):
     # return HttpResponse('hello world')
     #用判断请求方式来执行不同的命令
     if request.method=='GET':
-        print('login')
         return render(request, 'login/login.html')#自动找到模板路径下的login.html文件，读取内容并返回给用户
     else:
-        print('login的post')
         user_name = request.POST.get('Account')
         user_pwd = request.POST.get('Pwd')
-        if (user_name == '管理员') & (user_pwd == '123'):
+
+        user = models.User.objects.filter(name=user_name)  #根据用户名查找数据库是否存在
+        if user.exists():
+            pwd = user[0].pwd
+            id = user[0].user_id
+
+        else:
+            Msg='4'  #账号或密码不存在
+
+        if (user_pwd == pwd):
             # print('提交')   这种会在下面的运行里进行打印，平时测试方便
-            return HttpResponse(3)
+            request.session["Login_UserId"] = id
+            uid=request.session.get("Login_UserId")
+            Msg='3'
             # 表单形式提交才可以用重定向这种方式直接跳转url
             # ajax用redirect是没有用的，只能返回字符串，所以需要在html中用location.href的方式写跳转
         else:
-            print('2')
-            return HttpResponse(0)
+            Msg='4'
+        return HttpResponse(Msg)
 
 
-####以表单形式提交，redirect重定向跳转
-## 表单形式一定会刷新一次页面，所以需要ajax，不改变这个页面的显示下传值过来
-def login1(request):
-    if request.method == 'GET':
-        print('login1')
-        return render(request, 'login/login.html')  # 自动找到模板路径下的login.html文件，读取内容并返回给用户
-    else:
-        print('login1的post')
-        user_name = request.POST.get('account')
-        user_pwd = request.POST.get('pwd')
+def demo(request):
 
-        if (user_name == '管理员') & (user_pwd == '123'):
-            # print('提交')   这种会在下面的运行里进行打印，平时测试方便
-            return redirect('/mainIndex/')
-            # 表单形式提交才可以用重定向这种方式直接跳转url
-            # ajax用redirect是没有用的，只能返回字符串，所以需要在html中用location.href的方式写跳转
-        else:
-            print('2')
-            return redirect('/login1/')
-
+    return render(request,'login/demo.html')
 
 def index(request):
-    #增加
-   # models.UserGroup.objects.create(title='销售部')
-   # models.UserInfo.objects.create(user='root',password='pwd',age=12,ug_id=1)
-
-    #查询
-    group_list=models.UserGroup.objects.all()  # 拿所有数据
-    #group_title=models.UserGroup.objects.all().values('title')#只取title一列
-    #group_list.QuerySet类型（列表）
-    print(group_list)
-    for row in group_list:
-        print(row.id,row.title)
-
-    group_filter=models.UserGroup.objects.filter(id=1,title='销售部')  #带条件过滤
-    #group1=models.UserGroup.objects.filter(id__gt=1) #__gt  大于  __lt 小于
-    for row in group_filter:
-        print(row.id,row.title)
-
-    #删除
-    #models.UserGroup.objects.filter(id=2).delete()
-
-    #更新
-    models.UserGroup.objects.filter(id=2).update(title='公关部')
-
-    return HttpResponse('123')
-
-
-def test(request):
-    #创建数据
-    '''
-    models.UserType.objects.create(title='普通用户')
-    models.UserType.objects.create(title='二逼用户')
-    models.UserType.objects.create(title='牛逼用户')
-
-    models.UserInfo.objects.create(name='方绍伟',age=19,ut_id=1)
-    models.UserInfo.objects.create(name='尤庆斌',age=18,ut_id=2)
-    models.UserInfo.objects.create(name='刘庚',age=15,ut_id=2)
-    models.UserInfo.objects.create(name='陈涛',age=19,ut_id=3)
-    models.UserInfo.objects.create(name='王者',age=19,ut_id=3)
-    models.UserInfo.objects.create(name='杨涵',age=19,ut_id=1)
-    '''
-
-    result=models.UserInfo.objects.filter(name='王者')
-    for obj in result:
-        print(obj.name,obj.age,obj.ut_id)
-        print(obj.ut.title)
-    return HttpResponse('test')
+    # models.User.objects.create(name='管理员',pwd=123)
+    # models.Menu.objects.create(menu_name='系统配置',menu_img='accodin_system.png',menu_show=1,menu_node='1000')
+    # models.Menu.objects.create(menu_name='商品信息配置',menu_url='/goods/',menu_img='emotion_happy.png',menu_show=1,menu_node='10001002')
+    # models.Menu.objects.create(menu_name='商品类型配置', menu_url='/goodsCat/',menu_img='emotion_happy.png',menu_show=1,menu_node='10001003')
+    # models.Role.objects.create(name='处长', node='1001')
+    # models.Role.objects.create(name='副处长', node='10011000')
+    # models.Role.objects.create(name='党支书', node='100110001000')
+    # models.Role.objects.create(name='科长', node='10011001')
+    # models.Role.objects.create(name='副科长', node='100110011000')
+    # models.Role.objects.create(name='仓库管理员', node='1001100110001000')
+    # models.Role.objects.create(name='后勤', node='100110011001')
+    # models.User_Role.objects.create(user_id=2,role_id=1)
+    # models.User_Role.objects.create(user_id=2, role_id=2)
+    """  测试当一个用户有多种角色，将其所有角色的菜单权限合并 """
+    # models.Role_Menu.objects.create(role_id=1,menu_id=1)
+    # models.Role_Menu.objects.create(role_id=1, menu_id=2)
+    # models.Role_Menu.objects.create(role_id=1, menu_id=3)
+    # models.Role_Menu.objects.create(role_id=2,menu_id=1)
+    # models.Role_Menu.objects.create(role_id=2, menu_id=2)
+    # models.Role_Menu.objects.create(role_id=2, menu_id=3)
+    """测试用户不仅拥有其角色的菜单权限，该用户还有自己的菜单权限， 将用户权限和角色权限合并"""
+    #models.User_Menu.objects.create(user_id=2, menu_id=2)
+    # models.Menu.objects.create(menu_name='安全管理', menu_img='accodin_system.png', menu_show=1, menu_node='1005')
+    # models.Menu.objects.create(menu_name='用户管理',menu_url='',menu_img='emotion_happy.png',menu_show=1,menu_node='10051000')
+   # models.Menu.objects.create(menu_name='角色管理', menu_url='', menu_img='emotion_happy.png', menu_show=1, menu_node='10051001')
+   #  models.Menu.objects.create(menu_name='菜单管理', menu_url='', menu_img='emotion_happy.png', menu_show=1, menu_node='10051002')
+   #  models.Menu.objects.create(menu_name='模块管理', menu_url='', menu_img='emotion_happy.png', menu_show=1, menu_node='10051003')
+    models.Role_Menu.objects.create(role_id=1, menu_id=4)
+    models.Role_Menu.objects.create(role_id=1, menu_id=5)
+    models.Role_Menu.objects.create(role_id=1, menu_id=6)
+    models.Role_Menu.objects.create(role_id=1, menu_id=7)
+    models.Role_Menu.objects.create(role_id=1, menu_id=8)
+    ''' 测试部门角色用户  '''
+    # models.Department.objects.create(name='业务部,node='1000')
+    # models.Department.objects.create(name='业务部下的销售部',node='10001000')
+    # models.Department.objects.create(name='业务部下的市场开发部',node='10001001')
+    # models.Department.objects.create(name='工程部',node='1001')
+    # models.Department.objects.create(name='工程部下的开发组', node='10011000')
+    # models.Department.objects.create(name='工程部下的设计组', node='10011001')
+    # models.Depart_Role.objects.create(depart_id=1,role_id=1)
+    # models.Depart_Role.objects.create(depart_id=1, role_id=2)
+    # models.Depart_Role.objects.create(depart_id=2, role_id=3)
+    # models.Depart_Role.objects.create(depart_id=2, role_id=7)
+    # models.Depart_User.objects.create(depart_id=1,user_id=2)
+    # models.User.objects.create(name='小红销售', pwd=123)
+    # models.Depart_User.objects.create(depart_id=2, user_id=3)
+    # models.User_Role.objects.create(user_id=3,role_id=3)
+    # models.User_Role.objects.create(user_id=3, role_id=7)
+    # models.User.objects.create(name='工程师1', pwd=123)
+    # models.Depart_User.objects.create(depart_id=3, user_id=4)
+    # models.User_Role.objects.create(user_id=4,role_id=1)
+    # models.User_Role.objects.create(user_id=4, role_id=2)
+    # models.Depart_Role.objects.create(depart_id=3,role_id=1)
+    # models.Depart_Role.objects.create(depart_id=3, role_id=2)
+    '''用户管理下的权限管理'''
+    # models.Access.objects.create(access_name='浏览')
+    # models.Access.objects.create(access_name='添加')
+    # models.Access.objects.create(access_name='编辑')
+    # models.Access.objects.create(access_name='删除')
+    # models.Access.objects.create(access_name='查询')
+    # models.Access.objects.create(access_name='打印')
+    # models.Access.objects.create(access_name='预览')
+    # models.Access.objects.create(access_name='导出')
+    obj = models.User.objects.filter(name='管理员').first()
+    roles=obj.roles.all()
+    for row in roles:
+        print(row.name)
+    return HttpResponse(3)

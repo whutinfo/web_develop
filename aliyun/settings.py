@@ -27,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-#chabngshi
 
 # Application definition
 
@@ -42,7 +41,23 @@ INSTALLED_APPS = [
     'MainIndex',
     'SystemSettings',
     'Commodity',
+    'Models',
+    'security',
 ]
+
+
+#   Session通用配置
+SESSION_COOKIE_NAME = "sessionid"
+# Session的cookie保存在浏览器上时的key，即：sessionid＝随机字符串（默认）
+SESSION_COOKIE_PATH = "/"  # Session的cookie保存的路径（默认）
+SESSION_COOKIE_DOMAIN = None  # Session的cookie保存的域名（默认）
+SESSION_COOKIE_SECURE = False  # 是否Https传输cookie（默认）
+SESSION_COOKIE_HTTPONLY = True  # 是否Session的cookie只支持http传输（默认）
+SESSION_COOKIE_AGE = 1209600  # Session的cookie失效日期（2周）（默认）
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# 是否关闭浏览器使得Session过期（默认）
+SESSION_SAVE_EVERY_REQUEST = False
+# 是否每次请求都保存Session，默认修改之后才保存（默认）
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -53,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'aliyun.urls'
 
@@ -87,12 +103,15 @@ DATABASES = {
         'ENGINE':'django.db.backends.mysql',#'sql_server.pyodbc',django_pyodbc',
         'NAME':'aliyun',
         'HOST':'39.108.107.126',
-        'PORT':'3306',#1443
+        'PORT':'3306',
         'USER':'user',
         'PASSWORD':'user',
-
+        'OPTIONS': {
+           'init_command': 'SET sql_mode=STRICT_TRANS_TABLES',
+        },
     }
 }
+
 
 
 # Password validation
@@ -119,15 +138,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
-
-
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
+USE_I18N = False
+USE_L10N = False #为True会使format不生效
+DATE_FORMAT = 'Y-m-d'
+DATETIME_FORMAT = 'Y-m-d H:i:s'
+###auto_now 用update不会更新
+# USE_TZ = True
+USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
