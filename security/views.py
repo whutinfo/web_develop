@@ -590,7 +590,17 @@ def menuControl(request):
 				back = 1
 
 			return HttpResponse(back)
-
+		elif action == 'editMenu':#编辑
+			back = 0
+			menu_name = request.POST.get('menu_name')
+			menu_id = request.POST.get('menu_id')
+			menu_url = request.POST.get('menu_url')
+			menu_show = request.POST.get('menu_show')
+			menu_img = request.POST.get('menu_img')
+			menu_describe = request.POST.get('menu_describe')
+			models.Menu.objects.filter(menu_id=menu_id).update(menu_name=menu_name,menu_url=menu_url,menu_show=menu_show,menu_img=menu_img,menu_describe=menu_describe)
+			back = 1
+			return HttpResponse(back)
 
 '''
 #在menus中找到pmenu的所有子节点
