@@ -106,3 +106,85 @@ def supplier(request):
 
 
 
+
+#售卖页面  销售页面的处理函数
+def Seller_Trans(request):
+    action = request.POST.get('action')
+    if request.method == 'GET':
+        return render(request, 'SystemSettings/Seller.html')
+    else:
+        supplier = []
+        if action == 'LoadData':
+            #models.Seller.objects.all()
+            Supplier_list = models.Seller.objects.all()
+            value = {'Sellername': '', 'Sellerphone': '', 'Sellerproperty': '', 'SellerOwner': '', 'SellerOwnerPhone': '', 'SellerOwnerLevel': '', 'SellerOwnerNo': '', 'SellerOwnerArea': ''}  # 用字典和列表拼接很方便形成Json格式
+            for row in Supplier_list:
+                value['Sellername'] = row.Sellername
+                value['Sellerphone'] = row.Sellerphone
+                value['Sellerproperty'] = row.Sellerproperty
+                value['SellerOwner'] = row.SellerOwner
+
+                value['SellerOwnerPhone'] = row.SellerOwnerPhone
+                value['SellerOwnerLevel'] = row.SellerOwnerLevel
+                value['SellerOwnerNo'] = row.SellerOwnerNo
+                value['SellerOwnerArea'] = row.SellerOwnerArea
+                supplier.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
+                # 用.copy()就不会跟着改变
+            name = json.dumps(supplier)  # 将列表转字符串传给前端
+            return HttpResponse(name)
+        elif action == 'Save':
+            add_Sellername = request.POST.get('name')
+            add_Sellerphone = '13098823498'
+            add_Sellerproperty = request.POST.get('type')
+            add_SellerOwner = request.POST.get('manager')
+
+            add_SellerOwnerPhone = request.POST.get('phone')#request.POST.get('SellerOwnerPhone')
+            add_SellerOwnerLevel = request.POST.get('floor')
+            add_SellerOwnerNo = request.POST.get('number')
+            add_SellerOwnerArea = request.POST.get('area')
+
+
+            models.Seller.objects.create(Sellername=add_Sellername, Sellerphone=add_Sellerphone, Sellerproperty=add_Sellerproperty,\
+                                           SellerOwner=add_SellerOwner,SellerOwnerPhone=add_SellerOwnerPhone, \
+                                           SellerOwnerLevel = add_SellerOwnerLevel,SellerOwnerNo = add_SellerOwnerNo,SellerOwnerArea = add_SellerOwnerArea )
+
+            return HttpResponse(1)
+        elif action == 'LoadSellerCat':
+            return HttpResponse(1) #这个地方暂时先不处理
+        return HttpResponse()
+
+
+
+#销售商的属性配置
+def SellerProp_Trans(request):
+    action = request.POST.get('action')
+    if request.method == 'GET':
+        return render(request, 'SystemSettings/SellerProperty.html')
+    else:
+        supplier = []
+        if action == 'LoadData':
+            #models.Seller.objects.all()
+            Supplier_list = models.SellerPorprety.object.all()
+            value = {'SellerpropertyType': '', 'ID': ''}  # 用字典和列表拼接很方便形成Json格式
+            for row in Supplier_list:
+                value['SellerpropertyType'] = row.Sellerproperty
+                value['ID'] = row.ID
+
+                supplier.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
+                # 用.copy()就不会跟着改变
+            name = json.dumps(supplier)  # 将列表转字符串传给前端
+            return HttpResponse(name)
+        elif action == 'Save':
+            add_Propretyname = request.POST.get('Proprety')
+
+
+
+            models.SellerPorprety.objects.create(SellerpropertyType=add_Propretyname)
+
+            return HttpResponse(1)
+        elif action == 'LoadSellerCat':
+            return HttpResponse(1) #这个地方暂时先不处理
+        return HttpResponse()
+
+
+

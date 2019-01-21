@@ -133,6 +133,12 @@ urlpatterns = [
     path('manufactor/',sv.manufactor),
     path('supplier/', sv.supplier),
 
+#wangyu add 2019/1/21 begin
+    path('Seller/', sv.Seller_Trans),
+    path('SellerPro/', sv.SellerProp_Trans),
+#wangyu add 2019/1/21 end
+
+
 #测试用
     path('index/', lv.index),
     path('demo/', lv.demo),
