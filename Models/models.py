@@ -209,3 +209,51 @@ class SellerPorprety(models.Model):
         #managed = False
         db_table = 'SellerPorprety_Table'
 
+
+'''工单管理'''
+
+
+# 基础表
+class Base(models.Model):
+    title = models.CharField(max_length=64)
+    type = models.IntegerField(blank=True, null=True)
+    node = models.IntegerField(blank=True, null=True)
+    prefunc = models.IntegerField(blank=True, null=True)
+    curfunc = models.IntegerField(blank=True, null=True)
+    afterfunc = models.IntegerField(blank=True, null=True)
+    value1 = models.IntegerField(blank=True, null=True)
+    value2 = models.IntegerField(blank=True, null=True)
+    depart = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, related_name='depart')
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True, related_name='role')
+
+    class Meta:
+        managed = False
+        db_table = 'Base_Table'
+
+
+class Work(models.Model):
+    type = models.IntegerField(blank=True, null=True)
+    step = models.IntegerField(blank=True, null=True)
+    flag = models.IntegerField(blank=True, null=True)
+    text = models.TextField(blank=True, null=True)
+    position = models.TextField(blank=True, null=True)
+    create_time = models.DateTimeField(default=timezone.now)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='work_user')
+    performer1 = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='performer1')
+    performer2 = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='performer2')
+    performer3 = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='performer3')
+
+    class Meta:
+        managed = False
+        db_table = 'Work_Table'
+
+
+class Approval(models.Model):
+    work = models.ForeignKey(Work, on_delete=models.CASCADE, null=True, related_name='work_approval')
+    performer = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='user_approval')
+    advise = models.TextField(blank=True, null=True)
+    step = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'Approval_Table'

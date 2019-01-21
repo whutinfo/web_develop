@@ -118,16 +118,19 @@ from login import views as lv
 from MainIndex import views as mv
 from SystemSettings import views as sv
 from security import views as sec_v
+from WorkOrder import views as work
+
 urlpatterns = [
     #path('admin/', admin.site.urls),
+        # 主框架
     path('login/',lv.login),
     path('mainIndex/', mv.frame),
     path('home/',mv.home),
-
+        #安全管理
     path('user/', sec_v.userControl),
     path('role/', sec_v.roleControl),
     path('menu/', sec_v.menuControl),
-
+        #商品管理方面的系统配置
     path('goods/',sv.goods),
     path('goodsCat/',sv.goodsCat),
     path('manufactor/',sv.manufactor),
@@ -138,6 +141,9 @@ urlpatterns = [
     path('SellerPro/', sv.SellerProp_Trans),
 #wangyu add 2019/1/21 end
 
+        # 工单管理
+    path('editWork/', work.edit),
+    path('approveWork/', work.approve),
 
 #测试用
     path('index/', lv.index),

@@ -1,13 +1,14 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 <head  runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>销售属性配置</title>
-    <link rel="stylesheet" href="../../Themes/EasyUI/default/easyui.css" />
-    <link rel="stylesheet" href="../../Themes/EasyUI/icon.css" />
-    <script src="../../Themes/EasyUI/jquery.min.js" type="text/javascript"></script>
-    <script src="../../Themes/EasyUI/jquery.easyui.min.js" type="text/javascript"></script>
-    <script src="../../Themes/Scripts/FunctionJS.js"></script>
+     <link rel="stylesheet" href={% static "Themes/EasyUI/default/easyui.css" %} />
+    <link rel="stylesheet" href={% static "Themes/EasyUI/icon.css" %} />
+    <script src={% static "Themes/EasyUI/jquery.min.js"%}></script>
+    <script src={% static "Themes/EasyUI/jquery.easyui.min.js"%}></script>
+    <script src={% static "Themes/Scripts/FunctionJS.js"%} type="text/javascript"></script>
 </head>
     <script>
         $(document).ready(function () {
@@ -44,7 +45,7 @@
             var datajson = [];
 
             var parm = 'action=LoadData';
-            getAjax("/SellerProperty/", parm, function (backstring) {
+            getAjax("/SellerPro/", parm, function (backstring) {
                 if (backstring != "") {
                     datajson = jQuery.parseJSON(backstring);
                 }
@@ -89,7 +90,7 @@
         function save() {
             var name = $("#dlg1_2_txt_1").textbox('getValue');//地点
             var parm = 'action=Save&Proprety=' + name;
-            getAjax("/SellerProperty/", parm, function (data) {
+            getAjax("/SellerPro/", parm, function (data) {
                 var backstring = jQuery.parseJSON(data);
                 if (backstring == "1") {
                     $('#dlg1_2').dialog('close');

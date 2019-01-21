@@ -164,11 +164,11 @@ def SellerProp_Trans(request):
         supplier = []
         if action == 'LoadData':
             #models.Seller.objects.all()
-            Supplier_list = models.SellerPorprety.object.all()
+            Supplier_list =  models.SellerPorprety.objects.all()
             value = {'SellerpropertyType': '', 'ID': ''}  # 用字典和列表拼接很方便形成Json格式
             for row in Supplier_list:
-                value['SellerpropertyType'] = row.Sellerproperty
-                value['ID'] = row.ID
+                value['SellerpropertyType'] = row.SellerpropertyType
+                value['ID'] = row.id
 
                 supplier.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
                 # 用.copy()就不会跟着改变
@@ -176,9 +176,6 @@ def SellerProp_Trans(request):
             return HttpResponse(name)
         elif action == 'Save':
             add_Propretyname = request.POST.get('Proprety')
-
-
-
             models.SellerPorprety.objects.create(SellerpropertyType=add_Propretyname)
 
             return HttpResponse(1)

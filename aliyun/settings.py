@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'Commodity',
     'Models',
     'security',
+    'WorkOrder',
 ]
 
 
