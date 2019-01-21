@@ -73,9 +73,7 @@ def manufactor(request):
             add_phone=request.POST.get('phone')
             add_address=request.POST.get('address')
             models.Manufactor.objects.create(name=add_name,phone=add_phone,manager=add_manager,address=add_address)
-
             return HttpResponse(1)
-        return HttpResponse()
 
 
 def supplier(request):
