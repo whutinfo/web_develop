@@ -204,8 +204,8 @@ class Seller(models.Model):
 class SellerPorprety(models.Model):
     name = models.TextField(blank=True, null=True)
     SellerpropertyType = models.CharField(db_column='SellerP_Str',max_length=10) # Field name made lowercase.
-    SellerpropertyID = models.AutoField(db_column='Inx')
+    SellerpropertyID = models.AutoField(db_column='Inx',primary_key=True) #使用此字段时，必须传递primary_key=True，否则在生成迁移脚本文件时，就会报错，一个模型不能有两个自增长字段。
     class Meta:
-        managed = False
+      #  managed = False
         db_table = 'SellerPorprety_Table'
 
