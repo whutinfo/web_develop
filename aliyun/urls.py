@@ -119,6 +119,7 @@ from MainIndex import views as mv
 from SystemSettings import views as sv
 from security import views as sec_v
 from WorkOrder import views as work
+from Commodity import views as com_v
 
 urlpatterns = [
     #path('admin/', admin.site.urls),
@@ -145,6 +146,10 @@ urlpatterns = [
     path('editWork/', work.edit),
     path('approveWork/', work.approve),
 
+    #商品管理 出入库
+    path('stockIn/', com_v.stockIn),
+    path('stockOut/', com_v.stockOut),
+    path('commodity/', com_v.Load_Commodity),
 #测试用
     path('index/', lv.index),
     path('demo/', lv.demo),

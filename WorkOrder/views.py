@@ -210,8 +210,7 @@ def update_WorkApprove(flag,advise,work_id,user_id,cur_step):
 		bases = models.Base.objects.all()
 		work = models.Work.objects.filter(id=work_id).first()  # 找到所审批的工单
 		for base in bases:
-			print(work.type == base.type)
-			print(base.node == cur_step)
+
 			if work.type == base.type and base.node == int(cur_step): #在标准表中找到这一类工单流转 在当前步骤时那条数据
 				#没有问题查找value2，如果有问题查找value1
 				if base.value2 == 255:#流程结束
