@@ -181,4 +181,31 @@ class Seller(models.Model):
 
 
 
+#商户信息   wangyu add
+'''
+class Seller(models.Model):
+    name = models.TextField(blank=True, null=True)
+    Sellername = models.CharField(db_column='SellerName',max_length=10) # Field name made lowercase.
+    Sellerphone = models.CharField(max_length=50) #商户名称
+    Sellerproperty = models.CharField(max_length=64)#商户属性
+    SellerOwner = models.CharField(max_length=64)  # 负责人姓名
+    SellerOwnerPhone = models.CharField(max_length=64)  # 负责人手机号
+    SellerOwnerLevel = models.CharField(max_length=64)  # 所属楼栋
+    SellerOwnerNo = models.CharField(max_length=64)  # 所属编号
+    #models.FloatField()
+    SellerOwnerArea = models.CharField(max_length=64)  # 占地面积
+    class Meta:
+        managed = False
+        db_table = 'Seller_Table'
+
+
+'''
+#商户属性信息   wangyu add
+class SellerPorprety(models.Model):
+    name = models.TextField(blank=True, null=True)
+    SellerpropertyType = models.CharField(db_column='SellerP_Str',max_length=10) # Field name made lowercase.
+    SellerpropertyID = models.AutoField(db_column='Inx')
+    class Meta:
+        managed = False
+        db_table = 'SellerPorprety_Table'
 
