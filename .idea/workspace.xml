@@ -16,11 +16,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SystemSettings/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="161">
-              <caret line="79" column="20" lean-forward="true" selection-start-line="79" selection-start-column="20" selection-end-line="79" selection-end-column="20" />
+            <state relative-caret-position="-637">
+              <caret line="85" column="29" selection-start-line="85" selection-start-column="29" selection-end-line="85" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -43,11 +43,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Models/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="397">
-              <caret line="211" lean-forward="true" selection-start-line="211" selection-end-line="211" />
+            <state relative-caret-position="164">
+              <caret line="206" selection-start-line="206" selection-end-line="206" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
@@ -58,8 +58,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/aliyun/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="50">
-              <caret line="133" column="33" selection-start-line="133" selection-start-column="25" selection-end-line="133" selection-end-column="33" />
+            <state relative-caret-position="259">
+              <caret line="144" column="1" lean-forward="true" selection-start-line="144" selection-start-column="1" selection-end-line="144" selection-end-column="1" />
               <folding>
                 <element signature="e#2936#2968#0" expanded="true" />
               </folding>
@@ -119,12 +119,12 @@
         <option value="$PROJECT_DIR$/MainIndex/templates/MainIndex/main.html" />
         <option value="$PROJECT_DIR$/SystemSettings/views.py" />
         <option value="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/SellerProperty.html" />
-        <option value="$PROJECT_DIR$/Models/models.py" />
         <option value="$PROJECT_DIR$/aliyun/urls.py" />
+        <option value="$PROJECT_DIR$/Models/models.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="231" />
     <option name="y" value="135" />
     <option name="width" value="1325" />
@@ -244,7 +244,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4959000" />
+    <option name="totallyTimeSpent" value="5252000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -256,7 +256,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="7" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14678285" />
@@ -479,16 +479,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Models/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="397">
-          <caret line="211" lean-forward="true" selection-start-line="211" selection-end-line="211" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SystemSettings/templates/SystemSettings/Seller.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="218">
@@ -498,8 +488,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/aliyun/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="50">
-          <caret line="133" column="33" selection-start-line="133" selection-start-column="25" selection-end-line="133" selection-end-column="33" />
+        <state relative-caret-position="259">
+          <caret line="144" column="1" lean-forward="true" selection-start-line="144" selection-start-column="1" selection-end-line="144" selection-end-column="1" />
           <folding>
             <element signature="e#2936#2968#0" expanded="true" />
           </folding>
@@ -508,8 +498,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/SystemSettings/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="79" column="20" lean-forward="true" selection-start-line="79" selection-start-column="20" selection-end-line="79" selection-end-column="20" />
+        <state relative-caret-position="-637">
+          <caret line="85" column="29" selection-start-line="85" selection-start-column="29" selection-end-line="85" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Models/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="164">
+          <caret line="206" selection-start-line="206" selection-end-line="206" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -202,9 +202,9 @@ class Seller(models.Model):
 '''
 #商户属性信息   wangyu add
 class SellerPorprety(models.Model):
-    name = models.TextField(blank=True, null=True)
+    #name = models.TextField(blank=True, null=True)
     SellerpropertyType = models.CharField(db_column='SellerP_Str',max_length=10) # Field name made lowercase.
-    SellerpropertyID = models.AutoField(db_column='Inx')
+#    SellerpropertyID = models.AutoField(db_column='Inx')
     class Meta:
         managed = False
         db_table = 'SellerPorprety_Table'
