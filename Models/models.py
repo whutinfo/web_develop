@@ -206,6 +206,6 @@ class SellerPorprety(models.Model):
     SellerpropertyType = models.CharField(db_column='SellerP_Str',max_length=10) # Field name made lowercase.
 #    SellerpropertyID = models.AutoField(db_column='Inx')
     class Meta:
-        managed = False
+        #managed = False
         db_table = 'SellerPorprety_Table'
 
