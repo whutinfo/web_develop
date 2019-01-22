@@ -11,7 +11,7 @@ def customermanager(request):
     else:
         customermanager=[]
         if action == 'LoadData':
-            customermanager_list = models.Customermanager.objects.all()
+            customermanager_list = models.Customer.objects.all()
             value = {'value1': '','value2':'','value3':'','value4':'','value5':'','value6':'','value7':'','value8':''}  # 用字典和列表拼接很方便形成Json格式
             for row in customermanager_list:
                 value['value1'] = row.name
@@ -35,6 +35,6 @@ def customermanager(request):
             add_point = request.POST.get('point')
             add_create_time = request.POST.get('create_time')
             add_update_time = request.POST.get('update_time')
-            models.Customermanager.objects.create(name=add_name,birthday=add_birthday,sex=add_sex,phone=add_phone,carid=add_carid,point=add_point,create_time=add_create_time,update_time=add_update_time,)
+            models.Customer.objects.create(name=add_name,birthday=add_birthday,sex=add_sex,phone=add_phone,carid=add_carid,point=add_point,create_time=add_create_time,update_time=add_update_time,)
 
             return HttpResponse(1)

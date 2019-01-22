@@ -77,11 +77,11 @@ def index(request):
    # models.Menu.objects.create(menu_name='角色管理', menu_url='', menu_img='emotion_happy.png', menu_show=1, menu_node='10051001')
    #  models.Menu.objects.create(menu_name='菜单管理', menu_url='', menu_img='emotion_happy.png', menu_show=1, menu_node='10051002')
    #  models.Menu.objects.create(menu_name='模块管理', menu_url='', menu_img='emotion_happy.png', menu_show=1, menu_node='10051003')
-    models.Role_Menu.objects.create(role_id=1, menu_id=4)
-    models.Role_Menu.objects.create(role_id=1, menu_id=5)
-    models.Role_Menu.objects.create(role_id=1, menu_id=6)
-    models.Role_Menu.objects.create(role_id=1, menu_id=7)
-    models.Role_Menu.objects.create(role_id=1, menu_id=8)
+   #  models.Role_Menu.objects.create(role_id=1, menu_id=4)
+   #  models.Role_Menu.objects.create(role_id=1, menu_id=5)
+   #  models.Role_Menu.objects.create(role_id=1, menu_id=6)
+   #  models.Role_Menu.objects.create(role_id=1, menu_id=7)
+   #  models.Role_Menu.objects.create(role_id=1, menu_id=8)
     ''' 测试部门角色用户  '''
     # models.Department.objects.create(name='业务部,node='1000')
     # models.Department.objects.create(name='业务部下的销售部',node='10001000')
@@ -113,8 +113,9 @@ def index(request):
     # models.Access.objects.create(access_name='打印')
     # models.Access.objects.create(access_name='预览')
     # models.Access.objects.create(access_name='导出')
-    obj = models.User.objects.filter(name='管理员').first()
-    roles=obj.roles.all()
-    for row in roles:
-        print(row.name)
+    s = models.Goods.objects.all()
+    querys = models.Goods.objects.all().extra({'id': 'id','name':'goodsname'}).values('id','name')  #给字段起别名，必须写上values，不然并没有成功
+    for row in querys:
+        print(row['id'])
+        print(row['name'])
     return HttpResponse(3)
