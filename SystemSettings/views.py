@@ -22,9 +22,11 @@ def goods(request):
             print(name)
             return HttpResponse(name)
         elif action=='Save':
+            back = 0
             add_goods=request.POST.get('name')
             models.Goods.objects.create(goodsname=add_goods)
-            return HttpResponse(1)
+            back = 1
+            return HttpResponse(back)
 
 
 def goodsCat(request):
@@ -43,9 +45,11 @@ def goodsCat(request):
             name = json.dumps(goodsCat)  # 将列表转字符串传给前端
             return HttpResponse(name)
         elif action == 'Save':
+            back = 0
             add_goodsCat = request.POST.get('name')
+            back = 1
             models.GoodsCat.objects.create(catname=add_goodsCat)
-            return HttpResponse(1)
+            return HttpResponse(back)
 
 
 def manufactor(request):
@@ -68,12 +72,14 @@ def manufactor(request):
             name = json.dumps(manufactor)  # 将列表转字符串传给前端
             return HttpResponse(name)
         elif action == 'Save':
+            back = 0
             add_name = request.POST.get('name')
             add_manager=request.POST.get('manager')
             add_phone=request.POST.get('phone')
             add_address=request.POST.get('address')
             models.Manufactor.objects.create(name=add_name,phone=add_phone,manager=add_manager,address=add_address)
-            return HttpResponse(1)
+            back = 1
+            return HttpResponse(back)
 
 
 def supplier(request):
@@ -95,15 +101,14 @@ def supplier(request):
             name = json.dumps(supplier)  # 将列表转字符串传给前端
             return HttpResponse(name)
         elif action == 'Save':
+            back = 0
             add_name = request.POST.get('name')
             add_manager=request.POST.get('manager')
             add_phone=request.POST.get('phone')
             add_address=request.POST.get('address')
             models.Supplier.objects.create(name=add_name,phone=add_phone,managername=add_manager,address=add_address)
-
-            return HttpResponse(1)
-        return HttpResponse()
-
+            back = 1
+            return HttpResponse(back)
 
 
 
@@ -113,12 +118,12 @@ def Seller_Trans(request):
     if request.method == 'GET':
         return render(request, 'SystemSettings/Seller.html')
     else:
-        supplier = []
+        seller = []
         if action == 'LoadData':
             #models.Seller.objects.all()
-            Supplier_list = models.Seller.objects.all()
+            Seller_list = models.Seller.objects.all()
             value = {'Sellername': '', 'Sellerphone': '', 'Sellerproperty': '', 'SellerOwner': '', 'SellerOwnerPhone': '', 'SellerOwnerLevel': '', 'SellerOwnerNo': '', 'SellerOwnerArea': ''}  # 用字典和列表拼接很方便形成Json格式
-            for row in Supplier_list:
+            for row in Seller_list:
                 value['Sellername'] = row.Sellername
                 value['Sellerphone'] = row.Sellerphone
                 value['Sellerproperty'] = row.Sellerproperty
@@ -128,11 +133,11 @@ def Seller_Trans(request):
                 value['SellerOwnerLevel'] = row.SellerOwnerLevel
                 value['SellerOwnerNo'] = row.SellerOwnerNo
                 value['SellerOwnerArea'] = row.SellerOwnerArea
-                supplier.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
+                seller.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
                 # 用.copy()就不会跟着改变
-            name = json.dumps(supplier)  # 将列表转字符串传给前端
-            return HttpResponse(name)
+            return HttpResponse(json.dumps(seller)) # 将列表转字符串传给前端
         elif action == 'Save':
+            back = 0
             add_Sellername = request.POST.get('name')
             add_Sellerphone = '13098823498'
             add_Sellerproperty = request.POST.get('type')
@@ -144,14 +149,20 @@ def Seller_Trans(request):
             add_SellerOwnerArea = request.POST.get('area')
 
 
-            models.Seller.objects.create(Sellername=add_Sellername, Sellerphone=add_Sellerphone, Sellerproperty=add_Sellerproperty,\
-                                           SellerOwner=add_SellerOwner,SellerOwnerPhone=add_SellerOwnerPhone, \
+            models.Seller.objects.create(Sellername=add_Sellername, Sellerphone=add_Sellerphone, Sellerproperty=add_Sellerproperty,
+                                           SellerOwner=add_SellerOwner,SellerOwnerPhone=add_SellerOwnerPhone,
                                            SellerOwnerLevel = add_SellerOwnerLevel,SellerOwnerNo = add_SellerOwnerNo,SellerOwnerArea = add_SellerOwnerArea )
-
-            return HttpResponse(1)
-        elif action == 'LoadSellerCat':
-            return HttpResponse(1) #这个地方暂时先不处理
-        return HttpResponse()
+            back = 1
+            return HttpResponse(back)
+        elif action == 'LoadSellerPro':
+            value_dict = {'type':'','title':''}
+            value_list = []
+            sellerPros = models.SellerPorprety.objects.all()
+            for row in sellerPros:
+                value_dict['id'] = row.id
+                value_dict['name'] = row.SellerpropertyType
+                value_list.append(value_dict.copy())
+            return HttpResponse(json.dumps(value_list)) #这个地方暂时先不处理
 
 
 
@@ -181,7 +192,6 @@ def SellerProp_Trans(request):
             return HttpResponse(1)
         elif action == 'LoadSellerCat':
             return HttpResponse(1) #这个地方暂时先不处理
-        return HttpResponse()
 
 
 
