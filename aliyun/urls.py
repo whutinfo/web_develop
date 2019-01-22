@@ -120,6 +120,7 @@ from SystemSettings import views as sv
 from security import views as sec_v
 from WorkOrder import views as work
 from Commodity import views as com_v
+from customermanager import views as cv
 
 urlpatterns = [
     #path('admin/', admin.site.urls),
@@ -150,6 +151,8 @@ urlpatterns = [
     path('stockIn/', com_v.stockIn),
     path('stockOut/', com_v.stockOut),
     path('commodity/', com_v.Load_Commodity),
+    #客户管理
+    path('customermanager/', cv.customermanager),
 #测试用
     path('index/', lv.index),
     path('demo/', lv.demo),

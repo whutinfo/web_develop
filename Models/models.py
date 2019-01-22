@@ -257,3 +257,19 @@ class Approval(models.Model):
     class Meta:
         managed = False
         db_table = 'Approval_Table'
+
+
+#客户管理
+class Customermanager(models.Model):
+    name = models.CharField(max_length=50)
+    birthday = models.TextField(blank=True, null=True)
+    sex = models.CharField(max_length=50)
+    phone = models.CharField(max_length=50)
+    carid = models.TextField(db_column='carId', blank=True, null=True)  # Field name made lowercase.
+    point = models.CharField(max_length=50)
+    create_time = models.TextField(blank=True, null=True)
+    update_time = models.TextField(blank=True, null=True)
+
+    class Meta:
+      #  managed = False
+        db_table = 'Customermanager'
