@@ -306,8 +306,8 @@ class Customermanager(models.Model):
     phone = models.CharField(max_length=50)
     carid = models.TextField(db_column='carId', blank=True, null=True)  # Field name made lowercase.
     point = models.CharField(max_length=50)
-    create_time = models.TextField(blank=True, null=True)
-    update_time = models.TextField(blank=True, null=True)
+    create_time = models.DateTimeField(auto_now_add=True)
+    update_time = models.DateTimeField(auto_now=True)
 
     class Meta:
       #  managed = False
