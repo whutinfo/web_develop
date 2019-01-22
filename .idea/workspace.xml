@@ -54,9 +54,13 @@
         <entry file="file://$PROJECT_DIR$/customermanager/views.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="371">
-              <caret line="40" column="0" lean-forward="true" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+              <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
+                <marker date="1548143789009" expanded="true" signature="172:1895" ph="..." />
+                <marker date="1548143789009" expanded="true" signature="321:1895" ph="..." />
+                <marker date="1548143789009" expanded="true" signature="381:432" ph="..." />
+                <marker date="1548143789009" expanded="true" signature="1688:1895" ph="..." />
               </folding>
             </state>
           </provider>
@@ -65,9 +69,11 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Commodity/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="18" column="9" lean-forward="true" selection-start-line="18" selection-start-column="9" selection-end-line="18" selection-end-column="9" />
-              <folding />
+            <state relative-caret-position="1288">
+              <caret line="59" column="9" lean-forward="false" selection-start-line="59" selection-start-column="9" selection-end-line="59" selection-end-column="9" />
+              <folding>
+                <marker date="1548143788995" expanded="true" signature="164:166" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -84,11 +90,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="menu.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="menu.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/security/templates/security/menu.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1932">
-              <caret line="273" column="0" lean-forward="true" selection-start-line="273" selection-start-column="0" selection-end-line="273" selection-end-column="0" />
+              <caret line="273" column="0" lean-forward="false" selection-start-line="273" selection-start-column="0" selection-end-line="273" selection-end-column="0" />
               <folding>
                 <marker date="1548129260589" expanded="false" signature="11621:11646" ph="..." />
                 <marker date="1548129260589" expanded="false" signature="11719:11758" ph="..." />
@@ -146,24 +152,34 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="0026_auto_20190122_1552.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Models/migrations/0026_auto_20190122_1552.py">
+      <file leaf-file-name="0026_auto_20190122_1302.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Models/migrations/0026_auto_20190122_1302.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-549">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="205">
+              <caret line="23" column="71" lean-forward="true" selection-start-line="23" selection-start-column="31" selection-end-line="23" selection-end-column="71" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Models/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="800">
-              <caret line="308" column="53" lean-forward="true" selection-start-line="308" selection-start-column="53" selection-end-line="308" selection-end-column="53" />
+            <state relative-caret-position="223">
+              <caret line="328" column="53" lean-forward="false" selection-start-line="328" selection-start-column="53" selection-end-line="328" selection-end-column="53" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="0027_auto_20190122_1311.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Models/migrations/0027_auto_20190122_1311.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1035">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -230,6 +246,7 @@
         <option value="$PROJECT_DIR$/aliyun/urls.py" />
         <option value="$PROJECT_DIR$/security/templates/security/menu.html" />
         <option value="$PROJECT_DIR$/Models/models.py" />
+        <option value="$PROJECT_DIR$/Models/migrations/0026_auto_20190122_1302.py" />
       </list>
     </option>
   </component>
@@ -663,7 +680,7 @@
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="运行" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3295583" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24575311" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -690,8 +707,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/login/templates/login/login1.html" />
-    <entry file="file://$PROJECT_DIR$/static/images/sl1.png" />
     <entry file="file://$PROJECT_DIR$/commonstatic/assets/scripts/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-9443">
@@ -1124,18 +1139,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Commodity/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="18" column="9" lean-forward="true" selection-start-line="18" selection-start-column="9" selection-end-line="18" selection-end-column="9" />
-          <folding />
+        <state relative-caret-position="1288">
+          <caret line="59" column="9" lean-forward="false" selection-start-line="59" selection-start-column="9" selection-end-line="59" selection-end-column="9" />
+          <folding>
+            <marker date="1548143788995" expanded="true" signature="164:166" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/customermanager/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="371">
-          <caret line="40" column="0" lean-forward="true" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+          <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
+            <marker date="1548143789009" expanded="true" signature="172:1895" ph="..." />
+            <marker date="1548143789009" expanded="true" signature="321:1895" ph="..." />
+            <marker date="1548143789009" expanded="true" signature="381:432" ph="..." />
+            <marker date="1548143789009" expanded="true" signature="1688:1895" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1214,10 +1235,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Models/migrations/0027_auto_20190122_1311.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1035">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Models/migrations/0026_auto_20190122_1302.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="23" column="71" lean-forward="true" selection-start-line="23" selection-start-column="31" selection-end-line="23" selection-end-column="71" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Models/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="223">
+          <caret line="328" column="53" lean-forward="false" selection-start-line="328" selection-start-column="53" selection-end-line="328" selection-end-column="53" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Models/migrations/0026_auto_20190122_1552.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="24" column="67" lean-forward="true" selection-start-line="24" selection-start-column="39" selection-end-line="24" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/security/templates/security/menu.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1932">
-          <caret line="273" column="0" lean-forward="true" selection-start-line="273" selection-start-column="0" selection-end-line="273" selection-end-column="0" />
+          <caret line="273" column="0" lean-forward="false" selection-start-line="273" selection-start-column="0" selection-end-line="273" selection-end-column="0" />
           <folding>
             <marker date="1548129260589" expanded="false" signature="11621:11646" ph="..." />
             <marker date="1548129260589" expanded="false" signature="11719:11758" ph="..." />
@@ -1270,24 +1325,6 @@
             <marker date="1548129260589" expanded="false" signature="17351:17370" ph="..." />
             <marker date="1548129260589" expanded="false" signature="17435:17460" ph="..." />
             <marker date="1548129260589" expanded="false" signature="17531:17542" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Models/migrations/0026_auto_20190122_1552.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-549">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Models/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="800">
-          <caret line="308" column="53" lean-forward="true" selection-start-line="308" selection-start-column="53" selection-end-line="308" selection-end-column="53" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
           </folding>
         </state>
       </provider>

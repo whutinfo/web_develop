@@ -165,7 +165,7 @@ class GoodsCat(models.Model):
 
 #销售商   wangyu add
 class Seller(models.Model):
-    name = models.TextField(blank=True, null=True)
+
     Sellername = models.CharField(db_column='SellerName',max_length=10) # Field name made lowercase.
     Sellerphone = models.CharField(max_length=50) #商户名称
     Sellerproperty = models.CharField(max_length=64)#商户属性
@@ -262,7 +262,7 @@ class Approval(models.Model):
 '''商品出入库'''
 
 class StockIn(models.Model):
-    stockin_id = models.AutoField(primary_key=True)
+    stockin_id = models.IntegerField(null=True)
     goods = models.ForeignKey(Goods,db_column='goodsId',on_delete=models.CASCADE, null=True, related_name='goods_in')  # Field name made lowercase.
     goods_sn = models.CharField(db_column='goodsSn', max_length=100)  # Field name made lowercase.
     cat = models.ForeignKey(GoodsCat,db_column='catId',on_delete=models.CASCADE, null=True, related_name='goodsCat_in')  # Field name made lowercase.
@@ -280,7 +280,7 @@ class StockIn(models.Model):
 
 
 class StockOut(models.Model):
-    stockout_id = models.AutoField(primary_key=True) # Field name made lowercase.
+    stockout_id = models.IntegerField(null=True)
     goods = models.ForeignKey(Goods,db_column='goodsId',on_delete=models.CASCADE, null=True, related_name='goods_out')  # Field name made lowercase.
     goods_sn = models.CharField(db_column='goodsSn', max_length=100)   # Field name made lowercase.
     cat = models.ForeignKey(GoodsCat,db_column='catId',on_delete=models.CASCADE, null=True, related_name='goodsCat_out')  # Field name made lowercase.
@@ -297,9 +297,29 @@ class StockOut(models.Model):
         db_table = 'StockOut_Table'
 
 
+class GoodsInfo(models.Model):
+    stockin = models.ForeignKey(StockIn,db_column='stockIn_id',on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    goods = models.ForeignKey(Goods,db_column='goodsId',on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    cat = models.ForeignKey(GoodsCat,db_column='catId',on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    goods_sn = models.CharField(db_column='goodsSn', max_length=100) # Field name made lowercase.
+    goods_stock = models.IntegerField(db_column='goodsStock',null=True)  # Field name made lowercase.
+    sale_count = models.IntegerField(db_column='saleCount', null=True)  # Field name made lowercase.
+    cost = models.FloatField(null=True)
+    price = models.FloatField(null=True)
+    exp_date = models.DateTimeField(null=True)
+    manufactor = models.ForeignKey(Manufactor,db_column='manufactorId',on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    supplier = models.ForeignKey(Supplier,db_column='supplierId',on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    seller = models.ForeignKey(Seller,db_column='sellerId',on_delete=models.CASCADE, null=True)  # Field name made lowercase.
+    out_time = models.DateTimeField(null=True)
+    value3 = models.TextField(blank=True, null=True)  #留以备用的列
+    value4 = models.TextField(blank=True, null=True)
+
+    class Meta:
+     #   managed = False
+        db_table = 'GoodsInfo_Table'
 
 #客户管理
-class Customermanager(models.Model):
+class Customer(models.Model):
     name = models.CharField(max_length=50)
     birthday = models.TextField(blank=True, null=True)
     sex = models.CharField(max_length=50)
@@ -311,7 +331,7 @@ class Customermanager(models.Model):
 
     class Meta:
       #  managed = False
-        db_table = 'Customermanager'
+        db_table = 'Customer_Table'
 
 
 

@@ -53,7 +53,7 @@
          function LoadDg1() {
              var datajson = [];
              var parm = 'action=LoadData';
-             getAjax("In.ashx", parm, function (backstring) {
+             getAjax("/stockIn/", parm, function (backstring) {
                  if (backstring != "") {
                      datajson = jQuery.parseJSON(backstring);
                  }
@@ -102,7 +102,7 @@
          ////自动生成编号
          function CreateId() {
              var parm = 'action=CreateStockInId';
-             getAjax("In.ashx", parm, function (backstring) {
+             getAjax("/stockIn/", parm, function (backstring) {
                  if (backstring != "") {
                      $("#dlg1_2_txt_1").textbox('setValue', backstring);
                  }
@@ -113,16 +113,16 @@
          function LoadName() {
              var datajson = [];
              var parm = 'action=LoadGoodsName';
-             getAjax("In.ashx", parm, function (backstring) {
+             getAjax("/stockIn/", parm, function (backstring) {
                  if (backstring != "") {
-                     datajson = eval("(" + backstring + ")");
+                     datajson = jQuery.parseJSON(backstring);
                  }
              })
 
              $('#dlg1_2_txt_2').combobox({
                  data: datajson,
-                 valueField: 'type',
-                 textField: 'title',
+                 valueField: 'id',
+                 textField: 'name',
                  showItemIcon: true,
              })
          }
@@ -131,16 +131,16 @@
          function LoadCat() {
              var datajson = [];
              var parm = 'action=LoadGoodsCat';
-             getAjax("In.ashx", parm, function (backstring) {
+             getAjax("/stockIn/", parm, function (backstring) {
                  if (backstring != "") {
-                     datajson = eval("(" + backstring + ")");
+                     datajson = jQuery.parseJSON(backstring);
                  }
              })
 
              $('#dlg1_2_txt_3').combobox({
                  data: datajson,
-                 valueField: 'type',
-                 textField: 'title',
+                 valueField: 'id',
+                 textField: 'name',
                  showItemIcon: true,
              })
          }
@@ -148,17 +148,17 @@
          ///////选择商户名称
          function LoadShangHu() {
              var datajson = [];
-             var parm = 'action=LoadShangHu';
-             getAjax("In.ashx", parm, function (backstring) {
+             var parm = 'action=LoadSeller';
+             getAjax("/stockIn/", parm, function (backstring) {
                  if (backstring != "") {
-                     datajson = eval("(" + backstring + ")");
+                     datajson = jQuery.parseJSON(backstring);
                  }
              })
 
              $('#dlg1_2_txt_8').combobox({
                  data: datajson,
-                 valueField: 'type',
-                 textField: 'title',
+                 valueField: 'id',
+                 textField: 'name',
                  showItemIcon: true,
              })
          }
@@ -167,16 +167,16 @@
          function LoadManufactor() {
              var datajson = [];
              var parm = 'action=LoadManufactor';
-             getAjax("In.ashx", parm, function (backstring) {
+             getAjax("/stockIn/", parm, function (backstring) {
                  if (backstring != "") {
-                     datajson = eval("(" + backstring + ")");
+                     datajson = jQuery.parseJSON(backstring);
                  }
              })
 
              $('#dlg1_2_txt_9').combobox({
                  data: datajson,
-                 valueField: 'type',
-                 textField: 'title',
+                 valueField: 'id',
+                 textField: 'name',
                  showItemIcon: true,
              })
          }
@@ -185,16 +185,16 @@
          function LoadSupplier() {
              var datajson = [];
              var parm = 'action=LoadSupplier';
-             getAjax("In.ashx", parm, function (backstring) {
+             getAjax("/stockIn/", parm, function (backstring) {
                  if (backstring != "") {
-                     datajson = eval("(" + backstring + ")");
+                     datajson = jQuery.parseJSON(backstring);
                  }
              })
 
              $('#dlg1_2_txt_10').combobox({
                  data: datajson,
-                 valueField: 'type',
-                 textField: 'title',
+                 valueField: 'id',
+                 textField: 'name',
                  showItemIcon: true,
              })
          }
@@ -204,7 +204,7 @@
          function save() {
 
              var stockIn_id = $("#dlg1_2_txt_1").textbox('getValue');//编号
-             var name = $("#dlg1_2_txt_2").combobox('getValues');// 名称   //获得的都是type而不是title
+             var goods_id = $("#dlg1_2_txt_2").combobox('getValues');// 名称   //获得的都是id
              var type = $("#dlg1_2_txt_3").combobox('getValues');//类型
              var rfid = $("#dlg1_2_txt_4").textbox('getValue');//条形码
              var amount = $("#dlg1_2_txt_5").textbox('getValue');//入库数量
@@ -214,9 +214,9 @@
              var mfrs = $("#dlg1_2_txt_9").combobox('getValues');//生产厂家
              var supplier = $("#dlg1_2_txt_10").combobox('getValues');//供货商
 
-             var parm = 'action=Save&stockIn_id=' + stockIn_id + '&name=' + name + '&type=' + type + '&rfid=' + rfid + '&amount=' + amount + '&cost=' + cost + '&exp_date=' + exp_date + '&seller=' + seller + '&mfrs=' + mfrs + '&supplier=' + supplier;
-             getAjax("In.ashx", parm, function (data) {
-                 var backstring = eval("(" + data + ")");
+             var parm = 'action=Save&stockIn_id=' + stockIn_id + '&goods_id=' + goods_id + '&cat=' + type + '&rfid=' + rfid + '&amount=' + amount + '&cost=' + cost + '&exp_date=' + exp_date + '&seller=' + seller + '&mfrs=' + mfrs + '&supplier=' + supplier;
+             getAjax("/stockIn/", parm, function (data) {
+                 var backstring = data;
                  if (backstring == "1") {
                      $('#dlg1_2').dialog('close');
 
