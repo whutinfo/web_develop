@@ -9,7 +9,9 @@ def stockIn(request):
 		return render(request,'Commodity/stockIn.html')
 	else:
 		action = request.POST.get('action')
-		pass
+		if action == 'LoadData':
+			pass
+
 
 def stockOut(request):
 	if request.method == 'GET':

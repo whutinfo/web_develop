@@ -264,12 +264,14 @@
             var menu_show = $('#info42').combobox('getValue');
             var menu_img = $('#info72').textbox('getText');
             var menu_describe = $('#info82').textbox('getText');
-            var menu_remark = $('#info92').textbox('getText');
+          //  var menu_remark = $('#info92').textbox('getText');
 
             var dataJson3;
-            var parm = "action=editMenu&menu_name=" + menu_name + "&menu_url=" + menu_url + "&menu_show=" + menu_show + "&menu_img=" + menu_img + "&menu_describe=" + menu_describe + "&menu_remark=" + menu_remark + "&menu_id=" + menu_id;
+
+            var parm = "action=editMenu&menu_name=" + menu_name + "&menu_url=" + menu_url + "&menu_show=" + menu_show + "&menu_img=" + menu_img + "&menu_describe=" + menu_describe +  "&menu_id=" + menu_id;
             getAjax("/menu/", parm, function (data) {
-                dataJson3 = jQuery.parseJSON(data);
+                dataJson3 =  data ;
+
             })
 
                 var content = "";
