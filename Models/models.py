@@ -211,8 +211,6 @@ class SellerPorprety(models.Model):
 
 
 '''工单管理'''
-
-
 # 基础表
 class Base(models.Model):
     title = models.CharField(max_length=64)
@@ -257,3 +255,40 @@ class Approval(models.Model):
     class Meta:
         managed = False
         db_table = 'Approval_Table'
+
+'''商品出入库'''
+
+class StockIn(models.Model):
+    stockin_id = models.AutoField(primary_key=True)
+    goods = models.ForeignKey(Goods,db_column='goodsId',on_delete=models.CASCADE, null=True, related_name='goods_in')  # Field name made lowercase.
+    goods_sn = models.CharField(db_column='goodsSn', max_length=100)  # Field name made lowercase.
+    cat = models.ForeignKey(GoodsCat,db_column='catId',on_delete=models.CASCADE, null=True, related_name='goodsCat_in')  # Field name made lowercase.
+    in_amount = models.IntegerField(db_column='inAmount', blank=True, null=True)  # Field name made lowercase.
+    cost = models.FloatField(null=True)
+    performer = models.ForeignKey(User,on_delete=models.CASCADE, null=True, related_name='user_stockIn')
+    in_time = models.DateTimeField(default=timezone.now)
+    seller = models.ForeignKey(Seller,db_column='sellerId',on_delete=models.CASCADE, null=True, related_name='seller_stockIn')  # Field name made lowercase.
+    manufactor = models.ForeignKey(Manufactor,db_column='manufactorId',on_delete=models.CASCADE, null=True, related_name='manufactor_stockIn')  # Field name made lowercase.
+    supplier = models.ForeignKey(Supplier,db_column='supplierId', on_delete=models.CASCADE, null=True, related_name='supplier_stockIn')  # Field name made lowercase.
+
+    class Meta:
+      #  managed = False
+        db_table = 'StockIn_Table'
+
+
+class StockOut(models.Model):
+    stockout_id = models.AutoField(primary_key=True) # Field name made lowercase.
+    goods = models.ForeignKey(Goods,db_column='goodsId',on_delete=models.CASCADE, null=True, related_name='goods_out')  # Field name made lowercase.
+    goods_sn = models.CharField(db_column='goodsSn', max_length=100)   # Field name made lowercase.
+    cat = models.ForeignKey(GoodsCat,db_column='catId',on_delete=models.CASCADE, null=True, related_name='goodsCat_out')  # Field name made lowercase.
+    outamount = models.IntegerField(db_column='outAmount', blank=True, null=True)  # Field name made lowercase.
+    price = models.FloatField(null=True)
+    performer = models.ForeignKey(User,on_delete=models.CASCADE, null=True, related_name='user_stockOut')
+    out_time = models.DateTimeField(default=timezone.now)
+    seller = models.ForeignKey(Seller,db_column='sellerId',on_delete=models.CASCADE, null=True, related_name='seller_stockOut')   # Field name made lowercase.
+    customer_phone = models.CharField(db_column='KHPhone', max_length=100)  # Field name made lowercase.
+    customer_name = models.CharField(db_column='KeHuName',max_length=50)  # Field name made lowercase.
+
+    class Meta:
+      #  managed = False
+        db_table = 'StockOut_Table'
