@@ -55,7 +55,7 @@
      function LoadDg1() {
          var datajson = [];
          var parm = 'action=LoadData';
-         getAjax("Index.ashx", parm, function (backstring) {
+         getAjax("/commodity/", parm, function (backstring) {
              if (backstring != "") {
                  datajson = eval("(" + backstring + ")");
              }

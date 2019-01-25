@@ -150,7 +150,7 @@ urlpatterns = [
     #商品管理 出入库
     path('stockIn/', com_v.stockIn),
     path('stockOut/', com_v.stockOut),
-    path('commodity/', com_v.Load_Commodity),
+    path('commodity/', com_v.load_commodity),
     #客户管理
     path('customermanager/', cv.customermanager),
 #测试用
