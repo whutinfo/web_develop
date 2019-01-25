@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from Models import models
 import json
-
+from Base.views import get_checkbox,get_columns
 
 def goods(request):
     goods=[]
@@ -79,7 +79,19 @@ def manufactor(request):
             models.Manufactor.objects.create(name=add_name,phone=add_phone,manager=add_manager,address=add_address)
             back = 1
             return HttpResponse(back)
-
+        elif action == 'columns':
+            query = [{'field': 'value1', 'title': '生产厂商名称', 'width': '18%', 'align': 'center'},
+                     {'field': 'value2', 'title': '负责人姓名', 'width': '10%', 'align': 'center'},
+                     {'field': 'value3', 'title': '负责人手机号', 'width': "12%", 'align': 'center'},
+                     {'field': 'value4', 'title': '联系地址', 'width': "20%", 'align': 'center'}]  #假如从数据库读取的数据是这样的格式
+            value = get_checkbox('datagrid')
+            for row in query:
+                field_name = row['field']
+                column_name = row['title']
+                width = row['width']
+                align = row['align']
+                value = get_columns(value, field=field_name, title=column_name, width=width, align=align)
+            return HttpResponse(json.dumps(value))
 
 def supplier(request):
     action=request.POST.get('action')

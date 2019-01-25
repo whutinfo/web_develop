@@ -23,7 +23,7 @@
              var datajson = [];
              var columns_json = [];
              var parm = 'action=columns';
-             getAjax("/base/", parm, function (backstring) {
+             getAjax("/manufactor/", parm, function (backstring) {
                  if (backstring != "") {
                      columns_json = jQuery.parseJSON(backstring);
                  }
