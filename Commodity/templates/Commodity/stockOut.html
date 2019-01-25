@@ -54,9 +54,9 @@
          function LoadDg1() {
              var datajson = [];
              var parm = 'action=LoadData';
-             getAjax("Out.ashx", parm, function (backstring) {
+             getAjax("/stockOut/", parm, function (backstring) {
                  if (backstring != "") {
-                     datajson = eval("(" + backstring + ")");
+                     datajson = jQuery.parseJSON(backstring);
                  }
              })
              $("#dg1").datagrid('loadData', datajson);//加载本地数据，旧的行将被移除
@@ -70,9 +70,9 @@
              var datajson = [];
              $.messager.prompt('提示信息', '请输入条形码：', function (r) {
                  var parm = 'action=SearchRfid&rfid='+r;
-                 getAjax("Out.ashx", parm, function (backstring){
-                     if (backstring != "") {
-                         datajson = eval("(" + backstring + ")");
+                 getAjax("/stockOut/", parm, function (backstring){
+                     datajson = jQuery.parseJSON(backstring);
+                     if (datajson != "") {
 
                          $('#dlg1_2').show();
                          $('#dlg1_2').dialog({
@@ -92,7 +92,7 @@
                                  $("#dlg1_2_txt_5").textbox('setValue', datajson[0].exp_date);//保质期限
                                  $("#dlg1_2_txt_6").textbox('setValue', "");//出库数量
                                  $("#dlg1_2_txt_7").textbox('setValue', "");//出库总价
-                                 $("#dlg1_2_txt_8").textbox('setValue', datajson[0].shop);//进库商户
+                                 $("#dlg1_2_txt_8").textbox('setValue', datajson[0].seller);//进库商户
                                  $("#dlg1_2_txt_9").textbox('setValue',"");//出库客户手机号
                              },
                              onClose: function () {
@@ -113,7 +113,7 @@
          ////自动生成编号
          function CreateId() {
              var parm = 'action=CreateStockOutId';
-             getAjax("Out.ashx", parm, function (backstring) {
+             getAjax("/stockOut/", parm, function (backstring) {
                  if (backstring != "") {
                      $("#dlg1_2_txt_1").textbox('setValue', backstring);
                  }
@@ -126,8 +126,8 @@
              var customerName = "";
 
              var stockOut_id = $("#dlg1_2_txt_1").textbox('getValue');//编号
-             var name = $("#dlg1_2_txt_2").textbox('getValue');// 名称
-             var type = $("#dlg1_2_txt_3").textbox('getValue');//类型
+             var goods_id = $("#dlg1_2_txt_2").textbox('getValue');// 名称
+             var cat = $("#dlg1_2_txt_3").textbox('getValue');//类型
              var rfid = $("#dlg1_2_txt_4").textbox('getValue');//条形码
              var exp_date = $("#dlg1_2_txt_5").textbox('getValue');//保质期限
              var amount = $("#dlg1_2_txt_6").textbox('getValue');//出库数量
@@ -136,8 +136,8 @@
              var customer = $("#dlg1_2_txt_9").textbox('getValue');//客户手机号
           /////是否存在该客户
              var parm = 'action=SearchPhone&phone='+customer;
-             getAjax("Out.ashx", parm, function (backstring) {
-                 var data1 = backstring ;
+             getAjax("/stockOut/", parm, function (backstring) {
+                 var data1 = backstring;
                  if (data1 != "") {
                      customerName = data1;
                  }
@@ -146,8 +146,8 @@
                      alert("不存在该客户");
                  }
 
-                 parm = 'action=Save&stockOut_id=' + stockOut_id + '&name=' + name + '&type=' + type + '&rfid=' + rfid + '&amount=' + amount + '&price=' + price + '&exp_date=' + exp_date + '&seller=' + seller + '&CusPhone=' + customer + '&customer=' + customerName;
-                 getAjax("Out.ashx", parm, function (data) {
+                 parm = 'action=Save&stockOut_id=' + stockOut_id + '&goods_id=' + goods_id + '&cat=' + cat + '&rfid=' + rfid + '&amount=' + amount + '&price=' + price + '&exp_date=' + exp_date + '&seller=' + seller + '&CusPhone=' + customer + '&customer=' + customerName;
+                 getAjax("/stockOut/", parm, function (data) {
                      var backdata = eval("(" + data + ")");
                      if (backdata == "1") {
                          $('#dlg1_2').dialog('close');

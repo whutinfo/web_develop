@@ -205,7 +205,7 @@
 
              var stockIn_id = $("#dlg1_2_txt_1").textbox('getValue');//编号
              var goods_id = $("#dlg1_2_txt_2").combobox('getValues');// 名称   //获得的都是id
-             var type = $("#dlg1_2_txt_3").combobox('getValues');//类型
+             var cat = $("#dlg1_2_txt_3").combobox('getValues');//类型
              var rfid = $("#dlg1_2_txt_4").textbox('getValue');//条形码
              var amount = $("#dlg1_2_txt_5").textbox('getValue');//入库数量
              var cost = $("#dlg1_2_txt_6").textbox('getValue');//进货总价
@@ -214,7 +214,7 @@
              var mfrs = $("#dlg1_2_txt_9").combobox('getValues');//生产厂家
              var supplier = $("#dlg1_2_txt_10").combobox('getValues');//供货商
 
-             var parm = 'action=Save&stockIn_id=' + stockIn_id + '&goods_id=' + goods_id + '&cat=' + type + '&rfid=' + rfid + '&amount=' + amount + '&cost=' + cost + '&exp_date=' + exp_date + '&seller=' + seller + '&mfrs=' + mfrs + '&supplier=' + supplier;
+             var parm = 'action=Save&stockIn_id=' + stockIn_id + '&goods_id=' + goods_id + '&cat=' + cat + '&rfid=' + rfid + '&amount=' + amount + '&cost=' + cost + '&exp_date=' + exp_date + '&seller=' + seller + '&mfrs=' + mfrs + '&supplier=' + supplier;
              getAjax("/stockIn/", parm, function (data) {
                  var backstring = data;
                  if (backstring == "1") {

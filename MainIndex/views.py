@@ -32,11 +32,11 @@ def frame(request):# request  接收的请求
                 for menu in menus:
                     user_role_menu_get.append(menu.menu_id)#将菜单名添加进列表
             # 2、根据user_id，查出其所有用户权限所拥有的菜单列表
-            users=models.User.objects.get(user_id=user_id)
-            #if users.count():
-            menus=users.menus.filter(menu_show=1)
-            for menu in menus:
-                user_role_menu_get.append(menu.menu_id)
+            users = models.User.objects.filter(user_id=user_id)
+            if users.count() != 0:
+                menus = users.first().menus.filter(menu_show=1)
+                for menu in menus:
+                    user_role_menu_get.append(menu.menu_id)
             user_role_menu = list(set(user_role_menu_get))  # 去重
             user_role_menu.sort(key=user_role_menu_get.index)  # 按原来排序，此时将user对应的所有的role的角色权限菜单已全部以列表形式获取
             menu_dict = {'menu_id': '', 'menu_name': '', 'menu_describe': '', 'menu_url': '', 'menu_img': '',

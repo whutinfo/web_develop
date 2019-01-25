@@ -284,7 +284,7 @@ class StockOut(models.Model):
     goods = models.ForeignKey(Goods,db_column='goodsId',on_delete=models.CASCADE, null=True, related_name='goods_out')  # Field name made lowercase.
     goods_sn = models.CharField(db_column='goodsSn', max_length=100)   # Field name made lowercase.
     cat = models.ForeignKey(GoodsCat,db_column='catId',on_delete=models.CASCADE, null=True, related_name='goodsCat_out')  # Field name made lowercase.
-    outamount = models.IntegerField(db_column='outAmount', blank=True, null=True)  # Field name made lowercase.
+    out_amount = models.IntegerField(db_column='outAmount', blank=True, null=True)  # Field name made lowercase.
     price = models.FloatField(null=True)
     performer = models.ForeignKey(User,on_delete=models.CASCADE, null=True, related_name='user_stockOut')
     out_time = models.DateTimeField(default=timezone.now)
@@ -325,7 +325,7 @@ class Customer(models.Model):
     sex = models.CharField(max_length=50)
     phone = models.CharField(max_length=50)
     carid = models.TextField(db_column='carId', blank=True, null=True)  # Field name made lowercase.
-    point = models.CharField(max_length=50)
+    point = models.IntegerField(null=True)
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
 

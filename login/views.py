@@ -37,6 +37,7 @@ def login(request):
             # print('提交')   这种会在下面的运行里进行打印，平时测试方便
             request.session["Login_UserId"] = id
             uid=request.session.get("Login_UserId")
+
             Msg='3'
             # 表单形式提交才可以用重定向这种方式直接跳转url
             # ajax用redirect是没有用的，只能返回字符串，所以需要在html中用location.href的方式写跳转
@@ -113,6 +114,7 @@ def index(request):
     # models.Access.objects.create(access_name='打印')
     # models.Access.objects.create(access_name='预览')
     # models.Access.objects.create(access_name='导出')
+    print(request.session.exists("session_key"))
     s = models.Goods.objects.all()
     querys = models.Goods.objects.all().extra({'id': 'id','name':'goodsname'}).values('id','name')  #给字段起别名，必须写上values，不然并没有成功
     for row in querys:
