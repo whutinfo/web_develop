@@ -62,7 +62,6 @@ def manufactor(request):
             Manufactor_list = models.Manufactor.objects.all()
             value = {'value1': '','value2':'','value3':'','value4':''}  # 用字典和列表拼接很方便形成Json格式
             for row in Manufactor_list:
-                print(row.name,row.address,row.manager,row.phone)
                 value['value1'] = row.name
                 value['value2'] = row.manager
                 value['value3'] = row.phone

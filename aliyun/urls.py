@@ -121,6 +121,7 @@ from security import views as sec_v
 from WorkOrder import views as work
 from Commodity import views as com_v
 from customermanager import views as cv
+from Base import views as base
 
 urlpatterns = [
     #path('admin/', admin.site.urls),
@@ -128,6 +129,10 @@ urlpatterns = [
     path('login/',lv.login),
     path('mainIndex/', mv.frame),
     path('home/',mv.home),
+
+    #单页面的基础框架
+    path('base/',base.Base),
+
         #安全管理
     path('user/', sec_v.userControl),
     path('role/', sec_v.roleControl),
