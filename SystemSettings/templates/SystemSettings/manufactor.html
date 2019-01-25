@@ -13,7 +13,7 @@
 </head>
      <script>
          $(document).ready(function () {
-             InitDg1();
+             //InitDg1();
              LoadDg1();//一开始就加载所有
 
          })
@@ -186,7 +186,17 @@
            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" onclick="ShowDlg1_1();">查看详情</a>
 
          </div>
-         <table id="dg1" class="easyui-datagrid" style="width: 99%; height: 95%">
+         <table id="dg1" title="生产厂商信息" class="easyui-datagrid" data-options="" style="width: 99%; height: 95%;"
+            showFooter="true" pagination="true" singleSelect="true" selectOnCheck="true">
+              <thead>
+                <tr>
+                    <th data-options="field:'ck',checkbox:true"></th>
+                    {% for i in info_dict %}
+                    <th field={{ i.field }} width={{ i.width }}>{{ i.title }}</th>
+                    {% endfor %}
+
+                </tr>
+              </thead>
          </table>
 
     <!--查看生产厂商详情-->
