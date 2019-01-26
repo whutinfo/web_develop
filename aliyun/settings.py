@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'security',
     'WorkOrder',
     'customermanager',
+    'Base',
 ]
 
 

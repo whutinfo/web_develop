@@ -2,6 +2,70 @@ from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from Models import models
 import json
+from Base.views import get_checkbox,get_columns
+
+
+'''
+拼接前端表格的column数据
+'''
+def json_frame_construct(*var):# <class 'tuple'>: ([4, '生产厂商名称', '负责人姓名', '负责人手机号', '联系地址'],)
+    #var = []
+    column = []
+    var_list = var[0] #该元组只有一组数组
+    cnt = var_list[0] #参数个数
+    json_frame = {}
+    for i in range(1,len(var_list)):
+        title = var_list[i]
+        width = 18  #这个地方因为for循环导致每一次被固定18了
+        width = str(width) + "%"
+        align = 'center' #同width
+        value = 'value'+str(i)
+        json_frame={'field': value, 'title': title, 'width':width, 'align': align}
+        column.append(json_frame.copy())
+    # [
+    #     {'field': 'value1', 'title': '生产厂商名称', 'width': '18%', 'align': 'center'},
+    #     {'field': 'value2', 'title': '负责人姓名', 'width': '10%', 'align': 'center'},
+    #     {'field': 'value3', 'title': '负责人手机号', 'width': "12%", 'align': 'center'},
+    #     {'field': 'value4', 'title': '联系地址', 'width': "20%", 'align': 'center'}]
+
+    #construct json
+    return column
+
+
+'''
+base_fun_get_demo : 实现对某个表中的特定字段，将其注释内容返回  即中文列名
+形参：table  是特定表的字段
+返回值：字段的注释内容，返回类型为字符串类型
+'''
+def base_fun_get_demo(table):  # table= models.GoodsCat
+  #  return str.demo  # 字段的注释
+    #目前还不会返回字段注释
+    return table.name,table.manager,table.phone,table.address
+
+
+'''
+ 针对页面的get命令进行处理
+ '''
+def get_4_column():
+    # 列的数量
+    columcnt = 4
+    # 列的名字
+    comment = []
+    model_name = models.Manufactor
+    '''目前做不了直接获取这个表对象的所有列名  没有用base_fun_get_demo'''
+    #for i in range(columcnt):
+       # comment[i] = base_fun_get_demo(model_name)
+    comment.append(columcnt)
+    comment.append('生产厂商名称')
+    comment.append('负责人姓名')
+    comment.append('负责人手机号')
+    comment.append('联系地址')
+    #<class 'list'>: [4,'生产厂商名称', '负责人姓名', '负责人手机号', '联系地址']
+    # 构建列的HTML命令
+    # comment + head_pre ......
+    j_str = json_frame_construct(comment)
+    # 获得json数据
+    return j_str
 
 
 def goods(request):
@@ -55,14 +119,15 @@ def goodsCat(request):
 def manufactor(request):
     action=request.POST.get('action')
     if request.method=='GET':
-        return render(request,'SystemSettings/manufactor.html')
+        column = get_4_column()
+        return render(request, 'SystemSettings/manufactor.html', {'info_dict': column})
+       # return render(request,'SystemSettings/manufactor.html')
     else:
         manufactor=[]
         if action == 'Load':
             Manufactor_list = models.Manufactor.objects.all()
             value = {'value1': '','value2':'','value3':'','value4':''}  # 用字典和列表拼接很方便形成Json格式
             for row in Manufactor_list:
-                print(row.name,row.address,row.manager,row.phone)
                 value['value1'] = row.name
                 value['value2'] = row.manager
                 value['value3'] = row.phone
@@ -80,7 +145,8 @@ def manufactor(request):
             models.Manufactor.objects.create(name=add_name,phone=add_phone,manager=add_manager,address=add_address)
             back = 1
             return HttpResponse(back)
-
+       # elif action == 'columns':
+            pass
 
 def supplier(request):
     action=request.POST.get('action')

@@ -13,7 +13,7 @@
 </head>
      <script>
          $(document).ready(function () {
-             InitDg1();
+             //InitDg1();
              LoadDg1();//一开始就加载所有
 
          })
@@ -21,18 +21,25 @@
          //////////////////***************生产厂商信息 初始化 + 加载 *************///////////////////////////
          function InitDg1() {
              var datajson = [];
-
+             var columns_json = [];
+             var parm = 'action=columns';
+             getAjax("/manufactor/", parm, function (backstring) {
+                 if (backstring != "") {
+                     columns_json = jQuery.parseJSON(backstring);
+                 }
+             })
              $("#dg1").datagrid({
                  data: datajson,
                  title: '生产厂商信息',
-                 columns: [[
+                /* columns: [[
                       { field: 'CK', title: '', checkbox: true, width: "5%" },
                       { field: 'value1', title: '生产厂商名称', width: "18%", align: 'center' },
                       { field: 'value2', title: '负责人姓名', width: "10%", align: 'center' },
                       { field: 'value3', title: '负责人手机号', width: "12%", align: 'center' },
                       { field: 'value4', title: '联系地址', width: "20%", align: 'center' },
 
-                 ]],
+                 ]],*/
+                 columns: [columns_json],  //格式必须是 [[{},{},{}]]  所以json外面还要套一个中括号[]
                  showFooter: true,
                  pagination: true,
                  singleSelect: true,
@@ -179,7 +186,17 @@
            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" onclick="ShowDlg1_1();">查看详情</a>
 
          </div>
-         <table id="dg1" class="easyui-datagrid" style="width: 99%; height: 95%">
+         <table id="dg1" title="生产厂商信息" class="easyui-datagrid" data-options="" style="width: 99%; height: 95%;"
+            showFooter="true" pagination="true" singleSelect="true" selectOnCheck="true">
+              <thead>
+                <tr>
+                    <th data-options="field:'ck',checkbox:true"></th>
+                    {% for i in info_dict %}
+                    <th field={{ i.field }} width={{ i.width }}>{{ i.title }}</th>
+                    {% endfor %}
+
+                </tr>
+              </thead>
          </table>
 
     <!--查看生产厂商详情-->

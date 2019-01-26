@@ -335,5 +335,3 @@ class Customer(models.Model):
 
 
 
-
-

@@ -337,23 +337,7 @@ def load_commodity(request):
 			# 用.copy()就不会跟着改变
 
 			return HttpResponse(json.dumps(load_commodity,cls=DjangoJSONEncoder))  # 将列表转字符串传给前端
-		elif action == 'Save':
-			stockin = request.POST.get('stockin')
-			goods = request.POST.get('goods')
-			cat = request.POST.get('cat')
-			goods_sn = request.POST.get('goods_sn')
-			goods_stock = request.POST.get('goods_stock')
-			sale_count = request.POST.get('sale_count')
-			cost = request.POST.get('cost')
-			price = request.POST.get('price')
-			exp_date = request.POST.get('exp_date')
-			manufactor = request.POST.get('manufactor')
-			supplier = request.POST.get('supplier')
-			seller = request.POST.get('seller')
-			out_time = request.POST.get('out_time')
-			models.Customer.objects.create(stockin=stockin,goods=goods, cat=cat, goods_sn=goods_sn, goods_stock=goods_stock,
-										   sale_count=sale_count, cost=cost, price=price,
-										   exp_date=exp_date,manufactor=manufactor,supplier=supplier,seller=seller,out_time=out_time, )
+
 
 			return HttpResponse(1)
 
