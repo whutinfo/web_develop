@@ -106,9 +106,12 @@ DATABASES = {
         'ENGINE':'django.db.backends.mysql',#'sql_server.pyodbc',django_pyodbc',
         'NAME':'aliyun',
         'HOST':'39.108.107.126',
+        #'HOST':'localhost',
         'PORT':'3306',
         'USER':'user',
         'PASSWORD':'user',
+        # 'USER':'root',
+        # 'PASSWORD':'1234',
         'OPTIONS': {
            'init_command': 'SET sql_mode=STRICT_TRANS_TABLES',
         },

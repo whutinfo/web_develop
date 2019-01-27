@@ -52,7 +52,7 @@
          /***********加载本地生产厂商信息数据****************/
          function LoadDg1() {
              var datajson = [];
-             var parm = 'action=Load';
+             var parm = 'action=LoadData';
              getAjax("/manufactor/", parm, function (backstring) {
                  if (backstring != "") {
                      datajson = jQuery.parseJSON(backstring);
@@ -136,10 +136,10 @@
                          $(this).dialog('center');
                      },
                      onOpen: function () {
-                         $("#dlg1_1_txt_1").textbox('setValue', row_slec.value1);
-                         $("#dlg1_1_txt_2").textbox('setValue', row_slec.value2);
-                         $("#dlg1_1_txt_3").textbox('setValue', row_slec.value3);
-                         $("#dlg1_1_txt_4").textbox('setValue', row_slec.value4);
+                         $("#dlg1_1_txt_1").textbox('setValue', row_slec.name);
+                         $("#dlg1_1_txt_2").textbox('setValue', row_slec.manager);
+                         $("#dlg1_1_txt_3").textbox('setValue', row_slec.phone);
+                         $("#dlg1_1_txt_4").textbox('setValue', row_slec.address);
 
                      },
                      onClose: function () {
@@ -192,7 +192,9 @@
                 <tr>
                     <th data-options="field:'ck',checkbox:true"></th>
                     {% for i in info_dict %}
-                    <th field={{ i.field }} width={{ i.width }}>{{ i.title }}</th>
+                        {% if i.field != 'id' %}
+                            <th field={{ i.field }} width={{ i.width }} align={{ i.align }}>{{ i.title }}</th>
+                        {% endif %}
                     {% endfor %}
 
                 </tr>

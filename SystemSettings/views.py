@@ -2,89 +2,44 @@ from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from Models import models
 import json
-from Base.views import get_checkbox,get_columns
-
-
-'''
-拼接前端表格的column数据
-'''
-def json_frame_construct(*var):# <class 'tuple'>: ([4, '生产厂商名称', '负责人姓名', '负责人手机号', '联系地址'],)
-    #var = []
-    column = []
-    var_list = var[0] #该元组只有一组数组
-    cnt = var_list[0] #参数个数
-    json_frame = {}
-    for i in range(1,len(var_list)):
-        title = var_list[i]
-        width = 18  #这个地方因为for循环导致每一次被固定18了
-        width = str(width) + "%"
-        align = 'center' #同width
-        value = 'value'+str(i)
-        json_frame={'field': value, 'title': title, 'width':width, 'align': align}
-        column.append(json_frame.copy())
-    # [
-    #     {'field': 'value1', 'title': '生产厂商名称', 'width': '18%', 'align': 'center'},
-    #     {'field': 'value2', 'title': '负责人姓名', 'width': '10%', 'align': 'center'},
-    #     {'field': 'value3', 'title': '负责人手机号', 'width': "12%", 'align': 'center'},
-    #     {'field': 'value4', 'title': '联系地址', 'width': "20%", 'align': 'center'}]
-
-    #construct json
-    return column
-
-
-'''
-base_fun_get_demo : 实现对某个表中的特定字段，将其注释内容返回  即中文列名
-形参：table  是特定表的字段
-返回值：字段的注释内容，返回类型为字符串类型
-'''
-def base_fun_get_demo(table):  # table= models.GoodsCat
-  #  return str.demo  # 字段的注释
-    #目前还不会返回字段注释
-    return table.name,table.manager,table.phone,table.address
-
-
-'''
- 针对页面的get命令进行处理
- '''
-def get_4_column():
-    # 列的数量
-    columcnt = 4
-    # 列的名字
-    comment = []
-    model_name = models.Manufactor
-    '''目前做不了直接获取这个表对象的所有列名  没有用base_fun_get_demo'''
-    #for i in range(columcnt):
-       # comment[i] = base_fun_get_demo(model_name)
-    comment.append(columcnt)
-    comment.append('生产厂商名称')
-    comment.append('负责人姓名')
-    comment.append('负责人手机号')
-    comment.append('联系地址')
-    #<class 'list'>: [4,'生产厂商名称', '负责人姓名', '负责人手机号', '联系地址']
-    # 构建列的HTML命令
-    # comment + head_pre ......
-    j_str = json_frame_construct(comment)
-    # 获得json数据
-    return j_str
+from Base.views import *
 
 
 def goods(request):
-    goods=[]
     action = request.POST.get('action')
-    if request.method=='GET':
-        return render(request,'SystemSettings/goods.html')
+    if request.method == 'GET':
+        """  可以改参数的地方  """
+        cnt = 2  #需要获取的列的数量  包括id 按顺序获取
+        width_list = [0,15]   #列的宽度  个数与cnt匹配  顺序对应数据库中列的顺序  id不展示，但会获取，赋0
+        align_list = ['center']*cnt  #对齐格式 个数与cnt匹配   顺序对应数据库中列的顺序  id不展示，但会获取
+        model_name = models.Goods   #想要展示的表的Model对象
+        """  可以改参数的地方  """
+
+        column = get_cnt_column(cnt,width_list,align_list,model_name)
+        return render(request, 'SystemSettings/goods.html', {'info_dict': column})
+
     else:
-        if action=='Load':
-            goods_list=models.Goods.objects.all()
-            value={'value1':''}  #用字典和列表拼接很方便形成Json格式
+        """  可以改参数的地方  """
+        model_name = models.Goods  # 想要展示的表的Model对象
+        """  可以改参数的地方  """
+
+        if action=='LoadData':
+            goods_list=model_name.objects.all()
+            value = base_fun_get_demo(model_name)  # 获取该表中所有的列名及其对应的注释，即对应前端的{ field : name }
+            index = tuple(value) #转元组
+            '''
+			加载显示数据时返回的字典的Key要跟前端的field匹配，故通过base_fun_get_demo返回字典，并将其对应的value改成想要的数据
+			用字典和列表拼接很方便形成Json格式
+			value={'id': '索引号', 'name': '生产厂商名称', 'manager': '负责人名称', 'phone': '负责人联系电话', 'address': '生产厂商地址'}
+		   '''
+            value_list = []
             for row in goods_list:
-                value['value1']=row.goodsname  # [{},{},{}]
-                goods.append(value.copy())  #直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
+                value[index[0]] = row.id
+                value[index[1]]=row.goodsname  # [{},{},{}]
+                value_list.append(value.copy())  #直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
                    #用.copy()就不会跟着改变
-            name=json.dumps(goods) #将列表转字符串传给前端
-            print(goods_list)
-            print(name)
-            return HttpResponse(name)
+
+            return HttpResponse(json.dumps(value_list))#将列表拼字典仿Json格式转字符串传给前端
         elif action=='Save':
             back = 0
             add_goods=request.POST.get('name')
@@ -96,18 +51,36 @@ def goods(request):
 def goodsCat(request):
     action=request.POST.get('action')
     if request.method=='GET':
-        return render(request,'SystemSettings/goodsCat.html')
+        """  可以改参数的地方  """
+        cnt = 2  # 需要获取的列的数量  包括id 按顺序获取
+        width_list = [0, 15]  # 列的宽度  个数与cnt匹配  顺序对应数据库中列的顺序  id不展示，但会获取，赋0
+        align_list = ['center'] * cnt  # 对齐格式 个数与cnt匹配   顺序对应数据库中列的顺序  id不展示，但会获取
+        model_name = models.GoodsCat  # 想要展示的表的Model对象
+        """  可以改参数的地方  """
+
+        column = get_cnt_column(cnt, width_list, align_list, model_name)
+        return render(request, 'SystemSettings/goodsCat.html', {'info_dict': column})
     else:
-        goodsCat=[]
-        if action == 'Load':
-            goodsCat_list = models.GoodsCat.objects.all()
-            value = {'value1': ''}  # 用字典和列表拼接很方便形成Json格式
+        """  可以改参数的地方  """
+        model_name = models.GoodsCat  # 想要展示的表的Model对象
+        """  可以改参数的地方  """
+
+        if action == 'LoadData':
+            goodsCat_list = model_name.objects.all()
+            value = base_fun_get_demo(model_name)  # 获取该表中所有的列名及其对应的注释，即对应前端的{ field : name }
+            index = tuple(value)
+            '''
+			加载显示数据时返回的字典的Key要跟前端的field匹配，故通过base_fun_get_demo返回字典，并将其对应的value改成想要的数据
+			用字典和列表拼接很方便形成Json格式
+			value={'id': '索引号', 'name': '生产厂商名称', 'manager': '负责人名称', 'phone': '负责人联系电话', 'address': '生产厂商地址'}
+		   '''
+            value_list = []
             for row in goodsCat_list:
-                value['value1'] = row.catname
-                goodsCat.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
+                value[index[0]] = row.id
+                value[index[1]] = row.catname
+                value_list.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
                 # 用.copy()就不会跟着改变
-            name = json.dumps(goodsCat)  # 将列表转字符串传给前端
-            return HttpResponse(name)
+            return HttpResponse(json.dumps( value_list))  # 将列表转字符串传给前端
         elif action == 'Save':
             back = 0
             add_goodsCat = request.POST.get('name')
@@ -119,23 +92,38 @@ def goodsCat(request):
 def manufactor(request):
     action=request.POST.get('action')
     if request.method=='GET':
-        column = get_4_column()
+        """  可以改参数的地方  """
+        cnt = 5  #需要获取的列的数量  包括id 按顺序获取
+        width_list = [0,18, 10, 15, 20]   #列的宽度  个数与cnt匹配  顺序对应数据库中列的顺序  id不展示，但会获取，赋0
+        align_list = ['center']*cnt  #对齐格式 个数与cnt匹配   顺序对应数据库中列的顺序  id不展示，但会获取
+        model_name = models.Manufactor   #想要展示的表的Model对象
+        """  可以改参数的地方  """
+
+        column = get_cnt_column(cnt,width_list,align_list,model_name)
         return render(request, 'SystemSettings/manufactor.html', {'info_dict': column})
-       # return render(request,'SystemSettings/manufactor.html')
     else:
-        manufactor=[]
-        if action == 'Load':
-            Manufactor_list = models.Manufactor.objects.all()
-            value = {'value1': '','value2':'','value3':'','value4':''}  # 用字典和列表拼接很方便形成Json格式
+        """  可以改参数的地方  """
+        model_name = models.Manufactor  # 想要展示的表的Model对象
+        """  可以改参数的地方  """
+        if action == 'LoadData':
+            Manufactor_list = model_name.objects.all()
+            value = base_fun_get_demo(model_name)#获取该表中所有的列名及其对应的注释，即对应前端的{ field : name }
+            index = tuple(value)
+            value_list = []
+            '''
+            加载显示数据时返回的字典的Key要跟前端的field匹配，故通过base_fun_get_demo返回字典，并将其对应的value改成想要的数据
+            用字典和列表拼接很方便形成Json格式
+            value={'id': '索引号', 'name': '生产厂商名称', 'manager': '负责人名称', 'phone': '负责人联系电话', 'address': '生产厂商地址'}
+           '''
             for row in Manufactor_list:
-                value['value1'] = row.name
-                value['value2'] = row.manager
-                value['value3'] = row.phone
-                value['value4'] = row.address
-                manufactor.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
+                value[index[0]] = row.id
+                value[index[1]] = row.name
+                value[index[2]] = row.manager
+                value[index[3]] = row.phone
+                value[index[4]] = row.address
+                value_list.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
                 # 用.copy()就不会跟着改变
-            name = json.dumps(manufactor)  # 将列表转字符串传给前端
-            return HttpResponse(name)
+            return HttpResponse(json.dumps(value_list))  # 将列表转字符串传给前端
         elif action == 'Save':
             back = 0
             add_name = request.POST.get('name')
@@ -151,21 +139,40 @@ def manufactor(request):
 def supplier(request):
     action=request.POST.get('action')
     if request.method=='GET':
-        return render(request,'SystemSettings/supplier.html')
+        """  可以改参数的地方  """
+        cnt = 5  # 需要获取的列的数量  包括id 按顺序获取
+        width_list = [0, 18, 10, 12, 20]  # 列的宽度  个数与cnt匹配  顺序对应数据库中列的顺序  id不展示，但会获取，赋0
+        align_list = ['center'] * cnt  # 对齐格式 个数与cnt匹配   顺序对应数据库中列的顺序  id不展示，但会获取
+        model_name = models.Supplier  # 想要展示的表的Model对象
+        """  可以改参数的地方  """
+
+        column = get_cnt_column(cnt, width_list, align_list, model_name)
+        return render(request, 'SystemSettings/supplier.html', {'info_dict': column})
+
     else:
-        supplier=[]
+        """  可以改参数的地方  """
+        model_name = models.Supplier  # 想要展示的表的Model对象
+        """  可以改参数的地方  """
         if action == 'LoadData':
-            Supplier_list = models.Supplier.objects.all()
-            value = {'value1': '','value2':'','value3':'','value4':''}  # 用字典和列表拼接很方便形成Json格式
+            Supplier_list = model_name.objects.all()
+            value = base_fun_get_demo(model_name)  # 获取该表中所有的列名及其对应的注释，即对应前端的{ field : name }
+            index = tuple(value)
+            value_list = []
+            '''
+			加载显示数据时返回的字典的Key要跟前端的field匹配，故通过base_fun_get_demo返回字典，并将其对应的value改成想要的数据
+			用字典和列表拼接很方便形成Json格式
+			value={'id': '索引号', 'name': '生产厂商名称', 'manager': '负责人名称', 'phone': '负责人联系电话', 'address': '生产厂商地址'}
+		   '''
             for row in Supplier_list:
-                value['value1'] = row.name
-                value['value2'] = row.managername
-                value['value3'] = row.phone
-                value['value4'] = row.address
-                supplier.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
+                value[index[0]] = row.id
+                value[index[1]] = row.name
+                value[index[2]] = row.managername
+                value[index[3]] = row.phone
+                value[index[4]] = row.address
+                value_list.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
                 # 用.copy()就不会跟着改变
-            name = json.dumps(supplier)  # 将列表转字符串传给前端
-            return HttpResponse(name)
+
+            return HttpResponse(json.dumps(value_list)) # 将列表转字符串传给前端
         elif action == 'Save':
             back = 0
             add_name = request.POST.get('name')
@@ -182,30 +189,44 @@ def supplier(request):
 def Seller_Trans(request):
     action = request.POST.get('action')
     if request.method == 'GET':
-        return render(request, 'SystemSettings/Seller.html')
-    else:
-        seller = []
-        if action == 'LoadData':
-            #models.Seller.objects.all()
-            Seller_list = models.Seller.objects.all()
-            value = {'Sellername': '', 'Sellerphone': '', 'Sellerproperty': '', 'SellerOwner': '', 'SellerOwnerPhone': '', 'SellerOwnerLevel': '', 'SellerOwnerNo': '', 'SellerOwnerArea': ''}  # 用字典和列表拼接很方便形成Json格式
-            for row in Seller_list:
-                value['Sellername'] = row.Sellername
-                value['Sellerphone'] = row.Sellerphone
-                value['Sellerproperty'] = row.Sellerproperty
-                value['SellerOwner'] = row.SellerOwner
+        """  可以改参数的地方  """
+        cnt = 8  # 需要获取的列的数量  包括id 按顺序获取
+        width_list = [0, 18, 15, 12, 12, 12, 12, 12]  # 列的宽度  个数与cnt匹配  顺序对应数据库中列的顺序  id不展示，但会获取，赋0
+        align_list = ['center'] * cnt  # 对齐格式 个数与cnt匹配   顺序对应数据库中列的顺序  id不展示，但会获取
+        model_name = models.Seller  # 想要展示的表的Model对象
+        """  可以改参数的地方  """
 
-                value['SellerOwnerPhone'] = row.SellerOwnerPhone
-                value['SellerOwnerLevel'] = row.SellerOwnerLevel
-                value['SellerOwnerNo'] = row.SellerOwnerNo
-                value['SellerOwnerArea'] = row.SellerOwnerArea
-                seller.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
+        column = get_cnt_column(cnt, width_list, align_list, model_name)
+        return render(request, 'SystemSettings/Seller.html', {'info_dict': column})
+    else:
+        """  可以改参数的地方  """
+        model_name = models.Seller  # 想要展示的表的Model对象
+        """  可以改参数的地方  """
+        if action == 'LoadData':
+            Seller_list = model_name.objects.all()
+            value = base_fun_get_demo(model_name)  # 获取该表中所有的列名及其对应的注释，即对应前端的{ field : name }
+            index = tuple(value)
+            value_list = []
+            '''
+			加载显示数据时返回的字典的Key要跟前端的field匹配，故通过base_fun_get_demo返回字典，并将其对应的value改成想要的数据
+			用字典和列表拼接很方便形成Json格式
+			value={'id': '索引号', 'name': '生产厂商名称', 'manager': '负责人名称', 'phone': '负责人联系电话', 'address': '生产厂商地址'}
+		   '''
+           # value = {'Sellername': '', 'Sellerphone': '', 'Sellerproperty': '', 'SellerOwner': '', 'SellerOwnerPhone': '', 'SellerOwnerLevel': '', 'SellerOwnerNo': '', 'SellerOwnerArea': ''}  # 用字典和列表拼接很方便形成Json格式
+            for row in Seller_list:
+                value[index[1]] = row.Sellername
+                value[index[2]] = row.Sellerproperty
+                value[index[3]] = row.SellerOwner
+                value[index[4]] = row.SellerOwnerPhone
+                value[index[5]] = row.SellerOwnerLevel
+                value[index[6]] = row.SellerOwnerNo
+                value[index[7]] = row.SellerOwnerArea
+                value_list.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
                 # 用.copy()就不会跟着改变
-            return HttpResponse(json.dumps(seller)) # 将列表转字符串传给前端
+            return HttpResponse(json.dumps(value_list)) # 将列表转字符串传给前端
         elif action == 'Save':
             back = 0
             add_Sellername = request.POST.get('name')
-            add_Sellerphone = '13098823498'
             add_Sellerproperty = request.POST.get('type')
             add_SellerOwner = request.POST.get('manager')
 
@@ -214,9 +235,7 @@ def Seller_Trans(request):
             add_SellerOwnerNo = request.POST.get('number')
             add_SellerOwnerArea = request.POST.get('area')
 
-
-            models.Seller.objects.create(Sellername=add_Sellername, Sellerphone=add_Sellerphone, Sellerproperty=add_Sellerproperty,
-                                           SellerOwner=add_SellerOwner,SellerOwnerPhone=add_SellerOwnerPhone,
+            models.Seller.objects.create(Sellername=add_Sellername, Sellerproperty=add_Sellerproperty,SellerOwner=add_SellerOwner,SellerOwnerPhone=add_SellerOwnerPhone,
                                            SellerOwnerLevel = add_SellerOwnerLevel,SellerOwnerNo = add_SellerOwnerNo,SellerOwnerArea = add_SellerOwnerArea )
             back = 1
             return HttpResponse(back)
@@ -236,28 +255,40 @@ def Seller_Trans(request):
 def SellerProp_Trans(request):
     action = request.POST.get('action')
     if request.method == 'GET':
-        return render(request, 'SystemSettings/SellerProperty.html')
-    else:
-        supplier = []
-        if action == 'LoadData':
-            #models.Seller.objects.all()
-            Supplier_list =  models.SellerPorprety.objects.all()
-            value = {'SellerpropertyType': '', 'ID': ''}  # 用字典和列表拼接很方便形成Json格式
-            for row in Supplier_list:
-                value['SellerpropertyType'] = row.SellerpropertyType
-                value['ID'] = row.id
+        """  可以改参数的地方  """
+        cnt = 2  # 需要获取的列的数量  包括id 按顺序获取
+        width_list = [0, 18]  # 列的宽度  个数与cnt匹配  顺序对应数据库中列的顺序  id不展示，但会获取，赋0
+        align_list = ['center'] * cnt  # 对齐格式 个数与cnt匹配   顺序对应数据库中列的顺序  id不展示，但会获取
+        model_name = models.SellerPorprety # 想要展示的表的Model对象
+        """  可以改参数的地方  """
 
-                supplier.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
+        column = get_cnt_column(cnt, width_list, align_list, model_name)
+        return render(request, 'SystemSettings/SellerProperty.html', {'info_dict': column})
+    else:
+        """  可以改参数的地方  """
+        model_name = models.SellerPorprety  # 想要展示的表的Model对象
+        """  可以改参数的地方  """
+        if action == 'LoadData':
+            SellerProp_list = model_name.objects.all()
+            value = base_fun_get_demo(model_name)  # 获取该表中所有的列名及其对应的注释，即对应前端的{ field : name }
+            index = tuple(value)
+            value_list = []
+            '''
+			加载显示数据时返回的字典的Key要跟前端的field匹配，故通过base_fun_get_demo返回字典，并将其对应的value改成想要的数据
+			用字典和列表拼接很方便形成Json格式
+			value={'id': '索引号', 'name': '生产厂商名称', 'manager': '负责人名称', 'phone': '负责人联系电话', 'address': '生产厂商地址'}
+		   '''
+          #  value = {'SellerpropertyType': '', 'ID': ''}  # 用字典和列表拼接很方便形成Json格式
+            for row in SellerProp_list:
+                value[index[0]] = row.id
+                value[index[1]] = row.SellerpropertyType
+                value_list.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
                 # 用.copy()就不会跟着改变
-            name = json.dumps(supplier)  # 将列表转字符串传给前端
-            return HttpResponse(name)
+            return HttpResponse(json.dumps(value_list)  ) # 将列表转字符串传给前端
         elif action == 'Save':
             add_Propretyname = request.POST.get('Proprety')
             models.SellerPorprety.objects.create(SellerpropertyType=add_Propretyname)
-
             return HttpResponse(1)
-        elif action == 'LoadSellerCat':
-            return HttpResponse(1) #这个地方暂时先不处理
 
 
 

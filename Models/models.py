@@ -166,8 +166,9 @@ class GoodsCat(models.Model):
 #销售商   wangyu add
 class Seller(models.Model):
 
-    Sellername = models.CharField(db_column='SellerName',max_length=10) # Field name made lowercase.
-    Sellerphone = models.CharField(max_length=50) #商户名称
+    Sellername = models.CharField(db_column='SellerName',max_length=10) #商户名称
+    '''Sellerphone本身就有问题，现在影响了公共模板显示列名，故删去'''
+   # Sellerphone = models.CharField(max_length=50) #商户名称
     Sellerproperty = models.CharField(max_length=64)#商户属性
     SellerOwner = models.CharField(max_length=64)  # 负责人姓名
     SellerOwnerPhone = models.CharField(max_length=64)  # 负责人手机号

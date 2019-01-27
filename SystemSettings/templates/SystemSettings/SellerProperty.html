@@ -12,8 +12,7 @@
 </head>
     <script>
         $(document).ready(function () {
-
-            InitDg1();
+        //    InitDg1();
             LoadDg1();//一开始就加载所有
         })
 
@@ -149,13 +148,25 @@
 
             <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'" onclick="Refresh()" >刷新</a>
 
-            <!--a href="javascript:void(0)" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-add'" onclick="ShowDlg1_2();">新增信息</!--a-->
+            <a href="javascript:void(0)" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-add'" onclick="ShowDlg1_2();">新增信息</a>
 
             <!--a href="javascript:void(0)" class="easyui-linkbutton"data-options="plain:true,iconCls:'icon-remove'" onclick="delet();">删除信息</a-->
            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" onclick="ShowDlg1_1();">查看详情</a>
 
          </div>
-         <table id="dg1" class="easyui-datagrid" style="width: 99%; height: 95%">
+         <table id="dg1" title="商户类型" class="easyui-datagrid" data-options="" style="width: 99%; height: 95%;"
+            showFooter="true" pagination="true" singleSelect="true" selectOnCheck="true">
+              <thead>
+                <tr>
+                    <th data-options="field:'ck',checkbox:true"></th>
+                    {% for i in info_dict %}
+                        {% if i.field != 'id' %}
+                            <th field={{ i.field }} width={{ i.width }} align={{ i.align }}>{{ i.title }}</th>
+                        {% endif %}
+                    {% endfor %}
+
+                </tr>
+              </thead>
          </table>
 
     <!--查看工单详情-->

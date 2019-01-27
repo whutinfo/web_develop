@@ -122,7 +122,6 @@ from WorkOrder import views as work
 from Commodity import views as com_v
 from customermanager import views as cv
 from Base import views as base
-
 urlpatterns = [
     #path('admin/', admin.site.urls),
         # 主框架

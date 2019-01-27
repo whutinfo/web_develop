@@ -12,7 +12,7 @@
 </head>
      <script>
          $(document).ready(function () {
-             InitDg1();
+           //  InitDg1();
              LoadDg1();//一开始就加载所有
 
          })
@@ -172,14 +172,14 @@
                          $(this).dialog('center');
                      },
                      onOpen: function () {
-                         $("#dlg1_2_txt_1").textbox('setValue', row_slec.value1);
+                         $("#dlg1_2_txt_1").textbox('setValue', row_slec.Sellername);
                          LoadCat();
-                         $("#dlg1_2_txt_2").combobox('setValue', row_slec.value2);
-                         $("#dlg1_2_txt_3").textbox('setValue', row_slec.value3);
-                         $("#dlg1_2_txt_4").textbox('setValue', row_slec.value4);
-                         $("#dlg1_2_txt_5").combobox('setValue', row_slec.value5);
-                         $("#dlg1_2_txt_6").textbox('setValue', row_slec.value6);
-                         $("#dlg1_2_txt_7").textbox('setValue', row_slec.value7);
+                         $("#dlg1_2_txt_2").combobox('setValue', row_slec.Sellerproperty);
+                         $("#dlg1_2_txt_3").textbox('setValue', row_slec.SellerOwner);
+                         $("#dlg1_2_txt_4").textbox('setValue', row_slec.SellerOwnerPhone);
+                         $("#dlg1_2_txt_5").combobox('setValue', row_slec.SellerOwnerLevel);
+                         $("#dlg1_2_txt_6").textbox('setValue', row_slec.SellerOwnerNo);
+                         $("#dlg1_2_txt_7").textbox('setValue', row_slec.SellerOwnerArea);
 
                      },
                      buttons: [{
@@ -273,7 +273,19 @@
            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" onclick="ShowDlg1_1();">查看详情</a>
 
          </div>
-         <table id="dg1" class="easyui-datagrid" style="width: 99%; height: 95%">
+         <table id="dg1" title="商户信息" class="easyui-datagrid" data-options="" style="width: 99%; height: 95%;"
+            showFooter="true" pagination="true" singleSelect="true" selectOnCheck="true">
+              <thead>
+                <tr>
+                    <th data-options="field:'ck',checkbox:true"></th>
+                    {% for i in info_dict %}
+                        {% if i.field != 'id' %}
+                            <th field={{ i.field }} width={{ i.width }} align={{ i.align }}>{{ i.title }}</th>
+                        {% endif %}
+                    {% endfor %}
+
+                </tr>
+              </thead>
          </table>
 
     <!--查看供应商详情-->
