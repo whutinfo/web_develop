@@ -2,9 +2,8 @@ from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from Models import models
 import json
-import datetime
 import time
-from django.core.serializers.json import DjangoJSONEncoder
+
 # Create your views here.
 def stockIn(request):
 	user_id = request.session.get("Login_UserId")
@@ -93,7 +92,8 @@ def stockIn(request):
 			seller = request.POST.get('seller')
 			manufactor = request.POST.get('mfrs')
 			supplier = request.POST.get('supplier')
-			# 更新stockIn表   先添加主表数据
+
+			#更新stockIn表   先添加主表数据
 			In= models.StockIn.objects.create(stockin_id=id, goods_id=goods_id, cat_id=cat, goods_sn=rfid, in_amount=amount,
 			                              cost=float(cost), performer_id=user_id, seller_id=seller, manufactor_id=manufactor,
 			                              supplier_id=supplier)
@@ -194,6 +194,7 @@ def stockOut(request):
 			customer_Phone = request.POST.get('CusPhone')
 			customer_name = request.POST.get('customer')
 			seller = request.POST.get('seller')
+			seller_id = models.Seller.objects.filter(Sellername=seller).first().id
 			if customer_name != '':#存在该客户  添加信息  否则名字为匿名
 				#  更新stockOut表   先添加主表数据
 				models.StockOut.objects.create(stockout_id=id, goods_id=goods_id, cat_id=cat_id, goods_sn=rfid,out_amount=amount,price=price,
@@ -203,14 +204,17 @@ def stockOut(request):
 				point += float(price)  #销售价和积分 1:1转换
 				models.Customer.objects.filter(name=customer_name).update(point=point)
 			else:
+				pass
 				models.StockOut.objects.create(stockout_id=id, goods_id=goods_id, cat_id=cat_id, goods_sn=rfid,out_amount=amount,price=price,
-				                                    performer_id=user_id, seller_id=seller, customer_phone=customer_Phone, customer_name=customer_name)
+				                                    performer_id=user_id, seller_id=seller_id, customer_phone=customer_Phone, customer_name=customer_name)
 
 			# 更新goodsInfo表  相应 条形码 的那条数据  库存stock = 原有-amount  销售量salecount = 原有+amount  price 为销售单价   out_time
 			goodsInfo = models.GoodsInfo.objects.filter(goods_sn=rfid).first()
 			goods_stock = goodsInfo.goods_stock
 			sale_count = goodsInfo.sale_count
-			models.GoodsInfo.objects.filter(goods_sn=rfid).update(goods_stock = goods_stock-int(amount),sale_count=sale_count+int(amount),price = float(price)/int(amount))
+			out_time = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(time.time()))
+
+			models.GoodsInfo.objects.filter(goods_sn=rfid).update(goods_stock = goods_stock-int(amount),sale_count=sale_count+int(amount),price = float(price)/int(amount),out_time=out_time)
 			back = 1
 			return HttpResponse(back)
 
@@ -319,7 +323,8 @@ def load_commodity(request):
 				value['value6'] = row.sale_count #销售量
 				value['value7'] = row.cost #成本
 				value['value8'] = row.price #交易额
-				value['value9'] = row.exp_date #保质期限
+				if row.exp_date != None:  #为None 是没有strftime转换格式这种属性的
+					value['value9'] = row.exp_date.strftime("%Y-%m-%d %H:%M:%S") #保质期限
 				if row.manufactor != None:
 					value['value10'] = row.manufactor.name  # 商品厂家
 				else:
@@ -332,10 +337,12 @@ def load_commodity(request):
 					value['value12'] = row.seller.Sellername  # 销售
 				else:
 					value['value12'] = ''
-				value['value13'] = row.out_time
+				if row.out_time != None:  # 为None 是没有strftime转换格式这种属性的
+					value['value13'] = row.out_time.strftime("%Y-%m-%d %H:%M:%S")
 				load_commodity.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
+				value.clear()  #不保存上一次字典的记录，这是其实可以不要上面else时为空这句，返回不会有该key
 			# 用.copy()就不会跟着改变
 
-			return HttpResponse(json.dumps(load_commodity,cls=DjangoJSONEncoder))  # 将列表转字符串传给前端
+			return HttpResponse(json.dumps(load_commodity))  # 将列表转字符串传给前端
 
 
