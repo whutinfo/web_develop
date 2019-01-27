@@ -329,7 +329,6 @@ class Customer(models.Model):
     point = models.IntegerField(null=True)
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
-
     class Meta:
       #  managed = False
         db_table = 'Customer_Table'

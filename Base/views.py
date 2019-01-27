@@ -99,3 +99,16 @@ def fun_call_db_proc(database_str,table_str,column_str):
         print(data1)
 '''
 #    cursor1.execture()
+
+'''
+wangyu test
+
+def fun_call_db_proc(request):
+    models.Models
+    django.db
+    cursor1 = dbTrans.cursor()
+    cursor1.execute("select * from Goods_Table")
+    cursor.fetchall()
+#    cursor1.execture()
+
+'''

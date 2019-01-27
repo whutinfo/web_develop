@@ -2,19 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="76f65727-d4f0-41bc-ab4a-630420bf8f93" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/存储过程说明.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Base/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/Base/admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Base/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Base/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Commodity/templates/Commodity/commodity.html" beforeDir="false" afterPath="$PROJECT_DIR$/Commodity/templates/Commodity/commodity.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Commodity/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Commodity/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/Seller.html" beforeDir="false" afterPath="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/Seller.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/SellerProperty.html" beforeDir="false" afterPath="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/SellerProperty.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/goods.html" beforeDir="false" afterPath="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/goods.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/goodsCat.html" beforeDir="false" afterPath="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/goodsCat.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/manufactor.html" beforeDir="false" afterPath="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/manufactor.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/supplier.html" beforeDir="false" afterPath="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/supplier.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SystemSettings/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/SystemSettings/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aliyun/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/aliyun/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aliyun/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/aliyun/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/login/templates/login/demo.html" beforeDir="false" afterPath="$PROJECT_DIR$/login/templates/login/demo.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,27 +26,27 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="html" value="535" />
-          <entry key="py" value="5608" />
+          <entry key="py" value="5609" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="HTML" value="535" />
-          <entry key="Python" value="5608" />
+          <entry key="Python" value="5609" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="html" value="43" />
           <entry key="js" value="2" />
-          <entry key="py" value="58" />
+          <entry key="py" value="61" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="HTML" value="43" />
           <entry key="JavaScript" value="2" />
-          <entry key="Python" value="58" />
+          <entry key="Python" value="61" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.lifecycle.project">
@@ -82,22 +78,22 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SystemSettings/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-232">
-              <caret line="265" column="61" selection-start-line="265" selection-start-column="61" selection-end-line="265" selection-end-column="61" />
-              <folding>
-                <element signature="e#0#35#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SystemSettings/templates/SystemSettings/SellerProperty.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="103">
               <caret line="150" column="143" selection-start-line="150" selection-start-column="143" selection-end-line="150" selection-end-column="143" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SystemSettings/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="298">
+              <caret line="299" selection-start-line="299" selection-end-line="299" />
+              <folding>
+                <element signature="e#0#35#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -114,8 +110,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Base/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="92" column="33" selection-start-line="92" selection-start-column="33" selection-end-line="92" selection-end-column="33" />
+            <state relative-caret-position="179">
+              <caret line="93" column="19" lean-forward="true" selection-start-line="93" selection-start-column="19" selection-end-line="93" selection-end-column="19" />
+              <folding>
+                <element signature="e#0#35#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Commodity/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="95">
+              <caret line="17" column="23" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -197,16 +205,16 @@
         <option value="$PROJECT_DIR$/aliyun/urls.py" />
         <option value="$PROJECT_DIR$/Models/migrations/0026_auto_20190122_1302.py" />
         <option value="E:/views.py" />
-        <option value="$PROJECT_DIR$/Models/models.py" />
         <option value="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/Seller.html" />
         <option value="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/supplier.html" />
         <option value="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/manufactor.html" />
         <option value="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/goods.html" />
         <option value="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/goodsCat.html" />
-        <option value="$PROJECT_DIR$/SystemSettings/views.py" />
         <option value="$PROJECT_DIR$/aliyun/settings.py" />
-        <option value="$PROJECT_DIR$/Base/views.py" />
         <option value="$PROJECT_DIR$/SystemSettings/templates/SystemSettings/SellerProperty.html" />
+        <option value="$PROJECT_DIR$/Models/models.py" />
+        <option value="$PROJECT_DIR$/SystemSettings/views.py" />
+        <option value="$PROJECT_DIR$/Base/views.py" />
       </list>
     </option>
   </component>
@@ -230,7 +238,7 @@
       <path value="$PROJECT_DIR$/commonstatic/assets/plugins/jquery-validation/package.json" />
     </packageJsonPaths>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="307" />
     <option name="width" value="1550" />
     <option name="height" value="1038" />
@@ -255,20 +263,7 @@
             <path>
               <item name="web_develop" type="b2602c69:ProjectViewProjectNode" />
               <item name="web_develop" type="462c0819:PsiDirectoryNode" />
-              <item name="SystemSettings" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="web_develop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="web_develop" type="462c0819:PsiDirectoryNode" />
-              <item name="SystemSettings" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="web_develop" type="b2602c69:ProjectViewProjectNode" />
-              <item name="web_develop" type="462c0819:PsiDirectoryNode" />
-              <item name="SystemSettings" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="SystemSettings" type="462c0819:PsiDirectoryNode" />
+              <item name="Commodity" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -454,7 +449,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="7" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.29155496" />
@@ -632,16 +627,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Commodity/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="5" selection-end-column="11" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/pymysql/connections.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="96">
@@ -740,16 +725,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Models/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="77">
-          <caret line="270" column="39" lean-forward="true" selection-start-line="270" selection-start-column="39" selection-end-line="270" selection-end-column="39" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SystemSettings/templates/SystemSettings/Seller.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="304">
@@ -761,16 +736,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="291">
           <caret line="54" column="40" selection-start-line="54" selection-start-column="40" selection-end-line="54" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/login/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="2" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -812,30 +777,60 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Base/views.py">
+    <entry file="file://$PROJECT_DIR$/SystemSettings/templates/SystemSettings/SellerProperty.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="92" column="33" selection-start-line="92" selection-start-column="33" selection-end-line="92" selection-end-column="33" />
+        <state relative-caret-position="103">
+          <caret line="150" column="143" selection-start-line="150" selection-start-column="143" selection-end-line="150" selection-end-column="143" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Models/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="330" column="53" lean-forward="true" selection-start-line="330" selection-start-column="53" selection-end-line="330" selection-end-column="53" />
           <folding>
-            <element signature="e#0#35#0" expanded="true" />
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/login/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="2" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SystemSettings/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-232">
-          <caret line="265" column="61" selection-start-line="265" selection-start-column="61" selection-end-line="265" selection-end-column="61" />
+        <state relative-caret-position="298">
+          <caret line="299" selection-start-line="299" selection-end-line="299" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SystemSettings/templates/SystemSettings/SellerProperty.html">
+    <entry file="file://$PROJECT_DIR$/Base/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="103">
-          <caret line="150" column="143" selection-start-line="150" selection-start-column="143" selection-end-line="150" selection-end-column="143" />
+        <state relative-caret-position="179">
+          <caret line="93" column="19" lean-forward="true" selection-start-line="93" selection-start-column="19" selection-end-line="93" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commodity/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="95">
+          <caret line="17" column="23" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

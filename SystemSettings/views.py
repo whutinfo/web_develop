@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
+
 from Models import models
 import json
 from Base.views import *
@@ -187,6 +188,9 @@ def supplier(request):
 
 #售卖页面  销售页面的处理函数
 def Seller_Trans(request):
+    cursor1 = connection.cursor();
+
+
     action = request.POST.get('action')
     if request.method == 'GET':
         """  可以改参数的地方  """
@@ -253,6 +257,7 @@ def Seller_Trans(request):
 
 #销售商的属性配置
 def SellerProp_Trans(request):
+    fun_call_db_proc()
     action = request.POST.get('action')
     if request.method == 'GET':
         """  可以改参数的地方  """

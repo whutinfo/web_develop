@@ -4,6 +4,7 @@ from Models import models
 import json
 import datetime
 import time
+from django.core.serializers.json import DjangoJSONEncoder
 # Create your views here.
 def stockIn(request):
 	user_id = request.session.get("Login_UserId")
@@ -32,7 +33,8 @@ def stockIn(request):
 				value_dict['value6'] = stock_in.cost         # 进货总价
 				goodsInfo = stock_in.goodsinfo_set.filter(stockin_id=stock_in.id)   # 保质期限
 				if goodsInfo.count() != 0:
-					value_dict['value7'] = goodsInfo.first().exp_date.strftime("%Y-%m-%d %H:%M:%S")
+					if goodsInfo.first().exp_date != None:
+						value_dict['value7'] = goodsInfo.first().exp_date.strftime("%Y-%m-%d %H:%M:%S")
 				else:
 					value_dict['value7'] = ''
 				if stock_in.seller != None:
@@ -213,12 +215,7 @@ def stockOut(request):
 			return HttpResponse(back)
 
 
-def Load_Commodity(request):
-	if request.method == 'GET':
-		return render(request,'Commodity/commodity.html')
-	else:
-		action = request.POST.get('action')
-		pass
+
 
 '''
 加载最大入库单编号 字符串形式，9位
@@ -291,3 +288,54 @@ def getGoodsCombobox(select):
 			value_list.append(value_dict.copy())
 			value_dict.clear()
 	return value_list
+
+
+
+def load_commodity(request):
+	action = request.POST.get('action')
+	if request.method == 'GET':
+		return render(request,'Commodity/commodity.html')
+	else:
+		load_commodity=[]
+		if action == 'LoadData':
+			load_commodity_list = models.GoodsInfo.objects.all()
+			value = {'value1': '', 'value2': '', 'value3': '', 'value4': '', 'value5': '', 'value6': '', 'value7': '',
+					 'value8': '','value9': '','value10': '','value11': '','value12': '','value13': '','value14': '','value15': '',}  # 用字典和列表拼接很方便形成Json格式
+			for row in load_commodity_list:
+				value['value1'] = row.goods_sn #条形码
+				if row.goods != None:
+					value['value2'] = row.goods.goodsname  #商品名称
+				else:
+					value['value2'] = ''
+				if row.cat != None:
+					value['value3'] = row.cat.catname  # 商品类型
+				else:
+					value['value3'] = ''
+				value['value4'] = row.goods_stock #库存量
+				if row.stockin != None:
+					value['value5'] = row.stockin.in_amount  # 进货量
+				else:
+					value['value5'] = ''
+				value['value6'] = row.sale_count #销售量
+				value['value7'] = row.cost #成本
+				value['value8'] = row.price #交易额
+				value['value9'] = row.exp_date #保质期限
+				if row.manufactor != None:
+					value['value10'] = row.manufactor.name  # 商品厂家
+				else:
+					value['value10'] = ''
+				if row.supplier != None:
+					value['value11'] = row.supplier.name  # 供货商
+				else:
+					value['value11'] = ''
+				if row.seller != None:
+					value['value12'] = row.seller.Sellername  # 销售
+				else:
+					value['value12'] = ''
+				value['value13'] = row.out_time
+				load_commodity.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
+			# 用.copy()就不会跟着改变
+
+			return HttpResponse(json.dumps(load_commodity,cls=DjangoJSONEncoder))  # 将列表转字符串传给前端
+
+
