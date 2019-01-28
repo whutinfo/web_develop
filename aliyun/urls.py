@@ -122,7 +122,7 @@ from WorkOrder import views as work
 from Commodity import views as com_v
 from customermanager import views as cv
 from Base import views as base
-
+from video import views as video
 urlpatterns = [
     #path('admin/', admin.site.urls),
         # 主框架
@@ -161,4 +161,7 @@ urlpatterns = [
 #测试用
     path('index/', lv.index),
     path('demo/', lv.demo),
+
+    #视频
+    path('video/',video.index),
 ]

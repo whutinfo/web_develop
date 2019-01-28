@@ -2,14 +2,13 @@
 
 // 全局保存当前选中窗口
 var g_iWndIndex = 0; //可以不用设置这个变量，有窗口参数的接口中，不用传值，开发包会默认使用当前选择窗口
-$(function () {
+$(function  () {
     // 检查插件是否已经安装过
     var iRet = WebVideoCtrl.I_CheckPluginInstall();
     if (-1 == iRet) {
         alert("您还未安装过插件，双击开发包目录里的WebComponentsKit.exe安装！");
         return;
     }
-
     // 初始化插件参数及插入插件
     WebVideoCtrl.I_InitPlugin(500, 300, {
         bWndFull: true,     //是否支持单窗口双击全屏，默认支持 true:支持 false:不支持
@@ -27,7 +26,6 @@ $(function () {
                 szInfo = "当前还原的窗口编号：" + iWndIndex;
             }
             showCBInfo(szInfo);
-                        
             // 此处可以处理单窗口的码流切换
             /*if (bFullScreen) {
                 clickStartRealPlay(1);
@@ -78,6 +76,21 @@ $(function () {
     $("#endtime").val(szCurTime + " 23:59:59");
 });
 
+function LoadConf(){
+    var datajson = [];
+    var parm = 'action=LoadData';
+    getAjax("/video/", parm, function (backstring){
+    datajson = jQuery.parseJSON(backstring);
+  })
+    Def_IP_AD =datajson[0].value2;
+    Def_IP_PORT =datajson[0].value3;
+    Def_User_name= datajson[0].value4;
+    Def_Pwd= datajson[0].value5;
+    Def_Optional_deviceport='8000';
+    Def_Optional_rtspport=datajson[0].value6;
+    Def_streamtype = datajson[0].value7;
+
+}
 // 显示操作信息
 function showOPInfo(szInfo, status, xmlDoc) {
     var szTip = "<div>" + dateFormat(new Date(), "yyyy-MM-dd hh:mm:ss") + " " + szInfo;
@@ -202,21 +215,19 @@ function changeWndNum(iType) {
 
 // 登录
 function clickLogin() {
-    var szIP = $("#loginip").val(),
-        szPort = $("#port").val(),
-        szUsername = $("#username").val(),
-        szPassword = $("#password").val();
+    LoadConf();
+    var szIP = Def_IP_AD,
+        szPort =Def_IP_PORT,
+        szUsername = Def_User_name,
+        szPassword = Def_Pwd;
 
     if ("" == szIP || "" == szPort) {
         return;
     }
-
     var szDeviceIdentify = szIP + "_" + szPort;
-
     var iRet = WebVideoCtrl.I_Login(szIP, 1, szPort, szUsername, szPassword, {
         success: function (xmlDoc) {            
             showOPInfo(szDeviceIdentify + " 登录成功！");
-
             $("#ip").prepend("<option value='" + szDeviceIdentify + "'>" + szDeviceIdentify + "</option>");
             setTimeout(function () {
                 $("#ip").val(szDeviceIdentify);
@@ -371,9 +382,8 @@ function getDevicePort() {
 
     var oPort = WebVideoCtrl.I_GetDevicePort(szDeviceIdentify);
     if (oPort != null) {
-        $("#deviceport").val(oPort.iDevicePort);
-        $("#rtspport").val(oPort.iRtspPort);
-
+        Def_Optional_deviceport.valueOf(oPort.iDevicePort);
+        Def_Optional_rtspport.valueOf(oPort.iRtspPort);
         showOPInfo(szDeviceIdentify + " 获取端口成功！");
     } else {
         showOPInfo(szDeviceIdentify + " 获取端口失败！");
@@ -447,13 +457,13 @@ function clickGetDigitalChannelInfo() {
 function clickStartRealPlay(iStreamType) {
     var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex),
         szDeviceIdentify = $("#ip").val(),
-        iRtspPort = parseInt($("#rtspport").val(), 10),
+        iRtspPort = parseInt(Def_Optional_rtspport, 10),
         iChannelID = parseInt($("#channels").val(), 10),
         bZeroChannel = $("#channels option").eq($("#channels").get(0).selectedIndex).attr("bZero") == "true" ? true : false,
         szInfo = "";
 
     if ("undefined" === typeof iStreamType) {
-        iStreamType = parseInt($("#streamtype").val(), 10);
+        iStreamType = parseInt(Def_streamtype, 10);
     }
 
     if (null == szDeviceIdentify) {
@@ -995,7 +1005,7 @@ function clickRecordSearch(iType) {
 function clickStartPlayback() {
     var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex),
         szDeviceIdentify = $("#ip").val(),
-        iRtspPort = parseInt($("#rtspport").val(), 10),
+        iRtspPort = parseInt(Def_Optional_rtspport, 10),
         iStreamType = parseInt($("#record_streamtype").val(), 10),
         bZeroChannel = $("#channels option").eq($("#channels").get(0).selectedIndex).attr("bZero") == "true" ? true : false,
         iChannelID = parseInt($("#channels").val(), 10),
@@ -1097,7 +1107,7 @@ function clickStopPlayback() {
 function clickReversePlayback() {
     var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex),
         szDeviceIdentify = $("#ip").val(),
-        iRtspPort = parseInt($("#rtspport").val(), 10),
+        iRtspPort = parseInt(Def_Optional_rtspport, 10),
         iStreamType = parseInt($("#record_streamtype").val(), 10),
         bZeroChannel = $("#channels option").eq($("#channels").get(0).selectedIndex).attr("bZero") == "true" ? true : false,
         iChannelID = parseInt($("#channels").val(), 10),
@@ -1501,7 +1511,7 @@ function clickCheckPluginVersion() {
 // 远程配置库
 function clickRemoteConfig() {
     var szDeviceIdentify = $("#ip").val(),
-        iDevicePort = parseInt($("#deviceport").val(), 10) || "",
+        iDevicePort = parseInt(Def_Optional_deviceport, 10) || "",
         szInfo = "";
     
     if (null == szDeviceIdentify) {
@@ -1721,8 +1731,8 @@ function clickGetDeviceIP() {
         showOPInfo("设备IP和端口解析成功！");
 
         var arrTemp = szDeviceInfo.split("-");
-        $("#loginip").val(arrTemp[0]);
-        $("#deviceport").val(arrTemp[1]);
+        Def_IP_AD.valueOf(arrTemp[0]);
+        Def_Optional_deviceport.valueOf(arrTemp[1]);
     }
 }
 

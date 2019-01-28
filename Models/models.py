@@ -333,5 +333,18 @@ class Customer(models.Model):
       #  managed = False
         db_table = 'Customer_Table'
 
+class Video(models.Model):
+    id = models.AutoField(primary_key=True)
+    ip = models.GenericIPAddressField()
+    port = models.IntegerField(default='80')
+    name = models.CharField(max_length=20)
+    pwd = models.CharField(max_length=32)
+    rtsp_port = models.IntegerField(default='553')
+    stream_type = models.IntegerField(default='1')
+
+    class Meta:
+        db_table = 'video_conf'
+
+
 
 
