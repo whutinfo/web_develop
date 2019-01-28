@@ -5,6 +5,17 @@ from Base.com_func import *
 import json
 
 
+'''
+公共函数在Base下的com_func中，不要动！只需在自己的views下 from Base.com_func import * 导入即可
+
+单页的页面函数在Base下的views中，复制到自己写的app下的views中做相应的更改
+保存需要读取前端Save传值写的那些参数  具体看前端save函数  有注释
+
+单页的页面html 在 Base/templates/Base/sample_single.html  全部替换到自己的页面中
+'''
+
+
+'''页面函数'''
 def Base(request):
 	action = request.POST.get('action')
 

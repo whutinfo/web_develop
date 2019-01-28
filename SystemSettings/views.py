@@ -1,9 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
-
 from Models import models
 import json
-#from Base.views import *
 from Base.com_func import *
 
 def goods(request):
@@ -240,7 +238,7 @@ def supplier(request):
             models.Supplier.objects.create(name=add_name,phone=add_phone,managername=add_manager,address=add_address)
             back = 1
             return HttpResponse(back)
-
+        '''usr code end '''
 
 
 #售卖页面  销售页面的处理函数
@@ -297,7 +295,6 @@ def Seller_Trans(request):
                 # 用.copy()就不会跟着改变
                 value_dict.clear()#防止出错时保存了上一次的值而导致看不出问题在哪
 
-
             return HttpResponse(json.dumps(value_list))  # 将列表拼字典仿Json格式转字符串传给前端 [{},{},{}]
 
         elif action == 'Save':
@@ -325,7 +322,7 @@ def Seller_Trans(request):
                 value_dict['name'] = row.SellerpropertyType
                 value_list.append(value_dict.copy())
             return HttpResponse(json.dumps(value_list))
-
+        '''usr code end '''
 
 
 #销售商的属性配置
@@ -380,6 +377,8 @@ def SellerProp_Trans(request):
             add_Propretyname = request.POST.get('Proprety')
             models.SellerPorprety.objects.create(SellerpropertyType=add_Propretyname)
             return HttpResponse(1)
-
+        elif action == 'LoadSellerPro':
+            pass #暂不处理
+        '''usr code end '''
 
 
