@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
+
+from django.db import dbTrans
 from Models import models
 import json
 from Base.views import get_checkbox,get_columns
@@ -180,6 +182,9 @@ def supplier(request):
 
 #售卖页面  销售页面的处理函数
 def Seller_Trans(request):
+    cursor1 = connection.cursor();
+
+
     action = request.POST.get('action')
     if request.method == 'GET':
         return render(request, 'SystemSettings/Seller.html')
@@ -234,6 +239,7 @@ def Seller_Trans(request):
 
 #销售商的属性配置
 def SellerProp_Trans(request):
+    fun_call_db_proc()
     action = request.POST.get('action')
     if request.method == 'GET':
         return render(request, 'SystemSettings/SellerProperty.html')
@@ -261,3 +267,16 @@ def SellerProp_Trans(request):
 
 
 
+
+'''
+wangyu test
+
+def fun_call_db_proc(request):
+    models.Models
+    django.db
+    cursor1 = dbTrans.cursor()
+    cursor1.execute("select * from Goods_Table")
+    cursor.fetchall()
+#    cursor1.execture()
+
+'''
