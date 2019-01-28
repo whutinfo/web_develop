@@ -1,4 +1,4 @@
-""""已用类做了这几个函数  begin"""
+""""已将这几个函数封装成类  begin"""
 '''
 json_frame_construct：针对页面的get命令进行处理   拼接前端表格的column数据
 参数column_name:字段名  column_cnt：列的数量   column_width：列的宽度  column_align：对齐格式
@@ -50,7 +50,7 @@ def fun_call_db_proc(database_str,table_str,column_str):
 	data_str = cursor1.fetchone()
 	return data_str
 
-""""已用类做了这几个函数  end"""
+""""已将这几个函数封装成类   end"""
 
 
 class base_html_construct_trans(object):
