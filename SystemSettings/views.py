@@ -3,44 +3,55 @@ from django.shortcuts import HttpResponse
 
 from Models import models
 import json
-from Base.views import *
-
+#from Base.views import *
+from Base.com_func import *
 
 def goods(request):
     action = request.POST.get('action')
-    if request.method == 'GET':
-        """  可以改参数的地方  """
-        cnt = 2  #需要获取的列的数量  包括id 按顺序获取
-        width_list = [0,15]   #列的宽度  个数与cnt匹配  顺序对应数据库中列的顺序  id不展示，但会获取，赋0
-        align_list = ['center']*cnt  #对齐格式 个数与cnt匹配   顺序对应数据库中列的顺序  id不展示，但会获取
-        model_name = models.Goods   #想要展示的表的Model对象
-        """  可以改参数的地方  """
+    '''sys code define variable begin  '''
+    column = ''
+    '''sys code define variable begin  '''
 
-        column = get_cnt_column(cnt,width_list,align_list,model_name)
+    if request.method == 'GET':
+        '''user code define variable begin  '''
+
+        databasename = 'aliyun'
+        tablename = 'Goods_Table'  #在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
+        ''' id(数据库中自增长的那个字段，同样应为真实字段名)一定要有！！并放在第一个，不是用来显示，用来处理信息  其余顺序根据前端想要的摆放顺序来'''
+        columnname = ['id', 'goodsName']   #  在数据库找到想要获取的字段，应为数据库中真实的字段名,即Models中的db_column，如有的话
+        columncnt = 2       #需要获取的列的数量 包括id
+        columnwidth = [0, 18]       #列的宽度 个数与cnt匹配
+        columnalign = ['center']*columncnt  #对齐格式 个数与cnt匹配
+
+        '''user code define variable  end  '''
+
+        '''sys code begin  '''
+        column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+        '''sys code end'''
+
+        '''usr code begin  '''
         return render(request, 'SystemSettings/goods.html', {'info_dict': column})
+        '''usr code end '''
 
     else:
-        """  可以改参数的地方  """
+        '''user code define variable begin  '''
         model_name = models.Goods  # 想要展示的表的Model对象
-        """  可以改参数的地方  """
+        '''user code define variable end  '''
+
+        '''usr code begin  '''
 
         if action=='LoadData':
-            goods_list=model_name.objects.all()
-            value = base_fun_get_demo(model_name)  # 获取该表中所有的列名及其对应的注释，即对应前端的{ field : name }
-            index = tuple(value) #转元组
-            '''
-			加载显示数据时返回的字典的Key要跟前端的field匹配，故通过base_fun_get_demo返回字典，并将其对应的value改成想要的数据
-			用字典和列表拼接很方便形成Json格式
-			value={'id': '索引号', 'name': '生产厂商名称', 'manager': '负责人名称', 'phone': '负责人联系电话', 'address': '生产厂商地址'}
-		   '''
+            querys=model_name.objects.all() #获取需要的字段名的数据
+            value_dict = {'value0':'','value1':''}
             value_list = []
-            for row in goods_list:
-                value[index[0]] = row.id
-                value[index[1]]=row.goodsname  # [{},{},{}]
-                value_list.append(value.copy())  #直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
-                   #用.copy()就不会跟着改变
+            for row in querys:
+                value_dict['value0'] = row.id #一定要获取id 并放进第一个value0
+                value_dict['value1']=row.goodsname  # 根据前端想要的摆放顺序来
+                value_list.append(value_dict.copy())  #直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
+                #用.copy()就不会跟着改变
+                value_dict.clear()  # 防止出错时保存了上一次的值而导致看不出问题在哪
 
-            return HttpResponse(json.dumps(value_list))#将列表拼字典仿Json格式转字符串传给前端
+            return HttpResponse(json.dumps(value_list))#将列表拼字典仿Json格式转字符串传给前端 [{},{},{}]
         elif action=='Save':
             back = 0
             add_goods=request.POST.get('name')
@@ -48,40 +59,56 @@ def goods(request):
             back = 1
             return HttpResponse(back)
 
+        '''usr code end '''
 
 def goodsCat(request):
-    action=request.POST.get('action')
-    if request.method=='GET':
-        """  可以改参数的地方  """
-        cnt = 2  # 需要获取的列的数量  包括id 按顺序获取
-        width_list = [0, 15]  # 列的宽度  个数与cnt匹配  顺序对应数据库中列的顺序  id不展示，但会获取，赋0
-        align_list = ['center'] * cnt  # 对齐格式 个数与cnt匹配   顺序对应数据库中列的顺序  id不展示，但会获取
-        model_name = models.GoodsCat  # 想要展示的表的Model对象
-        """  可以改参数的地方  """
+    action = request.POST.get('action')
 
-        column = get_cnt_column(cnt, width_list, align_list, model_name)
+    '''sys code define variable begin  '''
+    column = ''
+    '''sys code define variable begin  '''
+
+    if request.method == 'GET':
+        '''user code define variable begin  '''
+
+        databasename = 'aliyun'
+        tablename = 'goodsCat_Table'  # 在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
+        ''' id(数据库中自增长的那个字段，同样应为真实字段名)一定要有！！并放在第一个，不是用来显示，用来处理信息  其余顺序根据前端想要的摆放顺序来'''
+        columnname = ['id', 'catName']  # 在数据库找到想要获取的字段，应为数据库中真实的字段名,即Models中的db_column，如有的话
+        columncnt = 2  # 需要获取的列的数量 包括id
+        columnwidth = [0, 18]  # 列的宽度 个数与cnt匹配
+        columnalign = ['center'] * columncnt  # 对齐格式 个数与cnt匹配   可以不用改！！
+
+        '''user code define variable  end  '''
+
+        '''sys code begin  '''
+        column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+        '''sys code end'''
+
+        '''usr code begin  '''
         return render(request, 'SystemSettings/goodsCat.html', {'info_dict': column})
+        '''usr code end '''
+
     else:
-        """  可以改参数的地方  """
+        '''user code define variable begin  '''
         model_name = models.GoodsCat  # 想要展示的表的Model对象
-        """  可以改参数的地方  """
+        '''user code define variable end  '''
+
+        '''usr code begin  '''
 
         if action == 'LoadData':
-            goodsCat_list = model_name.objects.all()
-            value = base_fun_get_demo(model_name)  # 获取该表中所有的列名及其对应的注释，即对应前端的{ field : name }
-            index = tuple(value)
-            '''
-			加载显示数据时返回的字典的Key要跟前端的field匹配，故通过base_fun_get_demo返回字典，并将其对应的value改成想要的数据
-			用字典和列表拼接很方便形成Json格式
-			value={'id': '索引号', 'name': '生产厂商名称', 'manager': '负责人名称', 'phone': '负责人联系电话', 'address': '生产厂商地址'}
-		   '''
+            querys = model_name.objects.all()  # 获取需要的字段名的数据
+            value_dict = {'value0': '', 'value1': ''}  # 有几个需要的列就有多少value 包括Id
             value_list = []
-            for row in goodsCat_list:
-                value[index[0]] = row.id
-                value[index[1]] = row.catname
-                value_list.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
+            for row in querys:
+                value_dict['value0'] = row.id  # 一定要获取id 并放进第一个value0
+                value_dict['value1'] = row.catname  # 根据前端想要的摆放顺序来
+
+                value_list.append(value_dict.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
                 # 用.copy()就不会跟着改变
-            return HttpResponse(json.dumps( value_list))  # 将列表转字符串传给前端
+                value_dict.clear()  # 防止出错时保存了上一次的值而导致看不出问题在哪
+
+            return HttpResponse(json.dumps(value_list))  # 将列表拼字典仿Json格式转字符串传给前端 [{},{},{}]
         elif action == 'Save':
             back = 0
             add_goodsCat = request.POST.get('name')
@@ -89,91 +116,121 @@ def goodsCat(request):
             models.GoodsCat.objects.create(catname=add_goodsCat)
             return HttpResponse(back)
 
+        '''usr code end '''
+
 
 def manufactor(request):
-    action=request.POST.get('action')
-    if request.method=='GET':
-        """  可以改参数的地方  """
-        cnt = 5  #需要获取的列的数量  包括id 按顺序获取
-        width_list = [0,18, 10, 15, 20]   #列的宽度  个数与cnt匹配  顺序对应数据库中列的顺序  id不展示，但会获取，赋0
-        align_list = ['center']*cnt  #对齐格式 个数与cnt匹配   顺序对应数据库中列的顺序  id不展示，但会获取
-        model_name = models.Manufactor   #想要展示的表的Model对象
-        """  可以改参数的地方  """
+    action = request.POST.get('action')
 
-        column = get_cnt_column(cnt,width_list,align_list,model_name)
+    '''sys code define variable begin  '''
+    column = ''
+    '''sys code define variable begin  '''
+
+    if request.method == 'GET':
+        '''user code define variable begin  '''
+
+        databasename = 'aliyun'
+        tablename = 'Manufactor_Table'  # 在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
+        ''' id(数据库中自增长的那个字段，同样应为真实字段名)一定要有！！并放在第一个，不是用来显示，用来处理信息  其余顺序根据前端想要的摆放顺序来'''
+        columnname = ['id', 'name', 'managerName', 'phone',
+                      'address']  # 在数据库找到想要获取的字段，应为数据库中真实的字段名,即Models中的db_column，如有的话
+        columncnt = 5  # 需要获取的列的数量 包括id
+        columnwidth = [0, 18, 10, 12, 20]  # 列的宽度 个数与cnt匹配
+        columnalign = ['center'] * columncnt  # 对齐格式 个数与cnt匹配   可以不用改！！
+
+        '''user code define variable  end  '''
+
+        '''sys code begin  '''
+        column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+        '''sys code end'''
+
+        '''usr code begin  '''
         return render(request, 'SystemSettings/manufactor.html', {'info_dict': column})
+        '''usr code end '''
+
     else:
-        """  可以改参数的地方  """
+        '''user code define variable begin  '''
         model_name = models.Manufactor  # 想要展示的表的Model对象
-        """  可以改参数的地方  """
+        '''user code define variable end  '''
+
+        '''usr code begin  '''
+
         if action == 'LoadData':
-            Manufactor_list = model_name.objects.all()
-            value = base_fun_get_demo(model_name)#获取该表中所有的列名及其对应的注释，即对应前端的{ field : name }
-            index = tuple(value)
+            querys = model_name.objects.all()  # 获取需要的字段名的数据
+            value_dict = {'value0': '', 'value1': '', 'value2': '', 'value3': '', 'value4': ''}  # 有几个需要的列就有多少value 包括Id
             value_list = []
-            '''
-            加载显示数据时返回的字典的Key要跟前端的field匹配，故通过base_fun_get_demo返回字典，并将其对应的value改成想要的数据
-            用字典和列表拼接很方便形成Json格式
-            value={'id': '索引号', 'name': '生产厂商名称', 'manager': '负责人名称', 'phone': '负责人联系电话', 'address': '生产厂商地址'}
-           '''
-            for row in Manufactor_list:
-                value[index[0]] = row.id
-                value[index[1]] = row.name
-                value[index[2]] = row.manager
-                value[index[3]] = row.phone
-                value[index[4]] = row.address
-                value_list.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
+            for row in querys:
+                value_dict['value0'] = row.id  # 一定要获取id 并放进第一个value0
+                value_dict['value1'] = row.name  # 根据前端想要的摆放顺序来
+                value_dict['value2'] = row.manager  # 负责人姓名
+                value_dict['value3'] = row.phone  # 负责人联系电话
+                value_dict['value4'] = row.address  # 生产厂商地址
+                value_list.append(value_dict.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
                 # 用.copy()就不会跟着改变
-            return HttpResponse(json.dumps(value_list))  # 将列表转字符串传给前端
+                value_dict.clear()  # 防止出错时保存了上一次的值而导致看不出问题在哪
+
+            return HttpResponse(json.dumps(value_list))  # 将列表拼字典仿Json格式转字符串传给前端 [{},{},{}]
         elif action == 'Save':
             back = 0
-            add_name = request.POST.get('name')
-            add_manager=request.POST.get('manager')
-            add_phone=request.POST.get('phone')
-            add_address=request.POST.get('address')
-            models.Manufactor.objects.create(name=add_name,phone=add_phone,manager=add_manager,address=add_address)
+            add_goods = request.POST.get('name')
+            models.Goods.objects.create(goodsname=add_goods)
             back = 1
             return HttpResponse(back)
-       # elif action == 'columns':
-            pass
+
+        '''usr code end '''
+
 
 def supplier(request):
-    action=request.POST.get('action')
-    if request.method=='GET':
-        """  可以改参数的地方  """
-        cnt = 5  # 需要获取的列的数量  包括id 按顺序获取
-        width_list = [0, 18, 10, 12, 20]  # 列的宽度  个数与cnt匹配  顺序对应数据库中列的顺序  id不展示，但会获取，赋0
-        align_list = ['center'] * cnt  # 对齐格式 个数与cnt匹配   顺序对应数据库中列的顺序  id不展示，但会获取
-        model_name = models.Supplier  # 想要展示的表的Model对象
-        """  可以改参数的地方  """
+    action = request.POST.get('action')
 
-        column = get_cnt_column(cnt, width_list, align_list, model_name)
+    '''sys code define variable begin  '''
+    column = ''
+    '''sys code define variable begin  '''
+
+    if request.method == 'GET':
+        '''user code define variable begin  '''
+
+        databasename = 'aliyun'
+        tablename = 'Supplier_Table'  # 在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
+        ''' id(数据库中自增长的那个字段，同样应为真实字段名)一定要有！！并放在第一个，不是用来显示，用来处理信息  其余顺序根据前端想要的摆放顺序来'''
+        columnname = ['id', 'name', 'managerName', 'phone',
+                      'address']  # 在数据库找到想要获取的字段，应为数据库中真实的字段名,即Models中的db_column，如有的话
+        columncnt = 5  # 需要获取的列的数量 包括id
+        columnwidth = [0, 18, 10, 12, 20]  # 列的宽度 个数与cnt匹配
+        columnalign = ['center'] * columncnt  # 对齐格式 个数与cnt匹配   可以不用改！！
+
+        '''user code define variable  end  '''
+
+        '''sys code begin  '''
+        column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+        '''sys code end'''
+
+        '''usr code begin  '''
         return render(request, 'SystemSettings/supplier.html', {'info_dict': column})
+        '''usr code end '''
 
     else:
-        """  可以改参数的地方  """
+        '''user code define variable begin  '''
         model_name = models.Supplier  # 想要展示的表的Model对象
-        """  可以改参数的地方  """
-        if action == 'LoadData':
-            Supplier_list = model_name.objects.all()
-            value = base_fun_get_demo(model_name)  # 获取该表中所有的列名及其对应的注释，即对应前端的{ field : name }
-            index = tuple(value)
-            value_list = []
-            '''
-			加载显示数据时返回的字典的Key要跟前端的field匹配，故通过base_fun_get_demo返回字典，并将其对应的value改成想要的数据
-			用字典和列表拼接很方便形成Json格式
-			value={'id': '索引号', 'name': '生产厂商名称', 'manager': '负责人名称', 'phone': '负责人联系电话', 'address': '生产厂商地址'}
-		   '''
-            for row in Supplier_list:
-                value[index[0]] = row.id
-                value[index[1]] = row.name
-                value[index[2]] = row.managername
-                value[index[3]] = row.phone
-                value[index[4]] = row.address
-                value_list.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
-                # 用.copy()就不会跟着改变
+        '''user code define variable end  '''
 
-            return HttpResponse(json.dumps(value_list)) # 将列表转字符串传给前端
+        '''usr code begin  '''
+
+        if action == 'LoadData':
+            querys = model_name.objects.all()  # 获取需要的字段名的数据
+            value_dict = {'value0': '', 'value1': '', 'value2': '', 'value3': '', 'value4': ''}  # 有几个需要的列就有多少value 包括Id
+            value_list = []
+            for row in querys:
+                value_dict['value0'] = row.id  # 一定要获取id 并放进第一个value0
+                value_dict['value1'] = row.name  # 根据前端想要的摆放顺序来
+                value_dict['value2'] = row.managername  # 负责人姓名
+                value_dict['value3'] = row.phone  # 负责人联系电话
+                value_dict['value4'] = row.address  # 生产厂商地址
+                value_list.append(value_dict.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
+                # 用.copy()就不会跟着改变
+                value_dict.clear()  # 防止出错时保存了上一次的值而导致看不出问题在哪
+
+            return HttpResponse(json.dumps(value_list))  # 将列表拼字典仿Json格式转字符串传给前端 [{},{},{}]
         elif action == 'Save':
             back = 0
             add_name = request.POST.get('name')
@@ -188,46 +245,61 @@ def supplier(request):
 
 #售卖页面  销售页面的处理函数
 def Seller_Trans(request):
-    cursor1 = connection.cursor();
-
-
     action = request.POST.get('action')
-    if request.method == 'GET':
-        """  可以改参数的地方  """
-        cnt = 8  # 需要获取的列的数量  包括id 按顺序获取
-        width_list = [0, 18, 15, 12, 12, 12, 12, 12]  # 列的宽度  个数与cnt匹配  顺序对应数据库中列的顺序  id不展示，但会获取，赋0
-        align_list = ['center'] * cnt  # 对齐格式 个数与cnt匹配   顺序对应数据库中列的顺序  id不展示，但会获取
-        model_name = models.Seller  # 想要展示的表的Model对象
-        """  可以改参数的地方  """
 
-        column = get_cnt_column(cnt, width_list, align_list, model_name)
+    '''sys code define variable begin  '''
+    column = ''
+    '''sys code define variable begin  '''
+
+    if request.method == 'GET':
+        '''user code define variable begin  '''
+
+        databasename = 'aliyun'
+        tablename = 'Seller_Table'  # 在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
+        ''' id(数据库中自增长的那个字段，同样应为真实字段名)一定要有！！并放在第一个，不是用来显示，用来处理信息  其余顺序根据前端想要的摆放顺序来'''
+        columnname = ['id', 'SellerName', 'Sellerproperty', 'SellerOwner','SellerOwnerPhone', 'SellerOwnerLevel',
+                      'SellerOwnerNo','SellerOwnerArea']  # 在数据库找到想要获取的字段，应为数据库中真实的字段名,即Models中的db_column，如有的话
+        columncnt = 8  # 需要获取的列的数量 包括id
+        columnwidth = [0, 18, 15, 12, 12, 12, 12, 20]  # 列的宽度 个数与cnt匹配  第一个对应的Id,id 不显示，赋0即可
+        columnalign = ['center'] * columncnt  # 对齐格式 个数与cnt匹配   可以不用改！！
+
+        '''user code define variable  end  '''
+
+        '''sys code begin  '''
+        column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+        '''sys code end'''
+
+        '''usr code begin  '''
         return render(request, 'SystemSettings/Seller.html', {'info_dict': column})
+        '''usr code end '''
+
     else:
-        """  可以改参数的地方  """
+        '''user code define variable begin  '''
         model_name = models.Seller  # 想要展示的表的Model对象
-        """  可以改参数的地方  """
+        '''user code define variable end  '''
+
+        '''usr code begin  '''
+
         if action == 'LoadData':
-            Seller_list = model_name.objects.all()
-            value = base_fun_get_demo(model_name)  # 获取该表中所有的列名及其对应的注释，即对应前端的{ field : name }
-            index = tuple(value)
+            querys = model_name.objects.all()  # 获取需要的字段名的数据
+            value_dict = {'value0': '', 'value1': '', 'value2': '', 'value3': '', 'value4': '', 'value5': '', 'value6': '', 'value7': ''}  # 有几个需要的列就有多少value 包括Id
             value_list = []
-            '''
-			加载显示数据时返回的字典的Key要跟前端的field匹配，故通过base_fun_get_demo返回字典，并将其对应的value改成想要的数据
-			用字典和列表拼接很方便形成Json格式
-			value={'id': '索引号', 'name': '生产厂商名称', 'manager': '负责人名称', 'phone': '负责人联系电话', 'address': '生产厂商地址'}
-		   '''
-           # value = {'Sellername': '', 'Sellerphone': '', 'Sellerproperty': '', 'SellerOwner': '', 'SellerOwnerPhone': '', 'SellerOwnerLevel': '', 'SellerOwnerNo': '', 'SellerOwnerArea': ''}  # 用字典和列表拼接很方便形成Json格式
-            for row in Seller_list:
-                value[index[1]] = row.Sellername
-                value[index[2]] = row.Sellerproperty
-                value[index[3]] = row.SellerOwner
-                value[index[4]] = row.SellerOwnerPhone
-                value[index[5]] = row.SellerOwnerLevel
-                value[index[6]] = row.SellerOwnerNo
-                value[index[7]] = row.SellerOwnerArea
-                value_list.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
+            for row in querys:
+                value_dict['value0'] = row.id  # 一定要获取id 并放进第一个value0
+                value_dict['value1'] = row.Sellername  # 根据前端想要的摆放顺序来
+                value_dict['value2'] = row.Sellerproperty  # 商户属性
+                value_dict['value3'] = row.SellerOwner  # 负责人姓名
+                value_dict['value4'] = row.SellerOwnerPhone  # 负责人手机号
+                value_dict['value5'] = row.SellerOwnerLevel  # 所属楼栋
+                value_dict['value6'] = row.SellerOwnerNo  # 所属编号
+                value_dict['value7'] = row.SellerOwnerArea  # 占地面积
+                value_list.append(value_dict.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
                 # 用.copy()就不会跟着改变
-            return HttpResponse(json.dumps(value_list)) # 将列表转字符串传给前端
+                value_dict.clear()#防止出错时保存了上一次的值而导致看不出问题在哪
+
+
+            return HttpResponse(json.dumps(value_list))  # 将列表拼字典仿Json格式转字符串传给前端 [{},{},{}]
+
         elif action == 'Save':
             back = 0
             add_Sellername = request.POST.get('name')
@@ -243,6 +315,7 @@ def Seller_Trans(request):
                                            SellerOwnerLevel = add_SellerOwnerLevel,SellerOwnerNo = add_SellerOwnerNo,SellerOwnerArea = add_SellerOwnerArea )
             back = 1
             return HttpResponse(back)
+
         elif action == 'LoadSellerPro':
             value_dict = {'type':'','title':''}
             value_list = []
@@ -251,45 +324,58 @@ def Seller_Trans(request):
                 value_dict['id'] = row.id
                 value_dict['name'] = row.SellerpropertyType
                 value_list.append(value_dict.copy())
-            return HttpResponse(json.dumps(value_list)) #这个地方暂时先不处理
+            return HttpResponse(json.dumps(value_list))
 
 
 
 #销售商的属性配置
 def SellerProp_Trans(request):
-    fun_call_db_proc()
     action = request.POST.get('action')
-    if request.method == 'GET':
-        """  可以改参数的地方  """
-        cnt = 2  # 需要获取的列的数量  包括id 按顺序获取
-        width_list = [0, 18]  # 列的宽度  个数与cnt匹配  顺序对应数据库中列的顺序  id不展示，但会获取，赋0
-        align_list = ['center'] * cnt  # 对齐格式 个数与cnt匹配   顺序对应数据库中列的顺序  id不展示，但会获取
-        model_name = models.SellerPorprety # 想要展示的表的Model对象
-        """  可以改参数的地方  """
 
-        column = get_cnt_column(cnt, width_list, align_list, model_name)
+    '''sys code define variable begin  '''
+    column = ''
+    '''sys code define variable begin  '''
+
+    if request.method == 'GET':
+        '''user code define variable begin  '''
+
+        databasename = 'aliyun'
+        tablename = 'SellerPorprety_Table'  # 在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
+        ''' id(数据库中自增长的那个字段，同样应为真实字段名)一定要有！！并放在第一个，不是用来显示，用来处理信息  其余顺序根据前端想要的摆放顺序来'''
+        columnname = ['id', 'SellerP_Str']  # 在数据库找到想要获取的字段，应为数据库中真实的字段名,即Models中的db_column，如有的话
+        columncnt = 2  # 需要获取的列的数量 包括id
+        columnwidth = [0, 18]  # 列的宽度 个数与cnt匹配  第一个对应的Id,id 不显示，赋0即可
+        columnalign = ['center'] * columncnt  # 对齐格式 个数与cnt匹配   可以不用改！！
+
+        '''user code define variable  end  '''
+
+        '''sys code begin  '''
+        column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+        '''sys code end'''
+
+        '''usr code begin  '''
         return render(request, 'SystemSettings/SellerProperty.html', {'info_dict': column})
+        '''usr code end '''
+
     else:
-        """  可以改参数的地方  """
+        '''user code define variable begin  '''
         model_name = models.SellerPorprety  # 想要展示的表的Model对象
-        """  可以改参数的地方  """
+        '''user code define variable end  '''
+
+        '''usr code begin  '''
+
         if action == 'LoadData':
-            SellerProp_list = model_name.objects.all()
-            value = base_fun_get_demo(model_name)  # 获取该表中所有的列名及其对应的注释，即对应前端的{ field : name }
-            index = tuple(value)
+            querys = model_name.objects.all()  # 获取需要的字段名的数据
+            value_dict = {'value0': '', 'value1': ''}  # 有几个需要的列就有多少value 包括Id
             value_list = []
-            '''
-			加载显示数据时返回的字典的Key要跟前端的field匹配，故通过base_fun_get_demo返回字典，并将其对应的value改成想要的数据
-			用字典和列表拼接很方便形成Json格式
-			value={'id': '索引号', 'name': '生产厂商名称', 'manager': '负责人名称', 'phone': '负责人联系电话', 'address': '生产厂商地址'}
-		   '''
-          #  value = {'SellerpropertyType': '', 'ID': ''}  # 用字典和列表拼接很方便形成Json格式
-            for row in SellerProp_list:
-                value[index[0]] = row.id
-                value[index[1]] = row.SellerpropertyType
-                value_list.append(value.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
+            for row in querys:
+                value_dict['value0'] = row.id  # 一定要获取id 并放进第一个value0
+                value_dict['value1'] = row.SellerpropertyType  # 根据前端想要的摆放顺序来
+                value_list.append(value_dict.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
                 # 用.copy()就不会跟着改变
-            return HttpResponse(json.dumps(value_list)  ) # 将列表转字符串传给前端
+                value_dict.clear()  # 防止出错时保存了上一次的值而导致看不出问题在哪
+            return HttpResponse(json.dumps(value_list))  # 将列表拼字典仿Json格式转字符串传给前端 [{},{},{}]
+
         elif action == 'Save':
             add_Propretyname = request.POST.get('Proprety')
             models.SellerPorprety.objects.create(SellerpropertyType=add_Propretyname)
