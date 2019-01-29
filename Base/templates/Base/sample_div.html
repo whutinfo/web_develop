@@ -1,7 +1,7 @@
 {% load staticfiles %}
 <!DOCTYPE html>
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head  runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>{{ head_title }}</title>
@@ -10,46 +10,31 @@
     <script src={% static "Themes/EasyUI/jquery.min.js" %}></script>
     <script src={% static "Themes/EasyUI/jquery.easyui.min.js" %}></script>
     <script src={% static "Themes/Scripts/FunctionJS.js" %} type="text/javascript"></script>
-
+</head>
      <script>
          $(document).ready(function () {
-             //InitDg1();
+             InitDg1();
+           //  InitDg2();
              LoadDg1();//一开始就加载所有
 
          });
-         /*    该函数不管！    */
+         /*    该函数不管不动！    */
          //////////////////***************生产厂商信息 初始化 + 加载 *************///////////////////////////
          function InitDg1() {
              var datajson = [];
              var columns_json = [];
-             var parm = 'action=columns';
-             //getAjax 第一个参数是Url 做相应的 更改
-             getAjax("/single/", parm, function (backstring) {
-                 if (backstring != "") {
-                     columns_json = jQuery.parseJSON(backstring);
-                 }
-             })
              $("#dg1").datagrid({
                  data: datajson,
-                 title: '生产厂商信息',
-                /* columns: [[
-                      { field: 'CK', title: '', checkbox: true, width: "5%" },
-                      { field: 'value1', title: '生产厂商名称', width: "18%", align: 'center' },
-                      { field: 'value2', title: '负责人姓名', width: "10%", align: 'center' },
-                      { field: 'value3', title: '负责人手机号', width: "12%", align: 'center' },
-                      { field: 'value4', title: '联系地址', width: "20%", align: 'center' },
-
-                 ]],*/
-                 columns: [columns_json],  //格式必须是 [[{},{},{}]]  所以json外面还要套一个中括号[]
                  showFooter: true,
                  pagination: true,
                  singleSelect: true,
                  selectOnCheck: true,
                  onClickRow: function (index, row) {
+                    LoadDg2(row.value0);//返回索引id 即数据中自增长字段
                  }
              })
          }
-         /*    该函数不管！    */
+         /*    该函数不管不动！    */
 
          /***********加载本地生产厂商信息数据****************/
          function LoadDg1() {
@@ -60,7 +45,8 @@
 
                 /* user code begin */
                      //getAjax 第一个参数是Url 做相应的 更改
-             getAjax("/single/", parm, function (backstring) {
+             getAjax("/div/", parm, function (backstring) {
+
                  /* user code end */
                  if (backstring != "") {
                      datajson = jQuery.parseJSON(backstring);
@@ -71,11 +57,32 @@
          }
          /******************加载结束***********************/
 
+     /***********加载本地生产厂商详情  显示在下面分栏的信息****************/
+         function LoadDg2(value_id) {
+             var datajson = [];
+             var value_id = value_id;
+             var parm = "action=LoadDetail&value_id=" + value_id;
+              //  后台用request.POST.get()方式获取时  是根据字符串里面的名称获取的，与上面的变量名无关
+             //  如：  request.POST.get('action')  后台获取的就是action对应的值即Save 参数至少必须得有action参数
 
-         /****************新建生产厂商 初始化   可以不动！*****************/
+                /* user code begin */
+                     //getAjax 第一个参数是Url 做相应的 更改
+             getAjax("/div/", parm, function (backstring) {
+
+                 /* user code end */
+                 if (backstring != "") {
+                     datajson = jQuery.parseJSON(backstring);
+                 }
+             })
+             $("#dg2").datagrid('loadData', datajson);//加载本地数据，旧的行将被移除
+
+         }
+
+         /****************新建生产厂商  初始化配置   可以不动！*****************/
          function ShowDlg1_2() {
              $('#dlg1_2').show();
              $('#dlg1_2').dialog({
+
                  width: 705,
                  height: 420,
                  closed: false,
@@ -83,8 +90,10 @@
                  onResize: function () {
                      $(this).dialog('center');
                  },
-                 onClose: function () {  //关闭时进行的处理  ： 重新加载数据
+
+                 onClose: function () {
                      LoadDg1();
+
                  },
                  buttons: '#dlg1_2-buttons1_add',
 
@@ -96,7 +105,7 @@
          function save() {
                  /* user code begin */
 
-             //变量名与显示的Html的新增信息的排序相对应
+             //变量名与下面Html的新增信息的排序相对应
              var name = $("#dlg1_2_txt_1").textbox('getValue');
              var manager = $("#dlg1_2_txt_2").textbox('getValue');
              var phone = $("#dlg1_2_txt_3").textbox('getValue');
@@ -106,14 +115,16 @@
              var parm = 'action=Save&name=' + name + '&manager=' + manager + '&phone=' + phone + '&address=' + address;
 
                 //getAjax 第一个参数是Url 做相应的 更改
-             getAjax("/single/", parm, function (data) {
+             getAjax("/div/", parm, function (data) {
 
                  /* user code end */
 
                  var backstring = jQuery.parseJSON(data);
                  if (backstring == "1") {
                      $('#dlg1_2').dialog('close');
+
                      LoadDg1();
+
                  }
                  else
                      alert("保存失败");
@@ -165,7 +176,11 @@
          }
          //////////////////***************Dlg1_1  工单信息详情查看 结束 *************///////////////////////////
 
+
+
      </script>
+
+
 
      <style>
 
@@ -180,36 +195,55 @@
         }
     </style>
 
-</head>
 
 
-<body class="easyui-layout" style="width: 100%; height: 100%">
+<body class="easyui-layout" style="width: 100%; height: 100%">>
     <div data-options="region:'center'," style="height: 100%">
          <div id="toolbar1" style="padding: 2px 5px;">
                                                                                             <!-- 中间内容可以随页面做更改 新增XXXX信息  等-->
             <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'" onclick=" LoadDg1();" >刷新</a>
-                                                                                                                        <!--$('#dlg1_2').show().dialog();   ShowDlg1_2()-->
-            <a href="javascript:void(0)" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-add'" onclick="ShowDlg1_2() ">新增生产厂家信息</a>
 
-            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'" onclick="edit();">编辑生产厂家信息</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-add'" onclick="ShowDlg1_2();">新增生产厂家信息</a>
+
+            <a href="javascript:void(0)" class="easyui-linkbutton"data-options="plain:true,iconCls:'icon-edit'" onclick="edit();">编辑生产厂家信息</a>
            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" onclick="ShowDlg1_1();">查看详情</a>
 
-         </div>   <!-- 表格信息    不动！-->
-         <table id="dg1" title="{{ datagrid_title }}" class="easyui-datagrid" data-options="" style="width: 99%; height: 95%;"
-            showFooter="true" pagination="true" singleSelect="true" selectOnCheck="true">
-              <thead>
-                <tr>
-                    <th data-options="field:'ck',checkbox:true"></th>
-                    {% for i in info_dict %}
-                        {% if i.field != 'value0' %}
-                            <th field="{{ i.field }}" width="{{ i.width }}" align="{{ i.align }}">{{ i.title }}</th>
-                        {% endif %}
-                    {% endfor %}
+         </div>
+         <div data-options="region:'north'" style="padding: 5px; height: 300px;">
+             <!-- 上分栏    不动!-->
+             <table id="dg1" title={{ datagrid_title }} class="easyui-datagrid" data-options="" style="width: 99%; height: 95%;"
+                showFooter="true" pagination="true" singleSelect="true" selectOnCheck="true">
+                  <thead>
+                    <tr>
+                        <th data-options="field:'ck',checkbox:true"></th>
+                        {% for i in info_dict %}
+                            {% if i.field != 'value0' %}
+                                <th field={{ i.field }} width={{ i.width }} align={{ i.align }}>{{ i.title }}</th>
+                            {% endif %}
+                        {% endfor %}
 
-                </tr>
-              </thead>
-         </table>
+                    </tr>
+                  </thead>
+             </table>
+         </div>  <!-- 下分栏    不动-->
+         <div data-options="region:'south'" style="height: 400px; padding: 5px;">
+             <table id="dg2" title={{ detail_name }} class="easyui-datagrid" data-options="" style="width: 99%; height: 95%;"
+                showFooter="true" pagination="true" singleSelect="true" selectOnCheck="true">
+                  <thead>
+                    <tr>
+                        <th data-options="field:'ck',checkbox:true"></th>
+                        {% for i in detail_dict %}
+                            {% if i.field != 'value0' %}
+                                <th field={{ i.field }} width={{ i.width }} align={{ i.align }}>{{ i.title }}</th>
+                            {% endif %}
+                        {% endfor %}
 
+                    </tr>
+                  </thead>
+             </table>
+         </div>
+
+    </div>
     <!--查看生产厂商详情-->
     <div id="dlg1_1" style="display: none;">
         <div style="padding-top: 10px; padding-left: 20px;">
@@ -250,12 +284,12 @@
         </div>
     </div>
 
-    <!--创建生产厂家   不动！-->
-    <div id="dlg1_2" style="display: none;" title="{{ add_title }}">
+    <!--创建生产厂家    不动！-->
+    <div id="dlg1_2" style="display: none;" title={{ add_title }}>
         <div style="padding-top: 5px; padding-left: 5px; padding-right: 5px;">
             <div class="easyui-panel" style="padding-top: 4px; padding-left: 20px; width: 680px; height: 400px;">
                 <table>
-                     {% for row in add_dict %}
+                    {% for row in add_dict %}
                         <tr>
                             <td style="padding-top: 4px;">
                                 <span style="padding: 0px 0px 0px 25px;">{{ row.title }}:</span>
@@ -265,7 +299,6 @@
                             </td>
                         </tr>
                     {% endfor %}
-
                 </table>
             </div>
             <div id="dlg1_2-buttons1_add" style="display: none;">
@@ -277,4 +310,6 @@
     </div>
 
 </body>
+
+
 </html>

@@ -1,3 +1,4 @@
+#-*- coding: UTF-8 -*-
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from Models import models
@@ -15,7 +16,8 @@ def customermanager(request):
     if request.method == 'GET':
         '''user code define variable begin  '''
 
-        databasename = 'aliyun'
+        version = 1  # 哪一代版本的 int
+        # databasename = 'aliyun'
         tablename = 'Customer_Table'  # 在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
         ''' id(数据库中自增长的那个字段，同样应为真实字段名)一定要有！！并放在第一个，不是用来显示，用来处理信息  其余顺序根据前端想要的摆放顺序来'''
         columnname = ['id', 'name', 'carId', 'phone', 'sex', 'birthday',
@@ -27,7 +29,12 @@ def customermanager(request):
         '''user code define variable  end  '''
 
         '''sys code begin  '''
-        column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+
+        # column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+        base_html_construct = base_html_construct_trans(version, tablename, columnname, columnwidth, columnalign)
+        base_html_construct.encode()  # 先将传送进来的参数进行解析
+        column = base_html_construct.fun_Get_Cmd_Trans(columncnt)  # 拼接cnt列Json
+
         '''sys code end'''
 
         '''usr code begin  '''

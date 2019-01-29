@@ -34,6 +34,8 @@ def fun_Get_Cmd_Trans(databasename,tablename,columnname,columncnt,columnwidth,co
 
     return column
 
+"""已将这几个函数封装成类   end"""
+
 
 '''
 wangyu test
@@ -48,45 +50,35 @@ def fun_call_db_proc(database_str,table_str,column_str):
 	cursor1 = connection.cursor()
 	cursor1.execute(data2)
 	data_str = cursor1.fetchone()
-	return data_str
+	if data_str != None:
+		return data_str
+	else:       #参数有误报错
+		return ''
 
-""""已将这几个函数封装成类   end"""
-
-
+'''
+html页面的表格初始化的公共类
+传参顺序：版本号，获取注释的表名，获取注释的字段， 宽度 ， 对齐方式
+如： base_html_construct_trans(datagrid_version, datagrid_tablename, datagrid_columnname, datagrid_columnwidth, datagrid_columnalign)
+'''
 class base_html_construct_trans(object):
-
 	database_name = 'aliyun'
 	def __init__(self, *var):
 		self.param = var
 
 	def encode(self):
-		self.version = self.param[0]
-		# self.table_name = ''
-		# self.column_list = ''
-		# self.width_list = ''
-		# self.align_list = ''
-		if self.version == 1:  # 针对第一种格式
+		self.version = int( self.param[0] ) # 容许你输入的参数为'1' 容错
+		if self.version == 1:  # 版本
 			self.table_name = self.param[1]  # 要获取注释信息的表名  数据库中真实表名
 			self.column_list = self.param[2]  # 要获取注释的字段名  数据库中真实字段名
 			self.width_list = self.param[3]  # 列的宽度 元组
 			self.align_list = self.param[4]  # 列的对齐格式  元组
-		elif self.version == 2:  # 针对第二种数据格式
+		elif self.version == 2:  # 初始化新增信息的弹框
 			self.table_name = self.param[1]  # 要获取注释信息的表名  数据库中真实表名
 			self.column_list = self.param[2]  # 要获取注释的字段名  数据库中真实字段名
 			self.width_list = self.param[3]  # 列的宽度 元组
 			self.align_list = self.param[4]  # 列的对齐格式  元组
 
 		self.fielddic = {}
-
-	def fun_call_db_proc(self, database_str, table_str, column_str):
-		from django.db import connection
-		data2 = ''
-		data2 = 'SELECT column_comment FROM INFORMATION_SCHEMA.Columns WHERE table_schema = "' + database_str + '" AND table_name= "' + \
-		        table_str + '" AND  column_name= "' + column_str + '"'
-		cursor1 = connection.cursor()
-		cursor1.execute(data2)
-		data_str = cursor1.fetchone()
-		return data_str
 
 	'''
 	json_frame_construct：针对页面的get命令进行处理   拼接前端表格的column数据
@@ -102,29 +94,110 @@ class base_html_construct_trans(object):
 			json_frame = {'field': value, 'title': column_name[i], 'width':width, 'align': column_align[i]}
 			column.append(json_frame.copy())
 		return column
-
-	# [
-	#     {'field': 'value1', 'title': '生产厂商名称', 'width': '18%', 'align': 'center'},
-	#     {'field': 'value2', 'title': '负责人姓名', 'width': '10%', 'align': 'center'},
-	#     {'field': 'value3', 'title': '负责人手机号', 'width': "12%", 'align': 'center'},
-	#     {'field': 'value4', 'title': '联系地址', 'width': "20%", 'align': 'center'}]
-
 	# construct json
 
 	'''
 	拼接 get命令下，针对列表模式下的页面结构 
 	databasename:数据库名  tablename：表名  columnname：字段名 columncnt：字段个数  columnwidth：宽度 columnalign：对齐格式
 	'''
-
 	def fun_Get_Cmd_Trans(self, columncnt):
 		l_column_name = []
+		error = 0
 		for i in range(columncnt):
-			comment = self.fun_call_db_proc(self.database_name, self.table_name,self.column_list[i])  # 获得表的该字段的注释 即为前端表格的中文列名  返回元组如：(ID,)
-			l_column_name.append(comment[0])
-		self.fielddic = self.json_frame_construct(l_column_name, columncnt, self.width_list, self.align_list)  # 将所有列的参数送进去拼接成json
+			comment = fun_call_db_proc(self.database_name, self.table_name,self.column_list[i])  # 获得表的该字段的注释 即为前端表格的中文列名  返回元组如：(ID,)
+			if comment != '':
+				l_column_name.append(comment[0])
+			else:  #查询字段时报错
+				error = 1
+		if error != 1:
+			self.fielddic = self.json_frame_construct(l_column_name, columncnt, self.width_list, self.align_list)  # 将所有列的参数送进去拼接成json
+			return self.fielddic
+		else:#参数有误
+			return print('请检查参数是否输入有误')
 
-		return self.fielddic
+'''
+针对GET 对新增信息的弹框做初始化处理
+传参顺序如 ：版本号，获取注释的表名，获取注释的字段 输入框类型
+add_tab_construct_trans(add_tab_version, add_tab_tablename, add_tab_columnname, add_tab_boxtype)
+'''
+class add_tab_construct_trans(object):
+	database_name = 'aliyun'
 
+	def __init__(self, *var):
+		self.param = var
+
+	def encode(self):
+		self.version = int( self.param[0] ) # 容许你输入的参数为'1' 容错
+		if self.version == 1:  # 版本
+			self.table_name = self.param[1]  # 要获取注释信息的表名  数据库中真实表名
+			self.column_list = self.param[2]  # 要获取注释的字段名  数据库中真实字段名
+			self.box_type = self.param[3]  # 是输入框textbox,还是下拉框combobox,还是日历datebox
+		elif self.version == 2:  # 版本
+			self.table_name = self.param[1]  # 要获取注释信息的表名  数据库中真实表名
+			self.column_list = self.param[2]  # 要获取注释的字段名  数据库中真实字段名
+			self.box_type = self.param[3]  # 是 1:输入框textbox,还是 2:下拉框combobox,还是 3 :日历datebox
+
+		self.fielddic = {}
+
+	'''
+	json_frame_construct：针对页面的get命令进行处理   拼接前端新增信息弹框的Json
+	参数column_name:字段名  column_cnt：列的数量 box_type : 输入框的类型
+	返回值：将送进来的字段名与相应的列的各种参数拼接成前端需要的json形式返回
+	'''
+	def json_frame_construct(self,column_name,column_cnt,box_type):
+		column = []
+		type = ''
+		for i in range(column_cnt):
+			value = 'dlg1_2_txt_' + str(i+1)  #前端需要这种格式  从dlg1_2_txt_1开始
+
+			if box_type[i] == 1:
+				type = 'easyui-textbox'
+			elif box_type[i] == 2:
+				type = 'easyui-combobox'
+			elif box_type[i] == 3:
+				type = 'easyui-datebox'
+
+			json_frame = {'id': value, 'title': column_name[i],'box_type':type}
+			column.append(json_frame.copy())
+		return column
+
+	'''
+	拼接 get命令下，针对新增弹框下的页面结构 
+	columncnt：字段个数 
+	'''
+	def fun_Get_Cmd_Trans(self, columncnt):
+		l_column_name = []
+		error = 0
+		for i in range(columncnt):
+			comment = fun_call_db_proc(self.database_name, self.table_name,self.column_list[i])  # 获得表的该字段的注释 即为前端表格的中文列名  返回元组如：(ID,)
+			if comment != '':
+				l_column_name.append(comment[0])
+			else:
+				error = 1
+		if error != 1:
+			self.fielddic = self.json_frame_construct(l_column_name, columncnt,self.box_type)  # 将所有列的参数送进去拼接成json
+			return self.fielddic
+		else:#参数有误
+			return print('请检查参数是否输入有误')
+
+#还没有用到
+class html_base_var(object):
+		'''!!    表格初始化    !! '''
+		datagrid_type = ''  #哪一种初始化 int  1： 初始化datagrid表格  2：  初始化新增信息的弹框
+		datagrid_title = ''  #表格的名称
+		datagrid_tablename = ''  # 在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
+		''' id(数据库中自增长的那个字段，同样应为真实字段名)一定要有！！并放在第一个，不是用来显示，用来处理信息  其余顺序根据前端想要的摆放顺序来'''
+		datagrid_columnname = []  # 在数据库找到想要获取的字段，应为数据库中真实的字段名,即Models中的db_column，如有的话
+		datagrid_columncnt = ''  # 需要获取的列的数量 包括id
+		datagrid_columnwidth = []  # 列的宽度 个数与cnt匹配
+		datagrid_columnalign = []   # 对齐格式 个数与cnt匹配   可以不用改！！
+
+		''' !!  新增数据时的弹框初始化    新增数据是不需要传id这个参数的  id是新增后生成的自增长字段      !! '''
+		add_tab_type = ''
+		add_tab_title = '' #框的名称
+		add_tab_tablename = ''  # 在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
+		add_tab_columnname = []  # 在数据库找到想要获取的字段，应为数据库中真实的字段名,即Models中的db_column，如有的话
+		add_tab_columncnt = ''  # 需要获取的列的数量 不包括id！
 
 '''    
     cursor1.execute("select * from Goods_Table")

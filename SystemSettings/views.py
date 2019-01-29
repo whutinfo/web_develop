@@ -13,7 +13,8 @@ def goods(request):
     if request.method == 'GET':
         '''user code define variable begin  '''
 
-        databasename = 'aliyun'
+        version = 1  # 哪一代版本的 int
+        # databasename = 'aliyun'
         tablename = 'Goods_Table'  #在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
         ''' id(数据库中自增长的那个字段，同样应为真实字段名)一定要有！！并放在第一个，不是用来显示，用来处理信息  其余顺序根据前端想要的摆放顺序来'''
         columnname = ['id', 'goodsName']   #  在数据库找到想要获取的字段，应为数据库中真实的字段名,即Models中的db_column，如有的话
@@ -24,7 +25,12 @@ def goods(request):
         '''user code define variable  end  '''
 
         '''sys code begin  '''
-        column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+
+        # column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+        base_html_construct = base_html_construct_trans(version, tablename, columnname, columnwidth, columnalign)
+        base_html_construct.encode()  # 先将传送进来的参数进行解析
+        column = base_html_construct.fun_Get_Cmd_Trans(columncnt)  # 拼接cnt列Json
+
         '''sys code end'''
 
         '''usr code begin  '''
@@ -69,7 +75,8 @@ def goodsCat(request):
     if request.method == 'GET':
         '''user code define variable begin  '''
 
-        databasename = 'aliyun'
+        version = 1  # 哪一代版本的 int
+        # databasename = 'aliyun'
         tablename = 'goodsCat_Table'  # 在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
         ''' id(数据库中自增长的那个字段，同样应为真实字段名)一定要有！！并放在第一个，不是用来显示，用来处理信息  其余顺序根据前端想要的摆放顺序来'''
         columnname = ['id', 'catName']  # 在数据库找到想要获取的字段，应为数据库中真实的字段名,即Models中的db_column，如有的话
@@ -80,7 +87,12 @@ def goodsCat(request):
         '''user code define variable  end  '''
 
         '''sys code begin  '''
-        column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+
+        # column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+        base_html_construct = base_html_construct_trans(version, tablename, columnname, columnwidth, columnalign)
+        base_html_construct.encode()  # 先将传送进来的参数进行解析
+        column = base_html_construct.fun_Get_Cmd_Trans(columncnt)  # 拼接cnt列Json
+
         '''sys code end'''
 
         '''usr code begin  '''
@@ -127,7 +139,8 @@ def manufactor(request):
     if request.method == 'GET':
         '''user code define variable begin  '''
 
-        databasename = 'aliyun'
+        version = 1   #哪一代版本的 int
+       # databasename = 'aliyun'
         tablename = 'Manufactor_Table'  # 在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
         ''' id(数据库中自增长的那个字段，同样应为真实字段名)一定要有！！并放在第一个，不是用来显示，用来处理信息  其余顺序根据前端想要的摆放顺序来'''
         columnname = ['id', 'name', 'managerName', 'phone',
@@ -139,7 +152,12 @@ def manufactor(request):
         '''user code define variable  end  '''
 
         '''sys code begin  '''
-        column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+
+        # column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+        base_html_construct = base_html_construct_trans(version, tablename, columnname, columnwidth, columnalign)
+        base_html_construct.encode()  # 先将传送进来的参数进行解析
+        column = base_html_construct.fun_Get_Cmd_Trans(columncnt)  # 拼接cnt列Json
+
         '''sys code end'''
 
         '''usr code begin  '''
@@ -188,7 +206,8 @@ def supplier(request):
     if request.method == 'GET':
         '''user code define variable begin  '''
 
-        databasename = 'aliyun'
+        version = 1 #哪一代版本的 int
+        # databasename = 'aliyun'
         tablename = 'Supplier_Table'  # 在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
         ''' id(数据库中自增长的那个字段，同样应为真实字段名)一定要有！！并放在第一个，不是用来显示，用来处理信息  其余顺序根据前端想要的摆放顺序来'''
         columnname = ['id', 'name', 'managerName', 'phone',
@@ -200,7 +219,12 @@ def supplier(request):
         '''user code define variable  end  '''
 
         '''sys code begin  '''
-        column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+
+        # column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+        base_html_construct = base_html_construct_trans(version, tablename, columnname, columnwidth, columnalign)
+        base_html_construct.encode()  # 先将传送进来的参数进行解析
+        column = base_html_construct.fun_Get_Cmd_Trans(columncnt)  # 拼接cnt列Json
+
         '''sys code end'''
 
         '''usr code begin  '''
@@ -252,7 +276,8 @@ def Seller_Trans(request):
     if request.method == 'GET':
         '''user code define variable begin  '''
 
-        databasename = 'aliyun'
+        version = 1  #哪一代版本的 int
+        #databasename = 'aliyun'
         tablename = 'Seller_Table'  # 在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
         ''' id(数据库中自增长的那个字段，同样应为真实字段名)一定要有！！并放在第一个，不是用来显示，用来处理信息  其余顺序根据前端想要的摆放顺序来'''
         columnname = ['id', 'SellerName', 'Sellerproperty', 'SellerOwner','SellerOwnerPhone', 'SellerOwnerLevel',
@@ -264,7 +289,10 @@ def Seller_Trans(request):
         '''user code define variable  end  '''
 
         '''sys code begin  '''
-        column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+        # column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+        base_html_construct = base_html_construct_trans(version, tablename, columnname, columnwidth, columnalign)
+        base_html_construct.encode()  # 先将传送进来的参数进行解析
+        column = base_html_construct.fun_Get_Cmd_Trans(columncnt)  # 拼接cnt列Json
         '''sys code end'''
 
         '''usr code begin  '''
@@ -335,8 +363,8 @@ def SellerProp_Trans(request):
 
     if request.method == 'GET':
         '''user code define variable begin  '''
-
-        databasename = 'aliyun'
+        version = 1  # 哪一代版本的
+        # databasename = 'aliyun'
         tablename = 'SellerPorprety_Table'  # 在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
         ''' id(数据库中自增长的那个字段，同样应为真实字段名)一定要有！！并放在第一个，不是用来显示，用来处理信息  其余顺序根据前端想要的摆放顺序来'''
         columnname = ['id', 'SellerP_Str']  # 在数据库找到想要获取的字段，应为数据库中真实的字段名,即Models中的db_column，如有的话
@@ -347,7 +375,12 @@ def SellerProp_Trans(request):
         '''user code define variable  end  '''
 
         '''sys code begin  '''
-        column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+
+        # column = fun_Get_Cmd_Trans(databasename, tablename, columnname, columncnt, columnwidth, columnalign)
+        base_html_construct = base_html_construct_trans(version, tablename, columnname, columnwidth, columnalign)
+        base_html_construct.encode()  # 先将传送进来的参数进行解析
+        column = base_html_construct.fun_Get_Cmd_Trans(columncnt)  # 拼接cnt列Json
+
         '''sys code end'''
 
         '''usr code begin  '''
