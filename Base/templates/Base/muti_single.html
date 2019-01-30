@@ -12,7 +12,7 @@
 
     <script>
          $(document).ready(function () {
-             InitDg1();
+            // InitDg1();
              LoadDg1();//一开始就加载所有
          });
 
@@ -52,7 +52,7 @@
          function LoadDg1() {
              var datajson = [];
              var parm = 'action=LoadData';
-             getAjax("/stockIn/", parm, function (backstring) {
+             getAjax("/muti/", parm, function (backstring) {
                  if (backstring != "") {
                      datajson = jQuery.parseJSON(backstring);
                  }
@@ -67,7 +67,7 @@
          function ShowDlg1_2() {
              $('#dlg1_2').show();
              $('#dlg1_2').dialog({
-                 title: '新增入库单',
+                 //title: '新增入库单',
                  width: 705,
                  height: 420,
                  closed: false,
@@ -101,7 +101,7 @@
          ////自动生成编号
          function CreateId() {
              var parm = 'action=CreateStockInId';
-             getAjax("/stockIn/", parm, function (backstring) {
+             getAjax("/muti/", parm, function (backstring) {
                  if (backstring != "") {
                      $("#dlg1_2_txt_1").textbox('setValue', backstring);
                  }
@@ -112,7 +112,7 @@
          function LoadName() {
              var datajson = [];
              var parm = 'action=LoadGoodsName';
-             getAjax("/stockIn/", parm, function (backstring) {
+             getAjax("/muti/", parm, function (backstring) {
                  if (backstring != "") {
                      datajson = jQuery.parseJSON(backstring);
                  }
@@ -130,7 +130,7 @@
          function LoadCat() {
              var datajson = [];
              var parm = 'action=LoadGoodsCat';
-             getAjax("/stockIn/", parm, function (backstring) {
+             getAjax("/muti/", parm, function (backstring) {
                  if (backstring != "") {
                      datajson = jQuery.parseJSON(backstring);
                  }
@@ -148,7 +148,7 @@
          function LoadShangHu() {
              var datajson = [];
              var parm = 'action=LoadSeller';
-             getAjax("/stockIn/", parm, function (backstring) {
+             getAjax("/muti/", parm, function (backstring) {
                  if (backstring != "") {
                      datajson = jQuery.parseJSON(backstring);
                  }
@@ -166,7 +166,7 @@
          function LoadManufactor() {
              var datajson = [];
              var parm = 'action=LoadManufactor';
-             getAjax("/stockIn/", parm, function (backstring) {
+             getAjax("/muti/", parm, function (backstring) {
                  if (backstring != "") {
                      datajson = jQuery.parseJSON(backstring);
                  }
@@ -184,7 +184,7 @@
          function LoadSupplier() {
              var datajson = [];
              var parm = 'action=LoadSupplier';
-             getAjax("/stockIn/", parm, function (backstring) {
+             getAjax("/muti/", parm, function (backstring) {
                  if (backstring != "") {
                      datajson = jQuery.parseJSON(backstring);
                  }
@@ -214,7 +214,7 @@
              var supplier = $("#dlg1_2_txt_10").combobox('getValues');//供货商
 
              var parm = 'action=Save&stockIn_id=' + stockIn_id + '&goods_id=' + goods_id + '&cat=' + cat + '&rfid=' + rfid + '&amount=' + amount + '&cost=' + cost + '&exp_date=' + exp_date + '&seller=' + seller + '&mfrs=' + mfrs + '&supplier=' + supplier;
-             getAjax("/stockIn/", parm, function (data) {
+             getAjax("/muti/", parm, function (data) {
                  var backstring = data;
                  if (backstring == "1") {
                      $('#dlg1_2').dialog('close');
@@ -506,90 +506,21 @@
     </div>
 
     <!--创建入库单-->
-    <div id="dlg1_2" style="display: none;">
+    <div id="dlg1_2" style="display: none;" title="{{ add_title }}">
         <div style="padding-top: 5px; padding-left: 5px; padding-right: 5px;">
             <div class="easyui-panel" style="padding-top: 4px; padding-left: 20px; width: 680px; height: 400px;">
-                <table>
-                    <tr>
-                        <td style="padding-top: 4px;">
-                            <span style="padding: 0px 0px 0px 25px;">入库单编号:</span>
-                        </td>
-                        <td style="padding-top: 4px;">
-                            <input class="easyui-textbox" id="dlg1_2_txt_1" style="width: 500px" readonly="true"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top: 4px;">
-                            <span style="padding: 0px 0px 0px 25px;">商品名称:</span>
-                        </td>
-                        <td style="padding-top: 4px;">
-                            <input class="easyui-combobox" id="dlg1_2_txt_2" style="width: 500px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top: 4px;">
-                            <span style="padding: 0px 0px 0px 25px;">商品类型:</span>
-                        </td>
-                        <td style="padding-top: 4px;">
-                            <input class="easyui-combobox" id="dlg1_2_txt_3" style="width: 500px;"/>
-                        </td>
-                    </tr>
-                    <tr>
-                    <td style="padding-top: 4px;">
-                        <span style="padding: 0px 0px 0px 25px;">条形码:</span>
-                    </td>
-                    <td style="padding-top: 4px;">
-                        <input class="easyui-textbox" id="dlg1_2_txt_4" style="width: 500px;"/>
-                    </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top: 4px;">
-                            <span style="padding: 0px 0px 0px 25px;">入库数量:</span>
-                        </td>
-                        <td style="padding-top: 4px;">
-                            <input class="easyui-textbox" id="dlg1_2_txt_5" style="width: 500px;"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top: 4px;">
-                            <span style="padding: 0px 0px 0px 25px;">进货总价:</span>
-                        </td>
-                        <td style="padding-top: 4px;">
-                            <input class="easyui-textbox" id="dlg1_2_txt_6" style="width: 500px;"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top: 4px;">
-                            <span style="padding: 0px 0px 0px 25px;">保质期限:</span>
-                        </td>
-                        <td style="padding-top: 4px;">
-                            <input class="easyui-datebox" id="dlg1_2_txt_7" style="width: 500px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top: 4px;">
-                            <span style="padding: 0px 0px 0px 25px;">进库商户:</span>
-                        </td>
-                        <td style="padding-top: 4px;">
-                            <input class="easyui-combobox" id="dlg1_2_txt_8" style="width: 500px;"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top: 4px;">
-                            <span style="padding: 0px 0px 0px 25px;">生产厂家:</span>
-                        </td>
-                        <td style="padding-top: 4px;">
-                            <input class="easyui-combobox" id="dlg1_2_txt_9" style="width: 500px;"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top: 4px;">
-                            <span style="padding: 0px 0px 0px 25px;">供货商:</span>
-                        </td>
-                        <td style="padding-top: 4px;">
-                            <input class="easyui-combobox" id="dlg1_2_txt_10" style="width: 500px;" />
-                        </td>
-                    </tr>
+                 <table>
+                     {% for row in add_dict %}
+                        <tr>
+                            <td style="padding-top: 4px;">
+                                <span style="padding: 0px 0px 0px 25px;">{{ row.title }}:</span>
+                            </td>
+                            <td style="padding-top: 4px;">
+                                <input class="{{ row.box_type }}" id="{{ row.id }}"  style="width:500px;"/>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
                 </table>
             </div>
             <div id="dlg1_2-buttons1_add" style="display: none;">

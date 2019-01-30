@@ -48,12 +48,12 @@ def fun_call_db_proc(database_str,table_str,column_str):
 	data2 = 'SELECT column_comment FROM INFORMATION_SCHEMA.Columns WHERE table_schema = "'  + database_str + '" AND table_name= "' + \
 			 table_str + '" AND  column_name= "' + column_str + '"'
 	cursor1 = connection.cursor()
-	cursor1.execute(data2)
+	data1= cursor1.execute(data2)
 	data_str = cursor1.fetchone()
 	if data_str != None:
 		return data_str
 	else:       #参数有误报错
-		return ''
+		return print('请检查参数是否输入有误，无法获取注释')
 
 '''
 html页面的表格初始化的公共类
@@ -64,19 +64,22 @@ class base_html_construct_trans(object):
 	database_name = 'aliyun'
 	def __init__(self, *var):
 		self.param = var
-
+		self.table_name = ''
+		self.column_list = ''
+		self.width_list = ''
+		self.align_list = ''
 	def encode(self):
 		self.version = int( self.param[0] ) # 容许你输入的参数为'1' 容错
-		if self.version == 1:  # 版本
+		if self.version == 1:  # 版本1  单表
 			self.table_name = self.param[1]  # 要获取注释信息的表名  数据库中真实表名
 			self.column_list = self.param[2]  # 要获取注释的字段名  数据库中真实字段名
 			self.width_list = self.param[3]  # 列的宽度 元组
 			self.align_list = self.param[4]  # 列的对齐格式  元组
-		elif self.version == 2:  # 初始化新增信息的弹框
-			self.table_name = self.param[1]  # 要获取注释信息的表名  数据库中真实表名
-			self.column_list = self.param[2]  # 要获取注释的字段名  数据库中真实字段名
-			self.width_list = self.param[3]  # 列的宽度 元组
-			self.align_list = self.param[4]  # 列的对齐格式  元组
+		elif self.version == 2:  # 版本2  多表（已经获取过字段注释） 或直接输入字段注释
+			#self.table_name = self.param[1]  # 要获取注释信息的表名  数据库中真实表名
+			#self.column_list = self.param[2]  # 要获取注释的字段名  数据库中真实字段名
+			self.width_list = self.param[1]  # 列的宽度 元组
+			self.align_list = self.param[2]  # 列的对齐格式  元组
 
 		self.fielddic = {}
 
@@ -97,23 +100,42 @@ class base_html_construct_trans(object):
 	# construct json
 
 	'''
-	拼接 get命令下，针对列表模式下的页面结构 
+	拼接 get命令下，针对列表模式下的页面结构   单表查询
 	databasename:数据库名  tablename：表名  columnname：字段名 columncnt：字段个数  columnwidth：宽度 columnalign：对齐格式
 	'''
 	def fun_Get_Cmd_Trans(self, columncnt):
 		l_column_name = []
-		error = 0
-		for i in range(columncnt):
-			comment = fun_call_db_proc(self.database_name, self.table_name,self.column_list[i])  # 获得表的该字段的注释 即为前端表格的中文列名  返回元组如：(ID,)
-			if comment != '':
-				l_column_name.append(comment[0])
-			else:  #查询字段时报错
-				error = 1
-		if error != 1:
-			self.fielddic = self.json_frame_construct(l_column_name, columncnt, self.width_list, self.align_list)  # 将所有列的参数送进去拼接成json
-			return self.fielddic
-		else:#参数有误
-			return print('请检查参数是否输入有误')
+		self.fielddic = ''
+
+		if self.table_name != '' and self.column_list != '' and self.width_list != '' and self.align_list != '':   #检查参数是否经过encode解析
+			for i in range(columncnt):
+				comment = fun_call_db_proc(self.database_name, self.table_name,self.column_list[i])  # 获得表的该字段的注释 即为前端表格的中文列名  返回元组如：(ID,)
+				if comment != None: #参数无误
+					l_column_name.append(comment[0])
+			if len(self.width_list) == columncnt and len(self.align_list) == columncnt: #检查参数长度是否匹配
+				self.fielddic = self.json_frame_construct(l_column_name, columncnt, self.width_list, self.align_list)  # 将所有列的参数送进去拼接成json
+			else:
+				print('请检查width和align参数的长度是否与cnt个数匹配')
+		else:
+			print('请先对参数进行encode解析,注意系统代码段是否做过更改')
+		return self.fielddic
+
+	'''
+	拼接 get命令下，针对列表模式下的页面结构  需要连表查询获取字段注释  或 不获取直接输入列的中文名
+	column_name：字段注释 即列的中文名 columncnt：字段个数 
+	'''
+	def fun_Get_Muti_Table(self, columncnt, column_name):
+
+		self.fielddic = ''
+		if self.width_list != '' and self.align_list != '':  # 检查参数是否经过encode解析
+			if len(self.width_list) == columncnt and len(self.align_list) == columncnt:  # 检查参数长度是否匹配
+				self.fielddic = self.json_frame_construct(column_name, columncnt, self.width_list,
+				                                          self.align_list)  # 将所有列的参数送进去拼接成json
+			else:
+				print('请检查width和align参数的长度是否与cnt个数匹配')
+		else:
+			print('请先对参数进行encode解析,注意系统代码段是否做过更改')
+		return self.fielddic
 
 '''
 针对GET 对新增信息的弹框做初始化处理
@@ -125,6 +147,9 @@ class add_tab_construct_trans(object):
 
 	def __init__(self, *var):
 		self.param = var
+		self.table_name = ''
+		self.column_list = ''
+		self.box_type = ''
 
 	def encode(self):
 		self.version = int( self.param[0] ) # 容许你输入的参数为'1' 容错
@@ -132,10 +157,8 @@ class add_tab_construct_trans(object):
 			self.table_name = self.param[1]  # 要获取注释信息的表名  数据库中真实表名
 			self.column_list = self.param[2]  # 要获取注释的字段名  数据库中真实字段名
 			self.box_type = self.param[3]  # 是输入框textbox,还是下拉框combobox,还是日历datebox
-		elif self.version == 2:  # 版本
-			self.table_name = self.param[1]  # 要获取注释信息的表名  数据库中真实表名
-			self.column_list = self.param[2]  # 要获取注释的字段名  数据库中真实字段名
-			self.box_type = self.param[3]  # 是 1:输入框textbox,还是 2:下拉框combobox,还是 3 :日历datebox
+		elif self.version == 2:  # 版本2 直接输入注释
+			self.box_type = self.param[1]  # 是 1:输入框textbox,还是 2:下拉框combobox,还是 3 :日历datebox
 
 		self.fielddic = {}
 
@@ -167,19 +190,34 @@ class add_tab_construct_trans(object):
 	'''
 	def fun_Get_Cmd_Trans(self, columncnt):
 		l_column_name = []
-		error = 0
-		for i in range(columncnt):
-			comment = fun_call_db_proc(self.database_name, self.table_name,self.column_list[i])  # 获得表的该字段的注释 即为前端表格的中文列名  返回元组如：(ID,)
-			if comment != '':
-				l_column_name.append(comment[0])
-			else:
-				error = 1
-		if error != 1:
-			self.fielddic = self.json_frame_construct(l_column_name, columncnt,self.box_type)  # 将所有列的参数送进去拼接成json
-			return self.fielddic
-		else:#参数有误
-			return print('请检查参数是否输入有误')
+		self.fielddic = ''
 
+		if self.table_name != '' and self.column_list != '' and self.box_type != '':   #检查参数是否经过encode解析
+			for i in range(columncnt):
+				comment = fun_call_db_proc(self.database_name, self.table_name,self.column_list[i])  # 获得表的该字段的注释 即为前端表格的中文列名  返回元组如：(ID,)
+				if comment != None: #参数无误
+					l_column_name.append(comment[0])
+			if len(self.column_list) == columncnt: #检查参数长度是否匹配
+				self.fielddic = self.json_frame_construct(l_column_name, columncnt,self.box_type)  # 将所有列的参数送进去拼接成json
+			else:
+				print('请检查width和align参数的长度是否与cnt个数匹配')
+		else:
+			print('请先对参数进行encode解析,注意系统代码段是否做过更改')
+		return self.fielddic
+
+	'''
+	拼接 get命令下，针对列表模式下的页面结构  需要连表查询获取字段注释  或 不获取直接输入列的中文名
+	column_name：字段注释 即列的中文名 columncnt：字段个数 
+	'''
+	def fun_Get_Muti_Table(self, columncnt, column_name):
+
+		self.fielddic = ''
+		if self.box_type != '' :  # 检查参数是否经过encode解析
+
+			self.fielddic = self.json_frame_construct(column_name, columncnt,self.box_type)  # 将所有列的参数送进去拼接成json
+		else:
+			print('请先对参数进行encode解析,注意系统代码段是否做过更改')
+		return self.fielddic
 #还没有用到
 class html_base_var(object):
 		'''!!    表格初始化    !! '''

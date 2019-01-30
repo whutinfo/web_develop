@@ -329,9 +329,45 @@ class Customer(models.Model):
     point = models.IntegerField(null=True)
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
+
     class Meta:
       #  managed = False
         db_table = 'Customer_Table'
+
+class videomeau(models.Model):
+    name = models.CharField(max_length=20)
+    firstlayer = models.IntegerField(default='0')
+    secondlayer=models.IntegerField(default='0')
+    thirdlayer=models.IntegerField(default='0')
+    class Meta:
+        managed = False
+        db_table = 'VideoMeau_Table'
+
+
+class Video(models.Model):
+
+    ip = models.GenericIPAddressField()
+
+    port = models.IntegerField(default='80')
+
+    name = models.CharField(max_length=20)
+
+    pwd = models.CharField(max_length=32)
+
+    rtsp_port = models.IntegerField(default='553')
+
+    stream_type = models.IntegerField(default='1')
+
+    device_port = models.IntegerField(default='8000')
+
+    parent = models.ForeignKey(videomeau,on_delete=models.CASCADE, null=True)
+    parent_name = models.CharField(max_length=20,null=True)
+
+    type = models.IntegerField(default='1')
+    class Meta:
+
+        db_table = 'Video_Table'
+
 
 
 

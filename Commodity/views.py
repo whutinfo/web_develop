@@ -3,12 +3,64 @@ from django.shortcuts import HttpResponse
 from Models import models
 import json
 import time
+from Base.views import *
+
 
 # Create your views here.
 def stockIn(request):
 	user_id = request.session.get("Login_UserId")
+	action = request.POST.get('action')
+
+	'''sys code define variable begin  '''
+	column = ''
+
+	'''sys code define variable end  '''
+
 	if request.method == 'GET':
-		return render(request,'Commodity/stockIn.html')
+		'''user code define variable begin  '''
+		''' !!  都只改值，不动变量名    !!'''
+		html_name = 'Commodity/stockIn.html'  # 配置html的所在地址
+		head_title = ''  # 网页的标题title
+
+		'''!!    表格初始化    !! '''
+		datagrid_version = 1  # 哪一代版本的 int
+		datagrid_title = '入库信息'  # 表格的名称
+		datagrid_tablename = 'Stock_Table'  # 在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
+		''' id(数据库中自增长的那个字段，同样应为真实字段名)一定要有！！并放在第一个，不是用来显示，用来处理信息  其余顺序根据前端想要的摆放顺序来'''
+		datagrid_columnname = ['id', 'name', 'managerName', 'phone',
+		                       'address']  # 在数据库找到想要获取的字段，应为数据库中真实的字段名,即Models中的db_column，如有的话
+		datagrid_columncnt = 5  # 需要获取的列的数量 包括id
+		datagrid_columnwidth = [0, 18, 10, 12, 20]  # 列的宽度 个数与cnt匹配
+		datagrid_columnalign = ['center'] * datagrid_columncnt  # 对齐格式 个数与cnt匹配   可以不用改！！
+
+		''' !!  新增数据时的弹框初始化    新增数据是不需要传id这个参数的  id是新增后生成的自增长字段      !! '''
+		add_tab_version = 1
+		add_tab_title = '新增生产厂商'
+		add_tab_tablename = 'Manufactor_Table'  # 在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
+		add_tab_columnname = ['name', 'managerName',
+		                      'phone', 'address']  # 在数据库找到想要获取的字段，应为数据库中真实的字段名,即Models中的db_column，如有的话
+		add_tab_columncnt = 4  # 需要获取的列的数量 不包括id！
+		add_tab_boxtype = [1] * add_tab_columncnt
+		'''user code define variable  end  '''
+
+		'''sys code begin  '''
+
+		'''        表格初始化      '''
+		base_html_construct = base_html_construct_trans(datagrid_version, datagrid_tablename, datagrid_columnname,
+		                                                datagrid_columnwidth, datagrid_columnalign)
+		base_html_construct.encode()  # 先将传送进来的参数进行解析
+		column = base_html_construct.fun_Get_Cmd_Trans(datagrid_columncnt)  # 拼接cnt列Json
+		'''  新增数据时的弹框初始化     '''
+		add_tab_construct = add_tab_construct_trans(add_tab_version, add_tab_tablename, add_tab_columnname,
+		                                            add_tab_boxtype)
+		add_tab_construct.encode()  # 先将传送进来的参数进行解析
+		add_tab_dict = add_tab_construct.fun_Get_Cmd_Trans(add_tab_columncnt)  # 拼接cnt列Json
+
+		return_dict = {'head_title': head_title, 'info_dict': column, 'datagrid_title': datagrid_title,
+		               'add_dict': add_tab_dict, 'add_title': add_tab_title}
+
+		return render(request, html_name, return_dict)  # 将初始化信息全部返回到前端
+		'''sys code end'''
 	else:
 		action = request.POST.get('action')
 		if action == 'LoadData':

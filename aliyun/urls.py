@@ -132,6 +132,7 @@ urlpatterns = [
     #单页面的基础框架
     path('single/',base.Sample_Singe),
     path('div/',base.Sample_Div),
+    path('muti/',base.Muti_Table),
         #安全管理
     path('user/', sec_v.userControl),
     path('role/', sec_v.roleControl),

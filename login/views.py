@@ -36,8 +36,9 @@ def login(request):
         if (user_pwd == pwd):
             # print('提交')   这种会在下面的运行里进行打印，平时测试方便
             request.session["Login_UserId"] = id
-            uid=request.session.get("Login_UserId")
-
+            user_id=request.session.get("Login_UserId")
+            print(request.session.exists("session_key"))
+            print(request.session.exists("Login_UserId"))
             Msg='3'
             # 表单形式提交才可以用重定向这种方式直接跳转url
             # ajax用redirect是没有用的，只能返回字符串，所以需要在html中用location.href的方式写跳转

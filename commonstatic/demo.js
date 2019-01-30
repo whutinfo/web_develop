@@ -4,6 +4,7 @@
 var g_iWndIndex = 0; //可以不用设置这个变量，有窗口参数的接口中，不用传值，开发包会默认使用当前选择窗口
 $(function () {
     // 检查插件是否已经安装过
+
     var iRet = WebVideoCtrl.I_CheckPluginInstall();
     if (-1 == iRet) {
         alert("您还未安装过插件，双击开发包目录里的WebComponentsKit.exe安装！");
@@ -76,6 +77,44 @@ $(function () {
     var szCurTime = dateFormat(new Date(), "yyyy-MM-dd");
     $("#starttime").val(szCurTime + " 00:00:00");
     $("#endtime").val(szCurTime + " 23:59:59");
+     alert('三级菜单');
+    $("#tree").tree({
+        data: [{
+            "id": 1,
+            "text": "Folder1",
+            "children": [{
+                "id": 2,
+                "text": "File1",
+            }, { "id": 3,
+                "text": "Books",
+                "state": "open",
+                "children": [{
+                    "id": 4,
+                    "text": "PhotoShop",
+                }, {
+                    "id": 5,
+                    "text": "Sub Bookds",
+                    "state": "closed"
+                }]
+            }]
+        }, {"id": 6,
+            "text": "Languages",
+            "state": "closed",
+            "children": [{
+                "id": 7,
+                "text": "Java"
+            }, {
+                "id": 8,
+                "text": "C#"
+            }]
+        }],
+        onlyLeafCheck: true,
+        checkbox: false,
+        onClick: function (node) {
+            var menu_id = node.id;
+            LoadData(menu_id);
+        }
+    })
 });
 
 // 显示操作信息
