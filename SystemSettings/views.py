@@ -56,14 +56,32 @@ def goods(request):
                 value_dict.clear()  # 防止出错时保存了上一次的值而导致看不出问题在哪
 
             return HttpResponse(json.dumps(value_list))#将列表拼字典仿Json格式转字符串传给前端 [{},{},{}]
+
         elif action=='Save':
+
             back = 0
+
             add_goods=request.POST.get('name')
-            models.Goods.objects.create(goodsname=add_goods)
+            model_name.objects.create(goodsname=add_goods)
+
             back = 1
+
+            return HttpResponse(back)
+
+        elif action == 'Edit':
+
+            back = 0
+
+            # 获取要更新的信息
+            value_id = request.POST.get('value_id')
+            add_name = request.POST.get('name')
+
+            back = models.Goods.objects.filter(pk=value_id).update(goodsname=add_name)
+
             return HttpResponse(back)
 
         '''usr code end '''
+
 
 def goodsCat(request):
     action = request.POST.get('action')
@@ -119,16 +137,34 @@ def goodsCat(request):
                 value_dict.clear()  # 防止出错时保存了上一次的值而导致看不出问题在哪
 
             return HttpResponse(json.dumps(value_list))  # 将列表拼字典仿Json格式转字符串传给前端 [{},{},{}]
+
         elif action == 'Save':
+
             back = 0
+
             add_goodsCat = request.POST.get('name')
+
+            model_name.objects.create(catname=add_goodsCat)
+
             back = 1
-            models.GoodsCat.objects.create(catname=add_goodsCat)
+
+            return HttpResponse(back)
+
+        elif action == 'Edit':
+
+            back = 0
+
+            # 获取要更新的信息
+            value_id = request.POST.get('value_id')
+            add_goodsCat = request.POST.get('name')
+
+            back = model_name.objects.filter(pk=value_id).update(catname=add_goodsCat)
+
             return HttpResponse(back)
 
         '''usr code end '''
 
-
+# 生产厂商
 def manufactor(request):
     action = request.POST.get('action')
 
@@ -186,11 +222,38 @@ def manufactor(request):
                 value_dict.clear()  # 防止出错时保存了上一次的值而导致看不出问题在哪
 
             return HttpResponse(json.dumps(value_list))  # 将列表拼字典仿Json格式转字符串传给前端 [{},{},{}]
+
         elif action == 'Save':
+
             back = 0
-            add_goods = request.POST.get('name')
-            models.Goods.objects.create(goodsname=add_goods)
+
+            # 获取要新增的信息
+            add_name = request.POST.get('name')
+            add_manager = request.POST.get('manager')
+            add_phone = request.POST.get('phone')
+            add_address = request.POST.get('address')
+
+            models.Manufactor.objects.create(name=add_name, phone=add_phone, manager=add_manager,
+                                                    address=add_address)
+
             back = 1
+            return HttpResponse(back)
+
+        elif action == 'Edit':
+
+            back = 0
+
+            # 获取要更新的信息
+            value_id = request.POST.get('value_id')
+            add_name = request.POST.get('name')
+            add_manager = request.POST.get('manager')
+            add_phone = request.POST.get('phone')
+            add_address = request.POST.get('address')
+
+            back = models.Manufactor.objects.filter(pk=value_id).update(name=add_name, phone=add_phone,
+                                                                        manager=add_manager,
+                                                                        address=add_address)
+
             return HttpResponse(back)
 
         '''usr code end '''
@@ -253,14 +316,37 @@ def supplier(request):
                 value_dict.clear()  # 防止出错时保存了上一次的值而导致看不出问题在哪
 
             return HttpResponse(json.dumps(value_list))  # 将列表拼字典仿Json格式转字符串传给前端 [{},{},{}]
+
         elif action == 'Save':
+
             back = 0
+
             add_name = request.POST.get('name')
             add_manager=request.POST.get('manager')
             add_phone=request.POST.get('phone')
             add_address=request.POST.get('address')
-            models.Supplier.objects.create(name=add_name,phone=add_phone,managername=add_manager,address=add_address)
+
+            model_name.objects.create(name=add_name,phone=add_phone,managername=add_manager,address=add_address)
+
             back = 1
+
+            return HttpResponse(back)
+
+        elif action == 'Edit':
+
+            back = 0
+
+            # 获取要更新的信息
+            value_id = request.POST.get('value_id')
+            add_name = request.POST.get('name')
+            add_manager = request.POST.get('manager')
+            add_phone = request.POST.get('phone')
+            add_address = request.POST.get('address')
+
+            back = model_name.objects.filter(pk=value_id).update(name=add_name, phone=add_phone,
+                                                                        managername=add_manager,
+                                                                        address=add_address)
+
             return HttpResponse(back)
         '''usr code end '''
 
@@ -307,6 +393,7 @@ def Seller_Trans(request):
         '''usr code begin  '''
 
         if action == 'LoadData':
+
             querys = model_name.objects.all()  # 获取需要的字段名的数据
             value_dict = {'value0': '', 'value1': '', 'value2': '', 'value3': '', 'value4': '', 'value5': '', 'value6': '', 'value7': ''}  # 有几个需要的列就有多少value 包括Id
             value_list = []
@@ -326,7 +413,9 @@ def Seller_Trans(request):
             return HttpResponse(json.dumps(value_list))  # 将列表拼字典仿Json格式转字符串传给前端 [{},{},{}]
 
         elif action == 'Save':
+
             back = 0
+
             add_Sellername = request.POST.get('name')
             add_Sellerproperty = request.POST.get('type')
             add_SellerOwner = request.POST.get('manager')
@@ -336,15 +425,40 @@ def Seller_Trans(request):
             add_SellerOwnerNo = request.POST.get('number')
             add_SellerOwnerArea = request.POST.get('area')
 
-            models.Seller.objects.create(Sellername=add_Sellername, Sellerproperty=add_Sellerproperty,SellerOwner=add_SellerOwner,SellerOwnerPhone=add_SellerOwnerPhone,
+            model_name.objects.create(Sellername=add_Sellername, Sellerproperty=add_Sellerproperty,SellerOwner=add_SellerOwner,SellerOwnerPhone=add_SellerOwnerPhone,
                                            SellerOwnerLevel = add_SellerOwnerLevel,SellerOwnerNo = add_SellerOwnerNo,SellerOwnerArea = add_SellerOwnerArea )
+
             back = 1
+
+            return HttpResponse(back)
+
+        elif action == 'Edit':
+
+            back = 0
+
+            value_id = request.POST.get('value_id')
+            add_Sellername = request.POST.get('name')
+            add_Sellerproperty = request.POST.get('type')
+            add_SellerOwner = request.POST.get('manager')
+
+            add_SellerOwnerPhone = request.POST.get('phone')  # request.POST.get('SellerOwnerPhone')
+            add_SellerOwnerLevel = request.POST.get('floor')
+            add_SellerOwnerNo = request.POST.get('number')
+            add_SellerOwnerArea = request.POST.get('area')
+
+            back = model_name.objects.filter(pk=value_id).update(Sellername=add_Sellername, Sellerproperty=add_Sellerproperty,
+                                      SellerOwner=add_SellerOwner, SellerOwnerPhone=add_SellerOwnerPhone,
+                                      SellerOwnerLevel=add_SellerOwnerLevel, SellerOwnerNo=add_SellerOwnerNo,
+                                      SellerOwnerArea=add_SellerOwnerArea)
+
             return HttpResponse(back)
 
         elif action == 'LoadSellerPro':
-            value_dict = {'type':'','title':''}
+
+            value_dict = {'id':'','name':''}
             value_list = []
             sellerPros = models.SellerPorprety.objects.all()
+
             for row in sellerPros:
                 value_dict['id'] = row.id
                 value_dict['name'] = row.SellerpropertyType
@@ -395,23 +509,46 @@ def SellerProp_Trans(request):
         '''usr code begin  '''
 
         if action == 'LoadData':
+
             querys = model_name.objects.all()  # 获取需要的字段名的数据
             value_dict = {'value0': '', 'value1': ''}  # 有几个需要的列就有多少value 包括Id
             value_list = []
             for row in querys:
+
                 value_dict['value0'] = row.id  # 一定要获取id 并放进第一个value0
                 value_dict['value1'] = row.SellerpropertyType  # 根据前端想要的摆放顺序来
                 value_list.append(value_dict.copy())  # 直接使用append方法将字典添加到列表中，如果需要更改字典中的数据，那么列表中的内容也会发生改变
                 # 用.copy()就不会跟着改变
                 value_dict.clear()  # 防止出错时保存了上一次的值而导致看不出问题在哪
+
             return HttpResponse(json.dumps(value_list))  # 将列表拼字典仿Json格式转字符串传给前端 [{},{},{}]
 
         elif action == 'Save':
+
+            back = 0
+
             add_Propretyname = request.POST.get('Proprety')
-            models.SellerPorprety.objects.create(SellerpropertyType=add_Propretyname)
-            return HttpResponse(1)
+
+            model_name.objects.create(SellerpropertyType=add_Propretyname)
+
+            back = 1
+            return HttpResponse(back)
+
+        elif action == 'Edit':
+
+            back = 0
+
+            value_id = request.POST.get('value_id')
+            add_Propretyname = request.POST.get('Proprety')
+
+            back = model_name.objects.filter(pk=value_id).update(SellerpropertyType=add_Propretyname)
+
+            return HttpResponse(back)
+
         elif action == 'LoadSellerPro':
+
             pass #暂不处理
+
         '''usr code end '''
 
 

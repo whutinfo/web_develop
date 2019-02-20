@@ -8,11 +8,11 @@
     <link rel="stylesheet" href={% static "Themes/EasyUI/icon.css" %} />
     <script src={% static "Themes/EasyUI/jquery.min.js"%}></script>
     <script src={% static "Themes/EasyUI/jquery.easyui.min.js"%}></script>
-    <script src={% static "Themes/Scripts/FunctionJS.js"%} type="text/javascript"></script></head>
+    <script src={% static "Themes/Scripts/FunctionJS.js"%} type="text/javascript"></script>
 
     <script>
          $(document).ready(function () {
-             InitDg1();
+            // InitDg1();
              LoadDg1();//一开始就加载所有
          });
 
@@ -64,10 +64,10 @@
 
 
          /****************新建入库单*****************/
-         function ShowDlg1_2() {
+         function ShowDlg_add() {
              $('#dlg1_2').show();
              $('#dlg1_2').dialog({
-                 title: '新增入库单',
+                 //title: '新增入库单',
                  width: 705,
                  height: 420,
                  closed: false,
@@ -83,7 +83,7 @@
                      $("#dlg1_2_txt_4").textbox('setValue', "");//条形码
                      $("#dlg1_2_txt_5").textbox('setValue', "");//入库数量
                      $("#dlg1_2_txt_6").textbox('setValue', "");//进货成本
-                    // $("#dlg1_2_txt_7").textbox('setValue', "");//保质期限
+                     $("#dlg1_2_txt_7").datebox('setValue', "");//保质期限
 
                      LoadShangHu();
                      LoadManufactor();
@@ -247,19 +247,20 @@
                          $(this).dialog('center');
                      },
                      onOpen: function () {
-                         $("#dlg1_1_txt_1").textbox('setValue', row_slec.value1);
-                         $("#dlg1_1_txt_2").textbox('setValue', row_slec.value2);
-                         $("#dlg1_1_txt_3").textbox('setValue', row_slec.value3);
-                         $("#dlg1_1_txt_4").textbox('setValue', row_slec.value4);
-                         $("#dlg1_1_txt_5").textbox('setValue', row_slec.value5);
-                         $("#dlg1_1_txt_6").textbox('setValue', row_slec.value6);
-                         $("#dlg1_1_txt_7").textbox('setValue', row_slec.value7);
-                         $("#dlg1_1_txt_8").textbox('setValue', row_slec.value8);
-                         $("#dlg1_1_txt_9").textbox('setValue', row_slec.value9);
-                         $("#dlg1_1_txt_10").textbox('setValue', row_slec.value10);
-                         $("#dlg1_1_txt_11").textbox('setValue', row_slec.value11);
-                         $("#dlg1_1_txt_12").textbox('setValue', row_slec.value12);
-                         $("#dlg1_1_txt_13").textbox('setValue', row_slec.value13);
+
+                         $("#dlg1_1_txt_1").textbox('setValue', row_slec.value1);  //# 入库单编号
+                         $("#dlg1_1_txt_2").textbox('setValue', row_slec.value2);   //# 商品名称
+                         $("#dlg1_1_txt_3").textbox('setValue', row_slec.value3);   // #商品类型
+                         $("#dlg1_1_txt_4").textbox('setValue', row_slec.value4);   // #条形码
+                         $("#dlg1_1_txt_5").textbox('setValue', row_slec.value5);   //#入库数量
+                         $("#dlg1_1_txt_6").textbox('setValue', row_slec.value6);   // # 进货总价
+                         $("#dlg1_1_txt_7").textbox('setValue', row_slec.value7);   //# 保质期限
+                         $("#dlg1_1_txt_8").textbox('setValue', row_slec.value8);   //# 进库商户
+                         $("#dlg1_1_txt_9").textbox('setValue', row_slec.value9);   //# 操作人
+                         $("#dlg1_1_txt_10").textbox('setValue', row_slec.value10);     //# 入库时间
+                         $("#dlg1_1_txt_11").textbox('setValue', row_slec.value11);     //# 生产厂家
+                         $("#dlg1_1_txt_12").textbox('setValue', row_slec.value12);     // # 供货商
+
                      },
                      onClose: function () {
                          LoadDg1(0);
@@ -275,10 +276,10 @@
 
 
 
-         function edit() {
-             var row = $('#tg').datagrid('getSelected');
-             if (row) {
-                 var id = row.id;
+         function ShowDlg_edit() {
+              var row_slec = $("#dg1").datagrid('getSelected');
+             if (row_slec) {
+                 var value_id = row_slec.value0;
 
                  //加载弹出框
                  $('#dlg1_2').show().dialog({
@@ -289,58 +290,57 @@
                      cache: false,
                      modal: true,
                      onOpen: function () {
-                         var body = $(this).panel('body');
-                         $("#dlg1_1_txt_1").textbox('setValue', row_slec.value1);
-                         $("#dlg1_1_txt_2").combobox('setValue', row_slec.value2);
-                         $("#dlg1_1_txt_3").combobox('setValue', row_slec.value3);
-                         $("#dlg1_1_txt_4").textbox('setValue', row_slec.value4);
-                         $("#dlg1_1_txt_5").textbox('setValue', row_slec.value5);
-                         $("#dlg1_1_txt_6").textbox('setValue', row_slec.value6);
-                         $("#dlg1_1_txt_7").textbox('setValue', row_slec.value7);
-                         $("#dlg1_1_txt_8").combobox('setValue', row_slec.value8);
-                         $("#dlg1_1_txt_9").combobox('setValue', row_slec.value9);
-                         $("#dlg1_1_txt_10").combobox('setValue', row_slec.value10);
-                         $("#dlg1_1_txt_11").textbox('setValue', row_slec.value11);
-                         $("#dlg1_1_txt_12").textbox('setValue', row_slec.value12);
-                         $("#dlg1_1_txt_13").textbox('setValue', row_slec.value13);
+
+                         // 注意跟后台传过来的value1,2,3匹配，也就是value1,2,3是datagrid表的列的顺序，而不是真正的编辑的每行的顺序
+
+                         LoadName();//加载名称选项
+                         LoadCat();//加载类型选项
+                         LoadShangHu();
+                         LoadManufactor();
+                         LoadSupplier();
+
+                         $("#dlg1_2_txt_1").textbox('setValue', row_slec.value1);//编号
+
+                         // 与后台顺序匹配
+                         $("#dlg1_2_txt_2").combobox('setText', row_slec.combobox1.name); //名称
+                         $("#dlg1_2_txt_2").combobox('setValue', row_slec.combobox1.id);
+
+                          $("#dlg1_2_txt_3").combobox('setText', row_slec.combobox2.name); //类型
+                         $("#dlg1_2_txt_3").combobox('setValue', row_slec.combobox2.id);
+
+                         $("#dlg1_2_txt_4").textbox('setValue', row_slec.value4);//条形码
+                         $("#dlg1_2_txt_5").textbox('setValue', row_slec.value5);//入库数量
+                         $("#dlg1_2_txt_6").textbox('setValue', row_slec.value6);//进货总价
+
+                         $("#dlg1_2_txt_7").datebox('setValue', row_slec.value7);//保质期限
+
+                         $("#dlg1_2_txt_8").combobox('setText', row_slec.combobox3.name); //进库商户
+                         $("#dlg1_2_txt_8").combobox('setValue', row_slec.combobox3.id);
+
+                         $("#dlg1_2_txt_9").combobox('setText', row_slec.combobox4.name); //生产厂家
+                         $("#dlg1_2_txt_9").combobox('setValue', row_slec.combobox4.id);
+
+                         $("#dlg1_2_txt_10").combobox('setText', row_slec.combobox5.name); //供货商
+                         $("#dlg1_2_txt_10").combobox('setValue', row_slec.combobox5.id);
+
 
                      },
                      buttons: [{
                          text: '提交',
-                         iconCls: 'icon-ok',
-                         handler: function () {
-                             var stockIn_id = $("#dlg1_2_txt_1").textbox('getValue');//编号
-                             var name = $("#dlg1_2_txt_2").combobox('getValues');// 名称   //获得的都是type而不是title
-                             var type = $("#dlg1_2_txt_3").combobox('getValues');//类型
-                             var rfid = $("#dlg1_2_txt_4").textbox('getValue');//条形码
-                             var amount = $("#dlg1_2_txt_5").textbox('getValue');//入库数量
-                             var cost = $("#dlg1_2_txt_6").textbox('getValue');//进货总价
-                             var exp_date = $("#dlg1_2_txt_7").datebox('getValue');//保质期限
-                             var seller = $("#dlg1_2_txt_8").combobox('getValues');//商户
-                             var mfrs = $("#dlg1_2_txt_9").combobox('getValues');//生产厂家
-                             var supplier = $("#dlg1_2_txt_10").combobox('getValues');//供货商
-
-                             var parm = 'action=Edit&stockIn_id=' + stockIn_id + '&name=' + name + '&type=' + type + '&rfid=' + rfid + '&amount=' + amount + '&cost=' + cost + '&exp_date=' + exp_date + '&seller=' + seller + '&mfrs=' + mfrs + '&supplier=' + supplier;
-                             getAjax("In.ashx", parm, function (data) {
-                                 var dataJson3 = eval("(" + data + ")");
-                                 })
-                                 if (dataJson3 != -1) {
-                                     alert("编辑成功！");
-                                     $('#dlg1_2').dialog('close');
-                                     LoadDg1();
-                                 }
+                            iconCls: 'icon-ok',
+                            handler: function () {
+                                edit_save();
                              }
-                         },
-                      {
-                         text: '取消',
-                         iconCls: 'icon-cancel',
-                         handler: function () {
-                             $('#dlg1_2').dialog('close');
+                        },
+                         {
+                             text: '取消',
+                             iconCls: 'icon-cancel',
+                             handler: function () {
+                                 $('#dlg1_2').dialog('close');
 
-                         }
-                     }]
-                 });
-
+                             }
+                         }]
+                 })
 
              }
 
@@ -351,6 +351,49 @@
 
          }
 
+          //////*******************保存编辑后的生产厂商信息  仿save函数 不过后台不是create而是Update**************************/
+         function edit_save() {
+                 /* user code begin */
+
+             var row_slec = $("#dg1").datagrid('getSelected');
+             var value_id = row_slec.value0;
+
+             //变量名与显示的Html的新增信息的排序相对应
+             var stockIn_id = $("#dlg1_2_txt_1").textbox('getValue');//编号
+             var goods_id = $("#dlg1_2_txt_2").combobox('getValue');// 名称
+
+             var cat = $("#dlg1_2_txt_3").combobox('getValue');//类型
+             var rfid = $("#dlg1_2_txt_4").textbox('getValue');//条形码
+             var amount = $("#dlg1_2_txt_5").textbox('getValue');//入库数量
+             var cost = $("#dlg1_2_txt_6").textbox('getValue');//进货总价
+             var exp_date = $("#dlg1_2_txt_7").datebox('getValue');//保质期限
+             var seller = $("#dlg1_2_txt_8").combobox('getValue');//商户
+             var mfrs = $("#dlg1_2_txt_9").combobox('getValue');//生产厂家
+             var supplier = $("#dlg1_2_txt_10").combobox('getValue');//供货商
+
+             //  后台用request.POST.get()方式获取时  是根据字符串里面的名称获取的，与上面的变量名无关
+             //  如：  request.POST.get('action')  后台获取的就是action对应的值即Save
+             var parm = 'action=Edit&stockIn_id=' + stockIn_id + '&goods_id=' + goods_id + '&cat=' + cat + '&rfid=' + rfid + '&amount=' + amount + '&cost=' + cost + '&exp_date=' + exp_date + '&seller=' + seller + '&mfrs=' + mfrs + '&supplier=' + supplier + '&value_id=' + value_id;
+
+              //getAjax 第一个参数是Url 做相应的 更改
+             getAjax("/stockIn/", parm, function (data) {
+                  /* user code end */
+
+                 var backstring = data;
+
+                 if (backstring == "1") {
+                     alert("编辑成功！");
+                     $('#dlg1_2').dialog('close');
+                     LoadDg1();
+                 }
+                 else if(backstring != '0')  {
+                     alert(backstring);
+                 }
+                 else{
+                      alert("编辑失败");
+                 }
+             });
+         }
 
     </script>
 
@@ -368,19 +411,18 @@
             overflow: hidden;
         }
     </style>
-</html>
 
+</head>
 
 <body class="easyui-layout" style="width: 100%; height: 100%">>
     <div data-options="region:'center'," style="height: 100%">
          <div id="toolbar1" style="padding: 2px 5px;">
 
-            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'" onclick="LoadDg1();" >刷新</a>
-
-            <a href="javascript:void(0)" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-add'" onclick="ShowDlg1_2();">新增入库单</a>
-
-            <!--a href="javascript:void(0)" class="easyui-linkbutton"data-options="plain:true,iconCls:'icon-edit'" onclick="edit();">编辑入库单</!--a-->
-           <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" onclick="ShowDlg1_1();">查看详情</a>
+             <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'" onclick="LoadDg1();" >刷新</a>
+             <a href="javascript:void(0)" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-add'" onclick="ShowDlg_add();">新增入库单</a>
+             <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'" onclick="ShowDlg_edit();">编辑出库单</a>
+             <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'" onclick="delet();">删除入库单</a>
+             <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" onclick="ShowDlg1_1();">查看详情</a>
 
          </div>
          <table id="dg1" title="{{ datagrid_title }}" class="easyui-datagrid" data-options="" style="width: 99%; height: 95%;"
@@ -506,90 +548,21 @@
     </div>
 
     <!--创建入库单-->
-    <div id="dlg1_2" style="display: none;">
+    <div id="dlg1_2" style="display: none;" title="{{ add_title }}">
         <div style="padding-top: 5px; padding-left: 5px; padding-right: 5px;">
             <div class="easyui-panel" style="padding-top: 4px; padding-left: 20px; width: 680px; height: 400px;">
-                <table>
-                    <tr>
-                        <td style="padding-top: 4px;">
-                            <span style="padding: 0px 0px 0px 25px;">入库单编号:</span>
-                        </td>
-                        <td style="padding-top: 4px;">
-                            <input class="easyui-textbox" id="dlg1_2_txt_1" style="width: 500px" readonly="true"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top: 4px;">
-                            <span style="padding: 0px 0px 0px 25px;">商品名称:</span>
-                        </td>
-                        <td style="padding-top: 4px;">
-                            <input class="easyui-combobox" id="dlg1_2_txt_2" style="width: 500px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top: 4px;">
-                            <span style="padding: 0px 0px 0px 25px;">商品类型:</span>
-                        </td>
-                        <td style="padding-top: 4px;">
-                            <input class="easyui-combobox" id="dlg1_2_txt_3" style="width: 500px;"/>
-                        </td>
-                    </tr>
-                    <tr>
-                    <td style="padding-top: 4px;">
-                        <span style="padding: 0px 0px 0px 25px;">条形码:</span>
-                    </td>
-                    <td style="padding-top: 4px;">
-                        <input class="easyui-textbox" id="dlg1_2_txt_4" style="width: 500px;"/>
-                    </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top: 4px;">
-                            <span style="padding: 0px 0px 0px 25px;">入库数量:</span>
-                        </td>
-                        <td style="padding-top: 4px;">
-                            <input class="easyui-textbox" id="dlg1_2_txt_5" style="width: 500px;"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top: 4px;">
-                            <span style="padding: 0px 0px 0px 25px;">进货总价:</span>
-                        </td>
-                        <td style="padding-top: 4px;">
-                            <input class="easyui-textbox" id="dlg1_2_txt_6" style="width: 500px;"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top: 4px;">
-                            <span style="padding: 0px 0px 0px 25px;">保质期限:</span>
-                        </td>
-                        <td style="padding-top: 4px;">
-                            <input class="easyui-datebox" id="dlg1_2_txt_7" style="width: 500px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top: 4px;">
-                            <span style="padding: 0px 0px 0px 25px;">进库商户:</span>
-                        </td>
-                        <td style="padding-top: 4px;">
-                            <input class="easyui-combobox" id="dlg1_2_txt_8" style="width: 500px;"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top: 4px;">
-                            <span style="padding: 0px 0px 0px 25px;">生产厂家:</span>
-                        </td>
-                        <td style="padding-top: 4px;">
-                            <input class="easyui-combobox" id="dlg1_2_txt_9" style="width: 500px;"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top: 4px;">
-                            <span style="padding: 0px 0px 0px 25px;">供货商:</span>
-                        </td>
-                        <td style="padding-top: 4px;">
-                            <input class="easyui-combobox" id="dlg1_2_txt_10" style="width: 500px;" />
-                        </td>
-                    </tr>
+                 <table>
+                     {% for row in add_dict %}
+                        <tr>
+                            <td style="padding-top: 4px;">
+                                <span style="padding: 0px 0px 0px 25px;">{{ row.title }}:</span>
+                            </td>
+                            <td style="padding-top: 4px;">
+                                <input class="{{ row.box_type }}" id="{{ row.id }}"  style="width:500px;"/>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
                 </table>
             </div>
             <div id="dlg1_2-buttons1_add" style="display: none;">

@@ -221,8 +221,8 @@ def userControl(request):
 				depart = models.Department.objects.filter(id = trueid).first()
 				parent_node = depart.node
 				if len(parent_node)==4:
-					zdeparts = models.Department.objects.filter(node__startswith=parent_node).order_by('-node').first() #所有子部门按倒序排列，选第一个，对其Node+1
-					if zdeparts.exists() != True:  # 最开始不存在
+					zdeparts = models.Department.objects.filter(node__startswith=parent_node).order_by('-node') #所有子部门按倒序排列，选第一个，对其Node+1
+					if zdeparts.count() >= 1:  # 最开始不存在
 						checknode = '1000'  # 初始节点\
 					else:
 						checknode = str( int(zdeparts.node)+1 )
@@ -232,6 +232,7 @@ def userControl(request):
 				else: #子部门下添加 ，不允许
 					flag = 2
 			else:#在顶级索引下添加的是顶级部门
+				checknode = '1000'
 				departs = models.Department.objects.all().order_by('-node')
 				if departs.exists()!=True:#最开始不存在
 					checknode = '1000'#初始节点
@@ -573,6 +574,7 @@ def menuControl(request):
 				maxchild=pmenu.maxchild
 				checknode = str(int(maxchild)+1)
 				insertnode = pmenu_node + checknode
+
 				# 创建一行新建菜单的数据
 				models.Menu.objects.create(menu_name=menu_name,menu_describe=menu_describe,menu_url=menu_url,menu_show=menu_show,menu_img=menu_img,menu_node=insertnode,maxchild=addmaxchild)
 				#更新其父菜单的maxchild
@@ -583,10 +585,10 @@ def menuControl(request):
 				menus = models.Menu.objects.all().order_by('-menu_node')
 				for menu in menus:
 					if len(menu.menu_node) == 4:
-						addnode = int(menu.menu_node) + 1
+						newnode = int(menu.menu_node) + 1
 						break
 				models.Menu.objects.create(menu_name=menu_name, menu_describe=menu_describe, menu_url=menu_url,
-				                           menu_show=menu_show, menu_img=menu_img, menu_node=addnode,maxchild=addmaxchild)
+				                           menu_show=menu_show, menu_img=menu_img, menu_node=newnode,maxchild=addmaxchild)
 				back = 1
 
 			return HttpResponse(back)

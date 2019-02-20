@@ -122,6 +122,7 @@ from WorkOrder import views as work
 from Commodity import views as com_v
 from customermanager import views as cv
 from Base import views as base
+from Chart import views as chart
 urlpatterns = [
     #path('admin/', admin.site.urls),
         # 主框架
@@ -133,10 +134,12 @@ urlpatterns = [
     path('single/',base.Sample_Singe),
     path('div/',base.Sample_Div),
     path('muti/',base.Muti_Table),
+
         #安全管理
     path('user/', sec_v.userControl),
     path('role/', sec_v.roleControl),
     path('menu/', sec_v.menuControl),
+
         #商品管理方面的系统配置
     path('goods/',sv.goods),
     path('goodsCat/',sv.goodsCat),
@@ -158,7 +161,12 @@ urlpatterns = [
     path('commodity/', com_v.load_commodity),
     #客户管理
     path('customermanager/', cv.customermanager),
+
+    # 图表
+    path('line_or_bar/',chart.show_line_or_bar),
+    path('pie/',chart.show_pie),
 #测试用
     path('index/', lv.index),
     path('demo/', lv.demo),
+
 ]

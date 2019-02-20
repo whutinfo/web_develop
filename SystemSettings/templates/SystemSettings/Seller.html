@@ -60,7 +60,8 @@
 
 
          /****************新建商户信息*****************/
-         function ShowDlg1_2() {
+         function ShowDlg_add() {
+
              $('#dlg1_2').show();
              $('#dlg1_2').dialog({
                  title: '新增商户',
@@ -72,7 +73,9 @@
                      $(this).dialog('center');
                  },
                  onOpen: function () {
+
                      $("#dlg1_2_txt_1").textbox('setValue', "");
+
                      LoadCat();//加载类型选项
 
                      $("#dlg1_2_txt_3").textbox('setValue', "");
@@ -123,7 +126,7 @@
          function ShowDlg1_1() {
              var row_slec = $("#dg1").datagrid('getSelected');
              if (row_slec != null) {
-                 var value_id = row_slec.value_id;///索引号
+                 var value_id = row_slec.value0;///索引号
 
                  $('#dlg1_1').show();
                  $('#dlg1_1').dialog({
@@ -156,10 +159,11 @@
          }
          //////////////////***************Dlg1_1  详情查看 结束 *************///////////////////////////
 
-         function show_edit() {
+         function ShowDlg_edit() {
+
              var row_slec = $("#dg1").datagrid('getSelected');
              if (row_slec != null) {
-                 var value_id = row_slec.value_id;///索引号
+                 var value_id = row_slec.value0;///索引号
 
                  $('#dlg1_2').show();
                  $('#dlg1_2').dialog({
@@ -182,18 +186,25 @@
                          $("#dlg1_2_txt_7").textbox('setValue', row_slec.value7);
 
                      },
-                     buttons: [{
-                         text: '确定',
-                         iconCls: 'icon-ok',
-                         handler: function () {
-                             $('#dlg1_2').dialog('close');
-                             save_edit();
-                         }
-                     }],
+                     buttons:[{
+                            text: '提交',
+                            iconCls: 'icon-ok',
+                            handler: function () {
+                                edit_save();
+                             }
+                        },
+                          {
+                             text: '取消',
+                             iconCls: 'icon-cancel',
+                             handler: function () {
+                                 $('#dlg1_2').dialog('close');
+
+                             }
+                         }],
+
                      onClose: function () {
                          LoadDg1(0);
                      },
-
                  });
              }
              else {
@@ -217,23 +228,37 @@
                  valueField: 'id',
                  textField: 'name',
                  showItemIcon: true,
+                 editable:false,
              })
          }
 
-         function save_edit() {
+         function edit_save() {
 
+             var row_slec = $("#dg1").datagrid('getSelected');
+
+             var value_id = row_slec.value0;///索引号
+
+              //变量名与显示的Html的新增信息的排序相对应
              var name = $("#dlg1_2_txt_1").textbox('getValue');
-             var type = $("#dlg1_2_txt_2").combobox('getValue');// 名称   //获得的是type而不是title   ，但若不做任何下拉选择的话，就会被当文本框处理，得到title
+
+             var combo_text = $("#dlg1_2_txt_2").combobox('getText'); // 名称   //已设置成为不可输入  但商户和商户类型没有做外键索引
+             // 故不在数据库中保存索引号   直接获取文本值
              var manager = $("#dlg1_2_txt_3").textbox('getValue');
              var phone = $("#dlg1_2_txt_4").textbox('getValue');
-             var floor = $("#dlg1_2_txt_5").combobox('getText');//直接获取text文本
+             var floor = $("#dlg1_2_txt_5").combobox('getText');    //直接获取text文本，因为楼层不需要在数据库中索引
              var number = $("#dlg1_2_txt_6").textbox('getValue');
              var area = $("#dlg1_2_txt_7").textbox('getValue');
 
-             var parm = 'action=Edit&name=' + name + '&type=' + type + '&manager=' + manager + '&phone=' + phone + '&floor=' + floor + '&number=' + number + '&area=' + area;
+               //  后台用request.POST.get()方式获取时  是根据字符串里面的名称获取的，与上面的变量名无关
+             //  如：  request.POST.get('action')  后台获取的就是action对应的值即Save
+             var parm = 'action=Edit&name=' + name + '&type=' + combo_text + '&manager=' + manager + '&phone=' + phone + '&floor=' + floor + '&number=' + number + '&area=' + area+ '&value_id=' + value_id;
+
              getAjax("/Seller/", parm, function (data) {
-                 var backstring = eval("(" + data + ")");
+
+                 var backstring = jQuery.parseJSON(data);
+
                  if (backstring == "1") {
+                     alert("编辑成功！");
                      $('#dlg1_2').dialog('close');
                      LoadDg1();
                  }
@@ -265,12 +290,11 @@
     <div data-options="region:'center'," style="height: 100%">
          <div id="toolbar1" style="padding: 2px 5px;">
 
-            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'" onclick=" LoadDg1();" >刷新</a>
-
-            <a href="javascript:void(0)" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-add'" onclick="ShowDlg1_2();">新增商户信息</a>
-
-            <!--a href="javascript:void(0)" class="easyui-linkbutton"data-options="plain:true,iconCls:'icon-edit'" onclick="edit();">编辑商户信息</!--a-->
-           <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" onclick="ShowDlg1_1();">查看详情</a>
+             <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'" onclick=" LoadDg1();" >刷新</a>
+             <a href="javascript:void(0)" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-add'" onclick="ShowDlg_add();">新增商户信息</a>
+             <a href="javascript:void(0)" class="easyui-linkbutton"data-options="plain:true,iconCls:'icon-edit'" onclick="ShowDlg_edit();">编辑商户信息</a>
+             <a href="javascript:void(0)" class="easyui-linkbutton"data-options="plain:true,iconCls:'icon-edit'" onclick="delet();">删除信息</a>
+             <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" onclick="ShowDlg1_1();">查看详情</a>
 
          </div>
          <table id="dg1" title="商户信息" class="easyui-datagrid" data-options="" style="width: 99%; height: 95%;"
@@ -287,6 +311,7 @@
                 </tr>
               </thead>
          </table>
+    </div>
 
     <!--查看供应商详情-->
     <div id="dlg1_1" style="display: none;">

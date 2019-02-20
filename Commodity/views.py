@@ -8,8 +8,6 @@ from Base.views import *
 
 # Create your views here.
 def stockIn(request):
-	user_id = request.session.get("Login_UserId")
-	action = request.POST.get('action')
 
 	'''sys code define variable begin  '''
 	column = ''
@@ -19,140 +17,306 @@ def stockIn(request):
 	if request.method == 'GET':
 		'''user code define variable begin  '''
 		''' !!  都只改值，不动变量名    !!'''
-		html_name = 'Commodity/stockIn.html'  # 配置html的所在地址
-		head_title = ''  # 网页的标题title
+		html_name = 'Commodity/stockIn.html' #配置html的所在地址
+		head_title = '' #  网页的标题title
 
-		'''!!    表格初始化    !! '''
-		datagrid_version = 1  # 哪一代版本的 int
-		datagrid_title = '入库信息'  # 表格的名称
-		datagrid_tablename = 'Stock_Table'  # 在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
-		''' id(数据库中自增长的那个字段，同样应为真实字段名)一定要有！！并放在第一个，不是用来显示，用来处理信息  其余顺序根据前端想要的摆放顺序来'''
-		datagrid_columnname = ['id', 'name', 'managerName', 'phone',
-		                       'address']  # 在数据库找到想要获取的字段，应为数据库中真实的字段名,即Models中的db_column，如有的话
-		datagrid_columncnt = 5  # 需要获取的列的数量 包括id
-		datagrid_columnwidth = [0, 18, 10, 12, 20]  # 列的宽度 个数与cnt匹配
+		'''!!    表格初始化 版本2 涉及多表查注释或直接给列的中文名   !! '''
+		datagrid_version  = 2  #哪一代版本的 int
+		datagrid_title = '入库信息'  #表格的名称
+
+		datagrid_columncnt = 13  # 需要获取的列的数量 包括id
+		datagrid_columnwidth = [0, 8, 12, 12, 15, 15, 15, 15, 15, 12, 12, 12, 18]  # 列的宽度 个数与cnt匹配
 		datagrid_columnalign = ['center'] * datagrid_columncnt  # 对齐格式 个数与cnt匹配   可以不用改！！
+					# '''   获取字段的注释的参数  直接写简单点  '''
+		column_comment = ('ID','入库单编号','商品名称','商品类型','条形码','入库数量','进货总价',
+		                  '保质期限','进库商户','操作人','入库时间','生产厂家','供货商')
 
 		''' !!  新增数据时的弹框初始化    新增数据是不需要传id这个参数的  id是新增后生成的自增长字段      !! '''
-		add_tab_version = 1
-		add_tab_title = '新增生产厂商'
-		add_tab_tablename = 'Manufactor_Table'  # 在数据库找到想要获取字段的表，应为数据库中真实表名，即Models中的db_table
-		add_tab_columnname = ['name', 'managerName',
-		                      'phone', 'address']  # 在数据库找到想要获取的字段，应为数据库中真实的字段名,即Models中的db_column，如有的话
-		add_tab_columncnt = 4  # 需要获取的列的数量 不包括id！
-		add_tab_boxtype = [1] * add_tab_columncnt
+		add_tab_version = 2
+		add_tab_title = '新增入库单'
+		add_tab_columncnt = 10  # 需要获取的列的数量 不包括id！
+		add_tab_boxtype = [1,2,2,1,1,1,3,2,2,2]  # 1:输入框textbox,还是 2:下拉框combobox,还是 3 :日历datebox
+
+		add_tab_comment = ('入库单编号', '商品名称', '商品类型', '条形码', '入库数量', '进货总价',
+		                  '保质期限', '进库商户', '生产厂家', '供货商')
 		'''user code define variable  end  '''
 
 		'''sys code begin  '''
 
 		'''        表格初始化      '''
-		base_html_construct = base_html_construct_trans(datagrid_version, datagrid_tablename, datagrid_columnname,
-		                                                datagrid_columnwidth, datagrid_columnalign)
-		base_html_construct.encode()  # 先将传送进来的参数进行解析
-		column = base_html_construct.fun_Get_Cmd_Trans(datagrid_columncnt)  # 拼接cnt列Json
+		base_html_construct = base_html_construct_trans(datagrid_version ,datagrid_columnwidth,datagrid_columnalign)
+		base_html_construct.encode() #先将传送进来的参数进行解析
+		column = base_html_construct.fun_Get_Muti_Table(datagrid_columncnt,column_comment) #拼接cnt列Json
 		'''  新增数据时的弹框初始化     '''
-		add_tab_construct = add_tab_construct_trans(add_tab_version, add_tab_tablename, add_tab_columnname,
-		                                            add_tab_boxtype)
+		add_tab_construct = add_tab_construct_trans(add_tab_version, add_tab_boxtype)
 		add_tab_construct.encode()  # 先将传送进来的参数进行解析
-		add_tab_dict = add_tab_construct.fun_Get_Cmd_Trans(add_tab_columncnt)  # 拼接cnt列Json
+		add_tab_dict = add_tab_construct.fun_Get_Muti_Table(add_tab_columncnt,add_tab_comment)  # 拼接cnt列Json
 
-		return_dict = {'head_title': head_title, 'info_dict': column, 'datagrid_title': datagrid_title,
-		               'add_dict': add_tab_dict, 'add_title': add_tab_title}
+		return_dict = {'head_title':head_title,'info_dict': column,'datagrid_title':datagrid_title,'add_dict':add_tab_dict,'add_title':add_tab_title}
 
-		return render(request, html_name, return_dict)  # 将初始化信息全部返回到前端
+		return render(request, html_name, return_dict)#将初始化信息全部返回到前端
 		'''sys code end'''
+
 	else:
+		user_id = request.session.get("Login_UserId")
 		action = request.POST.get('action')
+
 		if action == 'LoadData':
-			value_dict = {'value1':'','value2':'','value3':'','value4':'','value5':'','value6':'',
-			              'value7': '','value8':'','value9':'','value10':'','value11':'','value12':'',}
+
+			# value_dict = {'value0': '', 'value1': '','combobox1':{'id':'','name':''}, 'value2': '', 'value3': '', 'value4': '', 'value5': '', 'value6': '',
+			#
+			#               'value7': '', 'value8': '', 'value9': '', 'value10': '', 'value11': '', 'value12': '', }
+
+			value_dict = {'value0': '', 'value1': '', 'combobox1': {'id': '', 'name': ''},
+			              'combobox2': {'id': '', 'name': ''},
+			              'combobox3': {'id': '', 'name': ''}, 'combobox4': {'id': '', 'name': ''},
+			              'combobox5': {'id': '', 'name': ''},
+			              'value2': '', 'value3': '', 'value4': '', 'value5': '', 'value6': '', 'value7': '',
+			              'value8': '', 'value9': '', 'value10': '', 'value11': '', 'value12': '', }
+
 			# 入库单编号 商品名称 商品类型 条形码 入库数量 进货总价 保质期限 进库商户 操作人 入库时间 生产厂家 供货商
+
 			value_list = []
+
 			stock_Ins = models.StockIn.objects.all()
+
 			for stock_in in stock_Ins:
-				value_dict['value1'] = str(stock_in.stockin_id).zfill(9) # 入库单编号
+
+				value_dict['value0'] = stock_in.id  # ID
+
+				value_dict['value1'] = str(stock_in.stockin_id).zfill(9)  # 入库单编号
+
 				if stock_in.goods != None:
-					value_dict['value2'] = stock_in.goods.goodsname    # 商品名称
+
+					# 涉及下拉框的注意！！！   除了给value值以外，另外加一个'combobox1': {'id': '', 'name': ''} 键值对
+					# 编辑时前端加载需要
+					value_dict['combobox1']['id'] = stock_in.goods.id  # 商品名称
+
+					value_dict['combobox1']['name'] = stock_in.goods.goodsname  # 商品名称
+
+					value_dict['value2'] = stock_in.goods.goodsname  # 商品名称
+
 				else:
+
 					value_dict['value2'] = ''
+
 				if stock_in.cat != None:
-					value_dict['value3'] = stock_in.cat.catname      #商品类型
+
+					value_dict['combobox2']['id'] = stock_in.cat.id
+
+					value_dict['combobox2']['name'] = stock_in.cat.catname
+
+					value_dict['value3'] = stock_in.cat.catname  # 商品类型
+
 				else:
+
 					value_dict['value3'] = ''
-				value_dict['value4'] = stock_in.goods_sn        #条形码
-				value_dict['value5'] = stock_in.in_amount     #入库数量
-				value_dict['value6'] = stock_in.cost         # 进货总价
-				goodsInfo = stock_in.goodsinfo_set.filter(stockin_id=stock_in.id)   # 保质期限
+
+				value_dict['value4'] = stock_in.goods_sn  # 条形码
+
+				value_dict['value5'] = stock_in.in_amount  # 入库数量
+
+				value_dict['value6'] = stock_in.cost  # 进货总价
+
+				goodsInfo = stock_in.goodsinfo_set.filter(stockin_id=stock_in.id)  # 保质期限
+
 				if goodsInfo.count() != 0:
+
 					if goodsInfo.first().exp_date != None:
 						value_dict['value7'] = goodsInfo.first().exp_date.strftime("%Y-%m-%d %H:%M:%S")
+
 				else:
+
 					value_dict['value7'] = ''
+
 				if stock_in.seller != None:
+
+					value_dict['combobox3']['id'] = stock_in.seller.id
+
+					value_dict['combobox3']['name'] = stock_in.seller.Sellername
+
 					value_dict['value8'] = stock_in.seller.Sellername  # 进库商户
+
 				else:
+
 					value_dict['value8'] = ''
+
 				if stock_in.performer != None:
+
 					value_dict['value9'] = stock_in.performer.name  # 操作人
+
 				else:
+
 					value_dict['value9'] = ''
-				value_dict['value10'] = stock_in.in_time.strftime("%Y-%m-%d %H:%M:%S")   # 入库时间
+
+				value_dict['value10'] = stock_in.in_time.strftime("%Y-%m-%d %H:%M:%S")  # 入库时间
+
 				if stock_in.manufactor != None:
+
+					value_dict['combobox4']['id'] = stock_in.manufactor.id
+
+					value_dict['combobox4']['name'] = stock_in.manufactor.name
+
 					value_dict['value11'] = stock_in.manufactor.name  # 生产厂家
+
 				else:
+
 					value_dict['value11'] = ''
+
 				if stock_in.supplier != None:
+					value_dict['combobox5']['id'] = stock_in.supplier.id
+
+					value_dict['combobox5']['name'] = stock_in.supplier.name
+
 					value_dict['value12'] = stock_in.supplier.name  # 供货商
+
 				else:
+
 					value_dict['value12'] = ''
+
 				value_list.append(value_dict.copy())
+
 			return HttpResponse(json.dumps(value_list))
 
 			'''新建入库单时生成单号，加载下拉框内容'''
+
 		elif action == 'CreateStockInId':
+
 			id = LoadStockInId()
+
 			next_id = GetNextNumber(id)
+
 			return HttpResponse(next_id)
+
 		elif action == 'LoadGoodsName':
+
 			value_list = getGoodsCombobox('goodsName')
+
 			return HttpResponse(json.dumps(value_list))
+
 		elif action == 'LoadGoodsCat':
+
 			value_list = getGoodsCombobox('goodsCat')
+
 			return HttpResponse(json.dumps(value_list))
+
 		elif action == 'LoadSeller':
+
 			value_list = getGoodsCombobox('seller')
+
 			return HttpResponse(json.dumps(value_list))
+
 		elif action == 'LoadManufactor':
+
 			value_list = getGoodsCombobox('manufactor')
+
 			return HttpResponse(json.dumps(value_list))
+
 		elif action == 'LoadSupplier':
+
 			value_list = getGoodsCombobox('supplier')
+
 			return HttpResponse(json.dumps(value_list))
+
 			'''保存新增的入库单'''
+
 		elif action == 'Save':
+
 			back = 0
-			id = request.POST.get('stockIn_id')  #'000000003'    int(id)=3
-			goods_id = request.POST.get('goods_id') #'1'
-			cat = request.POST.get('cat')  #'1'
-			rfid = request.POST.get('rfid')  #'S1233'
-			amount = request.POST.get('amount') #'15'
-			cost = request.POST.get('cost')   #'56'
-			#提交回来的是总的成本价，保存在数据库goodsInfo 中保存的是单价 ,stockIn中直接保存的总价
-			exp_date = request.POST.get('exp_date')  #'05/13/2020'
+
+			id = request.POST.get('stockIn_id')  # '000000003'    int(id)=3
+
+			goods_id = request.POST.get('goods_id')  # '1'
+
+			cat = request.POST.get('cat')  # '1'
+
+			rfid = request.POST.get('rfid')  # 'S1233'
+
+			amount = request.POST.get('amount')  # '15'
+
+			cost = request.POST.get('cost')  # '56'
+
+			# 提交回来的是总的成本价，保存在数据库goodsInfo 中保存的是单价 ,stockIn中直接保存的总价
+
+			exp_date = request.POST.get('exp_date')  # '05/13/2020'
+
 			'''时间格式问题 前端dd/mm/yy 保存格式应是yy-mm-dd 暂时不知道怎么解决，先不添加时间数据'''
 
 			seller = request.POST.get('seller')
+
 			manufactor = request.POST.get('mfrs')
+
 			supplier = request.POST.get('supplier')
 
-			#更新stockIn表   先添加主表数据
-			In= models.StockIn.objects.create(stockin_id=id, goods_id=goods_id, cat_id=cat, goods_sn=rfid, in_amount=amount,
-			                              cost=float(cost), performer_id=user_id, seller_id=seller, manufactor_id=manufactor,
-			                              supplier_id=supplier)
-			#更新goodsInfo表
-			models.GoodsInfo.objects.create(stockin_id=In.id,goods_id=goods_id,cat_id=cat,goods_sn=rfid,goods_stock=amount,sale_count=0,
-			                                cost=float(cost)/int(amount),manufactor_id=manufactor,seller_id=seller,supplier_id=supplier)
+			# 更新stockIn表   先添加主表数据
+
+			In = models.StockIn.objects.create(stockin_id=id, goods_id=goods_id, cat_id=cat, goods_sn=rfid,
+			                                   in_amount=amount,
+
+			                                   cost=float(cost), performer_id=user_id, seller_id=seller,
+			                                   manufactor_id=manufactor,
+
+			                                   supplier_id=supplier)
+
+			# 更新goodsInfo表
+
+			models.GoodsInfo.objects.create(stockin_id=In.id, goods_id=goods_id, cat_id=cat, goods_sn=rfid,
+			                                goods_stock=amount, sale_count=0,
+
+			                                cost=float(cost) / int(amount), manufactor_id=manufactor, seller_id=seller,
+			                                supplier_id=supplier)
+
 			back = 1
+
+			return HttpResponse(back)
+
+		elif action == 'Edit':
+
+			back = 0
+			input_error = 0  # 判断下拉框输入是否有问题
+			# 获取要更新的信息
+			value_id = request.POST.get('value_id')
+			id = request.POST.get('stockIn_id')  # '000000003'    int(id)=3
+			goods_id = request.POST.get('goods_id')  # '1'
+
+			if goods_id.isdigit() != True:
+				input_error = 1
+
+			cat = request.POST.get('cat')  # '1'
+
+			if cat.isdigit() != True:
+				input_error = 1
+
+			rfid = request.POST.get('rfid')  # 'S1233'
+			amount = request.POST.get('amount')  # '15'
+			cost = request.POST.get('cost')  # '56'
+			# 提交回来的是总的成本价，保存在数据库goodsInfo 中保存的是单价 ,stockIn中直接保存的总价
+
+			exp_date = request.POST.get('exp_date')  # '05/13/2020'
+			'''时间格式问题 前端dd/mm/yy 保存格式应是yy-mm-dd 暂时不知道怎么解决，先不添加时间数据'''
+
+			seller = request.POST.get('seller')
+			if seller.isdigit() != True:
+				input_error = 1
+
+			manufactor = request.POST.get('mfrs')
+			if manufactor.isdigit() != True:
+				input_error = 1
+
+			supplier = request.POST.get('supplier')
+			if supplier.isdigit() != True:
+				input_error = 1
+
+			if input_error != 1:
+				back = models.StockIn.objects.filter(pk=value_id).update(stockin_id=id, goods_id=goods_id, cat_id=cat,
+				                                                         goods_sn=rfid, in_amount=amount,
+				                                                         cost=float(cost), performer_id=user_id,
+				                                                         seller_id=seller, manufactor_id=manufactor,
+				                                                         supplier_id=supplier)
+
+			else:
+				back = '下拉框中没有该项，请检查输入是否有错，或在系统配置中添加该项！'
+
 			return HttpResponse(back)
 
 

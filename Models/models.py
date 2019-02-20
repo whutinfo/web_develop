@@ -365,8 +365,24 @@ class Video(models.Model):
 
     type = models.IntegerField(default='1')
     class Meta:
-
+        managed = False
         db_table = 'Video_Table'
+
+
+class Temperature(models.Model):
+
+    temperate = models.IntegerField(null=True)
+
+    humidity =  models.IntegerField(null=True)
+
+    rainfall =  models.IntegerField(null=True)
+
+    time = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        #managed = False
+        db_table = 'Temperature_Table'
+
 
 
 

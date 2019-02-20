@@ -1,3 +1,6 @@
+from echarts import *
+
+
 """"已将这几个函数封装成类  begin"""
 '''
 json_frame_construct：针对页面的get命令进行处理   拼接前端表格的column数据
@@ -43,7 +46,7 @@ http://blog.sina.com.cn/s/blog_70dc706b0100oavh.html  这个是针对存储过�
 获得表的该字段的注释  返回元组如：(ID,)
 '''
 def fun_call_db_proc(database_str,table_str,column_str):
-	from django.db import connection, transaction
+	from django.db import connection
 	data2 = ''
 	data2 = 'SELECT column_comment FROM INFORMATION_SCHEMA.Columns WHERE table_schema = "'  + database_str + '" AND table_name= "' + \
 			 table_str + '" AND  column_name= "' + column_str + '"'
@@ -218,6 +221,8 @@ class add_tab_construct_trans(object):
 		else:
 			print('请先对参数进行encode解析,注意系统代码段是否做过更改')
 		return self.fielddic
+
+
 #还没有用到
 class html_base_var(object):
 		'''!!    表格初始化    !! '''
@@ -277,6 +282,191 @@ def base_fun_get_demo(Model_Object):  # Model_Object= models.GoodsCat
         comment = fun_call_db_proc('aliyun', table_name, db_column)  #<class 'tuple'>: ('索引号',)
         fielddic[field_name] = comment[0]
     return fielddic
+
+
+def fun_sys_pie_series(x_data,y_data):
+	"""
+	拼接饼图中series的数据格式 [{ // 数据项的名称 name: '数据1',   // 数据项值8   value: 10		},
+							  {  name: '数据2', value: 20		}]
+	:param x_data: 饼图的数据项名称
+	:param y_data: 饼图的数据项值
+	:return: 拼接后的series_data
+	"""
+
+	value_list = []
+	value_dict = {'name':'','value':''}
+
+	# 先判断x_data与y_data的个数是否匹配
+	if len(x_data) != len(y_data):
+		print('请检查输入的x和y的个数是否一致！')
+		return None
+	else:
+		for i in range(len(x_data)):
+			value_dict['name'] = x_data[i]
+			value_dict['value'] = y_data[i]
+			value_list.append(value_dict.copy())
+
+		return value_list
+
+
+
+class new_a_chart(object):
+
+	def __init__(self,chart_type,title='',description=''):
+
+		self.title = title
+
+		self.description = description
+
+		self.y_data = []
+
+		self.x_data = []
+
+		self.legend = []
+
+		self.chart_type=chart_type
+
+		if int(self.chart_type) == 3: # 饼图的时候创建图的实例让axis坐标系为false
+			# 创建一张图的实例
+			self.chart = Echart(self.title,self.description,axis=False)
+			# 提示框组件
+			self.chart.use(Tooltip(trigger='item'))
+
+
+		else:
+			# 创建一张图的实例
+			self.chart = Echart(self.title, self.description, axis=True)
+			# 提示框组件
+			self.chart.use(Tooltip(trigger='axis'))
+
+	def line(self,x_data=None,y_data=None,label=''):
+		'''
+		在该图上画一条折线
+		:param x_data: x轴真实显示的数据
+		:param y_data: y轴真实显示的数据
+		:param label: 该条折线显示的意义，即图例内容
+		:return:None
+		'''
+
+		self.legend.append(label)
+
+		# 在折线图上以圆点显示最大值最小值
+		markPoint = {'data':
+			             [{'type': 'max', 'name': '最大值'},
+			              {'type': 'min', 'name': '最小值'}]
+		             }
+		# 在折线图以虚线画出平均值
+		markLine = {'data': [{'type': 'average', 'name': '平均值'}]}
+
+		self.x_data=x_data
+		self.y_data=y_data
+
+		# 创建一条折线
+		self.chart.use(Line(name=label, data=self.y_data, markPoint=markPoint, markLine=markLine))
+
+	def bar(self,x_data=None,y_data=None,label=''):
+		'''
+		在该图上画柱状
+		:param x_data: x轴真实显示的数据
+		:param y_data: y轴真实显示的数据
+		:param label: 该条形显示的意义，即图例内容
+		:return:None
+		'''
+
+		self.legend.append(label)
+
+		# 在折线图上以圆点显示最大值最小值
+		markPoint = {'data':
+			             [{'type': 'max', 'name': '最大值'},
+			              {'type': 'min', 'name': '最小值'}]
+		             }
+		# 在折线图以虚线画出平均值
+		markLine = {'data': [{'type': 'average', 'name': '平均值'}]}
+
+		self.x_data=x_data
+		self.y_data=y_data
+
+		# 创建一条折线
+		self.chart.use(Bar(name=label, data=self.y_data, markPoint=markPoint, markLine=markLine))
+
+	def pie(self,x_data=None,y_data=None,label=''):
+		'''
+		在该图上画饼图
+		:param x_data: x轴真实显示的数据
+		:param y_data: y轴真实显示的数据
+		:param label: 该条折线显示的意义，即图例内容
+		:return:None
+		'''
+
+		self.legend = x_data
+
+		self.x_data=x_data
+		self.y_data=y_data
+
+		""" pie没有坐标轴，数据全由series展示，数据格式如下
+		[{
+            // 数据项的名称
+            name: '数据1',
+            // 数据项值8
+            value: 10
+		}, 
+		{
+			 name: '数据2',
+			 value: 20
+		}]
+		"""
+
+		series_data = fun_sys_pie_series(x_data,y_data)
+
+		# 创建一个饼图 此时 name 是数据项的名称，即x_data
+		self.chart.use(Pie(name=label, data=series_data))
+
+	def Set_Legend(self, orient='horizontal', position=None):
+		"""
+		创建图例    data = ['类别1', '类别2', '类别3'],  series中根据名称区分 与series保持一致！
+		:param orient: 'horizontal' 水平, 'vertical'  垂直
+		:param position:默认 (x:'center',y: 'top') 以元组形式
+		:return: None
+		"""
+
+		self.chart.use(Legend(data=self.legend,orient=orient,position=position))
+
+	def x_axis(self,type='category', position='bottom'):
+		"""
+		设置直角坐标系 grid 中的 x 轴
+		:param type:默认为种类
+		:param position:x 轴的位置，可选：'top'，'bottom'
+		:return:'value' 数值轴，适用于连续数据。
+				'category' 类目轴，适用于离散的类目数据，为该类型时必须通过 data 设置类目数据。
+				'time' 时间轴，适用于连续的时序数据，与数值轴相比时间轴带有时间的格式化，在刻度计算上也有所不同，
+				例如会根据跨度的范围来决定使用月，星期，日还是小时范围的刻度。
+		"""
+		if type =='category':
+			self.chart.use(Axis(type=type, position=position,data=self.x_data))
+		elif type =='time':
+			self.chart.use(Axis(type=type, position=position,data=self.x_data))
+
+	def y_axis(self,type='value', position='left',tick_name=''):
+		"""
+		设置直角坐标系 grid 中的 y 轴
+		:param type:默认为种类
+		:param position:y 轴的位置，可选：'left'，'right'
+		:param tick_name:y 轴的单位
+		:return:'value' 数值轴，适用于连续数据。
+				'category' 类目轴，适用于离散的类目数据，为该类型时必须通过 data 设置类目数据。
+				'time' 时间轴，适用于连续的时序数据，与数值轴相比时间轴带有时间的格式化，在刻度计算上也有所不同，
+				例如会根据跨度的范围来决定使用月，星期，日还是小时范围的刻度。
+		"""
+		self.chart.use(Axis(type=type, position=position,
+		               axisLabel={'formatter': '{value}'+tick_name},
+		               ))
+
+	def get_json(self):
+		"""
+		配置完所有参数后获取该图的配置Json
+		:return: json数据，用于前端
+		"""
+		return self.chart.json
 
 
 '''

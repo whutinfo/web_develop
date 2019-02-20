@@ -58,7 +58,7 @@
 
 
         //新建商品信息
-        function ShowDlg1_2() {
+        function ShowDlg_add() {
             $('#dlg1_2').show();
             $('#dlg1_2').dialog({
                 title: '新增商品',
@@ -80,11 +80,129 @@
             });
         }
 
+        function save() {
+
+            var name = $("#dlg1_2_txt_1").textbox('getValue');//地点
+
+            var parm = 'action=Save&name=' + name;
+            getAjax("/goods/", parm, function (data) {
+                var backstring = jQuery.parseJSON(data); //data返回形式应该是"[{'value1':'衣服'},{'value1':'裤子'},{'value1':'手机'}]"
+                //转换后backstring的形式应该是[{value1:'衣服'},{value1:'裤子'},{value1:'手机'}]
+                if (backstring == "1") {
+                    $('#dlg1_2').dialog('close');
+                    LoadDg1();
+
+                }
+                else
+                    alert("保存失败");
+            })
+        }
+
+         /***************  编辑 ********************/
+         function ShowDlg_edit(){
+
+                var row_slec = $("#dg1").datagrid('getSelected');
+                if (row_slec != null) {
+                    var value_id = row_slec.value0;
+
+                    $('#dlg1_2').show();
+                    $('#dlg1_2').dialog({
+                        title: '编辑商品信息',
+                        width: 705,
+                        height: 420,
+                        closed: false,
+                        shadow: true,
+                        onResize: function () {
+                            $(this).dialog('center');
+                        },
+                        onOpen: function () {
+                            $("#dlg1_2_txt_1").textbox('setValue', row_slec.value1);
+
+                        },
+                        onClose: function () {
+                            LoadDg1();
+                        },
+                        buttons: [{
+                            text: '提交',
+                            iconCls: 'icon-ok',
+                            handler: function () {
+                                edit_save();
+                             }
+                        },
+                          {
+                             text: '取消',
+                             iconCls: 'icon-cancel',
+                             handler: function () {
+                                 $('#dlg1_2').dialog('close');
+
+                             }
+                         }]
+                        })
+                }
+                else {
+                 alert("勾选要编辑的项!");
+             }
+         }
+
+         //////*******************保存编辑后的生产厂商信息  仿save函数 不过后台不是create而是Update**************************/
+         function edit_save() {
+                 /* user code begin */
+             var row_slec = $("#dg1").datagrid('getSelected');
+             var value_id = row_slec.value0;
+             //变量名与显示的Html的新增信息的排序相对应
+             var name = $("#dlg1_2_txt_1").textbox('getValue');
+
+             //  后台用request.POST.get()方式获取时  是根据字符串里面的名称获取的，与上面的变量名无关
+             //  如：  request.POST.get('action')  后台获取的就是action对应的值即Save
+             var parm = 'action=Edit&name=' + name + '&value_id=' + value_id;
+
+                //getAjax 第一个参数是Url 做相应的 更改
+             getAjax("/goods/", parm, function (data) {
+
+                 /* user code end */
+
+                 var backstring = jQuery.parseJSON(data);
+                 if (backstring == "1") {
+                     alert("编辑成功！");
+                     $('#dlg1_2').dialog('close');
+                     LoadDg1();
+                 }
+                 else
+                     alert("编辑失败");
+             })
+         }
+
+
+        ///////删除信息
+         function delet(){
+
+             var row_slec = $("#dg1").datagrid('getSelected');
+             if (row_slec != null) {
+                 var value_id = row_slec.value0;
+                 var dataJson5;
+                 var parm = "action=Delete&value_id=" + value_id;
+                 getAjax("/single/", parm, function (data) {
+                     dataJson5 = eval("(" + data + ")");
+                 });
+
+                if (dataJson5 == 1) {
+                    alert("删除成功！");
+                    LoadDg1();
+                }
+
+            }
+            else {
+                alert("请选中某一行！");
+
+            }
+
+        }
+
         //////////////////***************Dlg1_1  工单信息详情查看  *************///////////////////////////
         function ShowDlg1_1() {
             var row_slec = $("#dg1").datagrid('getSelected');
             if (row_slec != null) {
-                var value_id = row_slec.value1;///索引号
+                var value_id = row_slec.value0;///索引号
 
                 $('#dlg1_1').show();
                 $('#dlg1_1').dialog({
@@ -111,25 +229,6 @@
         }
         //////////////////***************Dlg1_1  工单信息详情查看 结束 *************///////////////////////////
 
-        function save() {
-
-
-            var name = $("#dlg1_2_txt_1").textbox('getValue');//地点
-
-            var parm = 'action=Save&name=' + name;
-            getAjax("/goods/", parm, function (data) {
-                var backstring = jQuery.parseJSON(data); //data返回形式应该是"[{'value1':'衣服'},{'value1':'裤子'},{'value1':'手机'}]"
-                //转换后backstring的形式应该是[{value1:'衣服'},{value1:'裤子'},{value1:'手机'}]
-                if (backstring == "1") {
-                    $('#dlg1_2').dialog('close');
-                    LoadDg1();
-
-                }
-                else
-                    alert("保存失败");
-            })
-        }
-
 
     </script>
 
@@ -154,9 +253,10 @@
 
             <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'" onclick="Refresh()" >刷新</a>
 
-            <a href="javascript:void(0)" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-add'" onclick="ShowDlg1_2();">新增信息</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-add'" onclick="ShowDlg_add();">新增信息</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'" onclick="ShowDlg_edit();">编辑信息</a>
 
-            <a href="javascript:void(0)" class="easyui-linkbutton"data-options="plain:true,iconCls:'icon-edit'" onclick="delet();">编辑信息</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton"data-options="plain:true,iconCls:'icon-edit'" onclick="delet();">删除信息</a>
            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" onclick="ShowDlg1_1();">查看详情</a>
 
          </div>
@@ -174,7 +274,7 @@
                 </tr>
               </thead>
          </table>
-
+    </div>
 
     <!--查看工单详情-->
     <div id="dlg1_1" style="display: none;">

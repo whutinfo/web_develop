@@ -5,6 +5,7 @@ from Base.com_func import *
 import json
 
 
+
 '''
 将想要在前端展示的相应字段的中文名写到数据库中对应的注释里
 公共函数在Base下的com_func中，不要动！只需在自己的views下 from Base.com_func import * 导入即可
@@ -92,10 +93,61 @@ def Sample_Singe(request):
 
 			return HttpResponse(json.dumps(value_list))  # 将列表拼字典仿Json格式转字符串传给前端 [{},{},{}]
 		elif action == 'Save':
+
 			back = 0
-			add_goods = request.POST.get('name')
-			models.Goods.objects.create(goodsname=add_goods)
+
+			# 获取要新增的信息
+			add_name = request.POST.get('name')
+			add_manager = request.POST.get('manager')
+			add_phone = request.POST.get('phone')
+			add_address = request.POST.get('address')
+
+			models.Manufactor.objects.create(name=add_name, phone=add_phone, manager=add_manager, address=add_address)
+
 			back = 1
+			return HttpResponse(back)
+
+		elif action == 'Edit':
+
+			back = 0
+
+			# 获取要更新的信息
+			value_id = request.POST.get('value_id')
+			add_name = request.POST.get('name')
+			add_manager = request.POST.get('manager')
+			add_phone = request.POST.get('phone')
+			add_address = request.POST.get('address')
+
+			back = models.Manufactor.objects.filter(pk = value_id).update(name=add_name, phone=add_phone, manager=add_manager,
+			                                   address=add_address)
+
+			return HttpResponse(back)
+
+		elif action == 'Delete':
+
+			back = 0
+
+			# 获取要更新的信息
+			value_id = request.POST.get('value_id')
+			delete_flag = request.POST.get('delete_flag')
+
+			# 判断在goodsinfo表中是否存在该索引Id ，若存在，则提示警告 ！ 若删除会将关联的所有信息一并删除，请确认
+			if delete_flag == '0':  # 第一次点删除，还未做级联判断
+				row = models.GoodsInfo.objects.filter(manufactor_id=value_id)
+
+				if row.exists() != True:
+					models.Manufactor.objects.filter(pk = value_id).delete()  # 因为外键会级联直接删除入库单中涉及该条信息的所有行
+					back =1
+
+				else:
+					back = '在其他表中存在该信息，若删除将级联删除，是否确定删除？'
+				# back = 1 正常删除 back = 警告，级联删除  back = 0 其他异常
+
+			elif delete_flag == '1':  #确认级联删除，则直接删除
+
+				models.Manufactor.objects.filter(pk=value_id).delete()  # 因为外键会级联直接删除入库单中涉及该条信息的所有行
+				back = 1
+
 			return HttpResponse(back)
 
 		'''usr code end '''
@@ -202,8 +254,15 @@ def Sample_Div(request):
 		elif action == 'Save':
 			back = 0
 			''' user code begin '''
-			add_goods = request.POST.get('name')
-			models.Goods.objects.create(goodsname=add_goods)
+
+			add_name = request.POST.get('name')
+			add_manager = request.POST.get('manager')
+			add_phone = request.POST.get('phone')
+			add_address = request.POST.get('address')
+			models.Supplier.objects.create(name=add_name, phone=add_phone, managername=add_manager, address=add_address)
+			back = 1
+			return HttpResponse(back)
+
 			''' user code end '''
 			back = 1
 			return HttpResponse(back)
@@ -288,9 +347,14 @@ def Muti_Table(request):
 
 		if action == 'LoadData':
 
-			value_dict = {'value1': '', 'value2': '', 'value3': '', 'value4': '', 'value5': '', 'value6': '',
+			# value_dict = {'value0': '', 'value1': '','combobox1':{'id':'','name':''}, 'value2': '', 'value3': '', 'value4': '', 'value5': '', 'value6': '',
+			#
+			#               'value7': '', 'value8': '', 'value9': '', 'value10': '', 'value11': '', 'value12': '', }
 
-			              'value7': '', 'value8': '', 'value9': '', 'value10': '', 'value11': '', 'value12': '', }
+			value_dict = {'value0': '', 'value1': '', 'combobox1': {'id': '', 'name': ''}, 'combobox2': {'id': '', 'name': ''},
+			              'combobox3': {'id': '', 'name': ''},'combobox4': {'id': '', 'name': ''},'combobox5': {'id': '', 'name': ''},
+			              'value2': '','value3': '','value4': '', 'value5': '', 'value6': '', 'value7': '',
+			              'value8': '', 'value9': '', 'value10': '', 'value11': '', 'value12': '', }
 
 			# 入库单编号 商品名称 商品类型 条形码 入库数量 进货总价 保质期限 进库商户 操作人 入库时间 生产厂家 供货商
 
@@ -300,9 +364,17 @@ def Muti_Table(request):
 
 			for stock_in in stock_Ins:
 
+				value_dict['value0'] = stock_in.id  # ID
+
 				value_dict['value1'] = str(stock_in.stockin_id).zfill(9)  # 入库单编号
 
 				if stock_in.goods != None:
+
+					# 涉及下拉框的注意！！！   除了给value值以外，另外加一个'combobox1': {'id': '', 'name': ''} 键值对
+					# 编辑时前端加载需要
+					value_dict['combobox1']['id'] = stock_in.goods.id  # 商品名称
+
+					value_dict['combobox1']['name'] = stock_in.goods.goodsname  # 商品名称
 
 					value_dict['value2'] = stock_in.goods.goodsname  # 商品名称
 
@@ -311,6 +383,10 @@ def Muti_Table(request):
 					value_dict['value2'] = ''
 
 				if stock_in.cat != None:
+
+					value_dict['combobox2']['id'] = stock_in.cat.id
+
+					value_dict['combobox2']['name'] = stock_in.cat.catname
 
 					value_dict['value3'] = stock_in.cat.catname  # 商品类型
 
@@ -337,6 +413,10 @@ def Muti_Table(request):
 
 				if stock_in.seller != None:
 
+					value_dict['combobox3']['id'] = stock_in.seller.id
+
+					value_dict['combobox3']['name'] = stock_in.seller.Sellername
+
 					value_dict['value8'] = stock_in.seller.Sellername  # 进库商户
 
 				else:
@@ -355,6 +435,10 @@ def Muti_Table(request):
 
 				if stock_in.manufactor != None:
 
+					value_dict['combobox4']['id'] = stock_in.manufactor.id
+
+					value_dict['combobox4']['name'] = stock_in.manufactor.name
+
 					value_dict['value11'] = stock_in.manufactor.name  # 生产厂家
 
 				else:
@@ -362,6 +446,9 @@ def Muti_Table(request):
 					value_dict['value11'] = ''
 
 				if stock_in.supplier != None:
+					value_dict['combobox5']['id'] = stock_in.supplier.id
+
+					value_dict['combobox5']['name'] = stock_in.supplier.name
 
 					value_dict['value12'] = stock_in.supplier.name  # 供货商
 
@@ -464,6 +551,54 @@ def Muti_Table(request):
 			back = 1
 
 			return HttpResponse(back)
+
+		elif action == 'Edit':
+
+			back = 0
+			input_error = 0  # 判断下拉框输入是否有问题
+			# 获取要更新的信息
+			value_id = request.POST.get('value_id')
+			id = request.POST.get('stockIn_id')  # '000000003'    int(id)=3
+			goods_id = request.POST.get('goods_id')  # '1'
+
+			if goods_id.isdigit()!= True:
+				input_error = 1
+
+			cat = request.POST.get('cat')  # '1'
+
+			if cat.isdigit()!= True:
+				input_error = 1
+
+			rfid = request.POST.get('rfid')  # 'S1233'
+			amount = request.POST.get('amount')  # '15'
+			cost = request.POST.get('cost')  # '56'
+			# 提交回来的是总的成本价，保存在数据库goodsInfo 中保存的是单价 ,stockIn中直接保存的总价
+
+			exp_date = request.POST.get('exp_date')  # '05/13/2020'
+			'''时间格式问题 前端dd/mm/yy 保存格式应是yy-mm-dd 暂时不知道怎么解决，先不添加时间数据'''
+
+			seller = request.POST.get('seller')
+			if seller.isdigit() != True:
+				input_error = 1
+
+			manufactor = request.POST.get('mfrs')
+			if manufactor.isdigit() != True:
+				input_error = 1
+
+			supplier = request.POST.get('supplier')
+			if supplier.isdigit() != True:
+				input_error = 1
+
+			if input_error != 1:
+				back = models.StockIn.objects.filter(pk=value_id).update(stockin_id=id, goods_id=goods_id, cat_id=cat, goods_sn=rfid, in_amount=amount,
+			                              cost=float(cost), performer_id=user_id, seller_id=seller, manufactor_id=manufactor,
+			                              supplier_id=supplier)
+
+			else:
+				back ='下拉框中没有该项，请检查输入是否有错，或在系统配置中添加该项！'
+
+			return HttpResponse(back)
+
 
 '''
 加载最大入库单编号 字符串形式，9位

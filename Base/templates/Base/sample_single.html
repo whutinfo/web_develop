@@ -73,7 +73,7 @@
 
 
          /****************新建生产厂商 初始化   可以不动！*****************/
-         function ShowDlg1_2() {
+         function ShowDlg_add() {
              $('#dlg1_2').show();
              $('#dlg1_2').dialog({
                  width: 705,
@@ -82,6 +82,14 @@
                  shadow: true,
                  onResize: function () {
                      $(this).dialog('center');
+                 },
+                 onOpen: function () {
+
+                     $("#dlg1_2_txt_1").textbox('setValue', "");
+                     $("#dlg1_2_txt_2").textbox('setValue', "");
+                     $("#dlg1_2_txt_3").textbox('setValue', "");
+                     $("#dlg1_2_txt_4").textbox('setValue', "");
+
                  },
                  onClose: function () {  //关闭时进行的处理  ： 重新加载数据
                      LoadDg1();
@@ -121,6 +129,153 @@
          }
 
          /*************新建结束*****************/
+
+         /***************  编辑 ********************/
+         function ShowDlg_edit(){
+
+                var row_slec = $("#dg1").datagrid('getSelected');
+                if (row_slec != null) {
+                    var value_id = row_slec.value0;
+
+                    $('#dlg1_2').show();
+                    $('#dlg1_2').dialog({
+
+                        /* user code begin */
+
+                        title: '编辑生产厂商',  //title依需求更改  编辑时的弹框显示的名称
+
+                        /* user code end */
+                        width: 705,
+                        height: 420,
+                        closed: false,
+                        shadow: true,
+                        onResize: function () {
+                            $(this).dialog('center');
+                        },
+                        onOpen: function () {
+                            /* user code begin */
+
+                             //按你新增时的个数依次增加或减少 只需改dlg1_2_txt_1最后一位数字 和相应的value1的最后一位
+                            $("#dlg1_2_txt_1").textbox('setValue', row_slec.value1);
+                            $("#dlg1_2_txt_2").textbox('setValue', row_slec.value2);
+                            $("#dlg1_2_txt_3").textbox('setValue', row_slec.value3);
+                            $("#dlg1_2_txt_4").textbox('setValue', row_slec.value4);
+
+                            /* user code end */
+                        },
+                        onClose: function () {
+                            LoadDg1();
+                        },
+                        buttons: [{
+                            text: '提交',
+                            iconCls: 'icon-ok',
+                            handler: function () {
+                                edit_save();
+                             }
+                        },
+                          {
+                             text: '取消',
+                             iconCls: 'icon-cancel',
+                             handler: function () {
+                                 $('#dlg1_2').dialog('close');
+
+                             }
+                         }]
+                        })
+                }
+                else {
+                 alert("勾选要编辑的项!");
+             }
+         }
+
+         //////*******************保存编辑后的生产厂商信息  仿save函数 不过后台不是create而是Update**************************/
+         function edit_save() {
+
+                 /* user code begin */
+             var row_slec = $("#dg1").datagrid('getSelected');
+
+             var value_id = row_slec.value0;
+
+             //变量名与显示的Html的新增信息的排序相对应
+             var name = $("#dlg1_2_txt_1").textbox('getValue');
+             var manager = $("#dlg1_2_txt_2").textbox('getValue');
+             var phone = $("#dlg1_2_txt_3").textbox('getValue');
+             var address = $("#dlg1_2_txt_4").textbox('getValue');
+
+             //  后台用request.POST.get()方式获取时  是根据字符串里面的名称获取的，与上面的变量名无关
+             //  如：  request.POST.get('action')  后台获取的就是action对应的值即Save
+             var parm = 'action=Edit&name=' + name + '&manager=' + manager + '&phone=' + phone + '&address=' + address+ '&value_id=' + value_id;
+
+                //getAjax 第一个参数是Url 做相应的 更改
+             getAjax("/single/", parm, function (data) {
+
+                 /* user code end */
+
+                 var backstring = jQuery.parseJSON(data);
+                 if (backstring == "1") {
+                     alert("编辑成功！");
+                     $('#dlg1_2').dialog('close');
+                     LoadDg1();
+                 }
+                 else
+                     alert("编辑失败");
+             })
+         }
+
+
+
+        ///////删除信息
+         function delet(){
+
+             var row_slec = $("#dg1").datagrid('getSelected');
+             if (row_slec != null) {
+                 var value_id = row_slec.value0;
+                 var delete_flag = 0;
+                 var dataJson;
+                 var parm = "action=Delete&value_id=" + value_id+"&delete_flag=" + delete_flag;
+                 getAjax("/single/", parm, function (data) {
+                     dataJson = data;
+                 });
+
+                if (dataJson == '1') {
+                    alert("删除成功！");
+                    LoadDg1();
+                }
+
+                else if (dataJson != '0') {
+                    $.messager.confirm('确认对话框', dataJson, function(r){
+	                    if (r){
+	                        //关闭当前窗口
+	                        window.close();
+                            delete_flag = 1;
+                            var parm = "action=Delete&value_id=" + value_id+"&delete_flag=" + delete_flag;
+                            getAjax("/single/", parm, function (data) {
+                                dataJson = data;
+                            });
+                             if (dataJson == '1') {
+                                 alert("删除成功！");
+                                 LoadDg1();
+                             }
+                             else {
+                                alert("删除失败！");
+                                LoadDg1();
+                             }
+	                    }
+                    });
+                }
+
+                else {
+                    alert("删除失败！");
+                    LoadDg1();
+                }
+
+            }
+            else {
+                alert("请选中某一行！");
+
+            }
+
+        }
 
 
          //////////////////***************Dlg1_1  详情查看  *************///////////////////////////
@@ -188,10 +343,11 @@
                                                                                             <!-- 中间内容可以随页面做更改 新增XXXX信息  等-->
             <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'" onclick=" LoadDg1();" >刷新</a>
                                                                                                                         <!--$('#dlg1_2').show().dialog();   ShowDlg1_2()-->
-            <a href="javascript:void(0)" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-add'" onclick="ShowDlg1_2() ">新增生产厂家信息</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-add'" onclick="ShowDlg_add();">新增信息</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'" onclick="ShowDlg_edit();">编辑信息</a>
 
-            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'" onclick="edit();">编辑生产厂家信息</a>
-           <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" onclick="ShowDlg1_1();">查看详情</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton"data-options="plain:true,iconCls:'icon-edit'" onclick="delet();">删除信息</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" onclick="ShowDlg1_1();">查看详情</a>
 
          </div>   <!-- 表格信息    不动！-->
          <table id="dg1" title="{{ datagrid_title }}" class="easyui-datagrid" data-options="" style="width: 99%; height: 95%;"
@@ -267,13 +423,16 @@
 
                 </table>
             </div>
-            <div id="dlg1_2-buttons1_add" style="display: none;">
-            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="save()">确定</a>
-            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="javascript:$('#dlg1_2').dialog('close')">取消</a>
-            </div>
 
         </div>
+        <div id="dlg1_2-buttons1_add" style="display: none;">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="save()">确定</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="javascript:$('#dlg1_2').dialog('close')">取消</a>
+        </div>
     </div>
+
+
+
 
 </body>
 </html>

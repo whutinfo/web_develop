@@ -57,7 +57,7 @@
 
 
          /****************新建供应商*****************/
-         function ShowDlg1_2() {
+         function ShowDlg_add() {
              $('#dlg1_2').show();
              $('#dlg1_2').dialog({
                  title: '新增供应商',
@@ -109,6 +109,90 @@
          }
 
          /*************新建结束*****************/
+
+
+
+         /***************  编辑 ********************/
+         function ShowDlg_edit(){
+
+                var row_slec = $("#dg1").datagrid('getSelected');
+                if (row_slec != null) {
+                    var value_id = row_slec.value0;
+
+                    $('#dlg1_2').show();
+                    $('#dlg1_2').dialog({
+                        title: '编辑供应商',
+                        width: 705,
+                        height: 420,
+                        closed: false,
+                        shadow: true,
+                        onResize: function () {
+                            $(this).dialog('center');
+                        },
+                        onOpen: function () {
+                            $("#dlg1_2_txt_1").textbox('setValue', row_slec.value1);
+                            $("#dlg1_2_txt_2").textbox('setValue', row_slec.value2);
+                            $("#dlg1_2_txt_3").textbox('setValue', row_slec.value3);
+                            $("#dlg1_2_txt_4").textbox('setValue', row_slec.value4);
+                        },
+                        onClose: function () {
+                            LoadDg1();
+                        },
+                        buttons: [{
+                            text: '提交',
+                            iconCls: 'icon-ok',
+                            handler: function () {
+                                edit_save();
+                             }
+                        },
+                          {
+                             text: '取消',
+                             iconCls: 'icon-cancel',
+                             handler: function () {
+                                 $('#dlg1_2').dialog('close');
+
+                             }
+                         }]
+                        })
+                }
+                else {
+                 alert("勾选要编辑的项!");
+             }
+         }
+
+         //////*******************保存编辑后的生产厂商信息  仿save函数 不过后台不是create而是Update**************************/
+         function edit_save() {
+                 /* user code begin */
+
+             var row_slec = $("#dg1").datagrid('getSelected');
+             var value_id = row_slec.value0;
+
+             //变量名与显示的Html的新增信息的排序相对应
+             var name = $("#dlg1_2_txt_1").textbox('getValue');
+             var manager = $("#dlg1_2_txt_2").textbox('getValue');
+             var phone = $("#dlg1_2_txt_3").textbox('getValue');
+             var address = $("#dlg1_2_txt_4").textbox('getValue');
+
+             //  后台用request.POST.get()方式获取时  是根据字符串里面的名称获取的，与上面的变量名无关
+             //  如：  request.POST.get('action')  后台获取的就是action对应的值即Save
+             var parm = 'action=Edit&name=' + name + '&manager=' + manager + '&phone=' + phone + '&address=' + address+ '&value_id=' + value_id;
+
+                //getAjax 第一个参数是Url 做相应的 更改
+             getAjax("/supplier/", parm, function (data) {
+
+                 /* user code end */
+
+                 var backstring = jQuery.parseJSON(data);
+                 if (backstring == "1") {
+                     alert("编辑成功！");
+                     $('#dlg1_2').dialog('close');
+                     LoadDg1();
+                 }
+                 else
+                     alert("编辑失败");
+             })
+         }
+
 
 
          //////////////////***************Dlg1_1  工单信息详情查看  *************///////////////////////////
@@ -169,11 +253,10 @@
          <div id="toolbar1" style="padding: 2px 5px;">
 
             <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reload'" onclick=" LoadDg1();" >刷新</a>
-
-            <a href="javascript:void(0)" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-add'" onclick="ShowDlg1_2();">新增供应商信息</a>
-
-            <!-- href="javascript:void(0)" class="easyui-linkbutton"data-options="plain:true,iconCls:'icon-edit'" onclick="edit();">编辑供应商信息</!-->
-           <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" onclick="ShowDlg1_1();">查看详情</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-add'" onclick="ShowDlg_add();">新增信息</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'" onclick="ShowDlg_edit();">编辑信息</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton"data-options="plain:true,iconCls:'icon-edit'" onclick="delet();">删除信息</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'" onclick="ShowDlg1_1();">查看详情</a>
 
          </div>
          <table id="dg1" title="供应商信息" class="easyui-datagrid" data-options="" style="width: 99%; height: 95%;"
